@@ -27,11 +27,11 @@
   +----------------------------------------------------------------------+
   $Id: index.php,v 1.1 2010-05-08 11:05:33 Franck Danard franckd@agmp.org Exp $ */
 //include elastix framework
-define('FPDF_FONTPATH','/var/www/html/libs/font/');
+//define('FPDF_FONTPATH','/var/www/html/libs/font/');
 
 include_once "libs/paloSantoGrid.class.php";
 include_once "libs/paloSantoForm.class.php";
-include_once "libs/fpdf.php";
+//include_once "libs/fpdf.php";
 
 function _moduleContent(&$smarty, $module_name)
 {
