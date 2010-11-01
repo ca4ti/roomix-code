@@ -59,17 +59,39 @@ function _moduleContent(&$smarty, $module_name)
     //conexion resource
     $pDB = new paloDB($arrConf['dsn_conn_database']);
 
+    $smarty->assign("SAVE", $arrLang["Save"]);
+    $smarty->assign("CANCEL", $arrLang["Cancel"]);
+    $smarty->assign("DELETE", $arrLang["Delete"]);
+
     //actions
     $action = getAction();
     $content = "";
 
     switch($action){
+        case "delete":
+            $content = deleteRateList($smarty, $module_name, $local_templates_dir, $pDB, $arrConf, $arrLang);
+            break;
         default:
             $content = reportRateList($smarty, $module_name, $local_templates_dir, $pDB, $arrConf, $arrLang);
             break;
     }
     return $content;
 }
+
+function deleteRateList($smarty, $module_name, $local_templates_dir, &$pDB, $arrConf, $arrLang)
+{
+    $pRateList = new paloSantoRateList($pDB);
+    $_DATA = $_POST;
+    $prefix = $_DATA['prefix'];
+    if(is_array($prefix)){
+        foreach($prefix as $key => $value){ 
+	 	$deleteRate = $pRateList->deleteRateList('prefix', $value);
+        }
+    }
+    $content = reportRateList($smarty, $module_name, $local_templates_dir, $pDB, $arrConf, $arrLang);
+    return $content;
+}
+
 
 function reportRateList($smarty, $module_name, $local_templates_dir, &$pDB, $arrConf, $arrLang)
 {
@@ -105,8 +127,8 @@ function reportRateList($smarty, $module_name, $local_templates_dir, &$pDB, $arr
 	    $arrTmp[1] = $value['prefix'];
 	    $arrTmp[2] = $value['rate_offset'];
 	    $arrTmp[3] = $value['rate'];
-	    $arrTmp[4] = "Select";
-            $arrData[] = $arrTmp;
+	    $arrTmp[4] = "<input type='checkbox' name='prefix[".$key."] ' value='".$value['prefix']."'>";
+           $arrData[] = $arrTmp;
         }
     }
 
@@ -164,9 +186,9 @@ function createFieldFilter($arrLang){
     $arrFilter = array(
 	    "name" => $arrLang["Name"],
 	    "prefix" => $arrLang["Prefix"],
-	    "rate_offset" => $arrLang["Rate Offset"],
-	    "rate" => $arrLang["Rate"],
-	    "select" => $arrLang["Select"],
+	    //"rate_offset" => $arrLang["Rate Offset"],
+	    //"rate" => $arrLang["Rate"],
+	    //"select" => $arrLang["Select"],
                     );
 
     $arrFormElements = array(

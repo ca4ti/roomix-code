@@ -131,7 +131,7 @@ function reportModels($smarty, $module_name, $local_templates_dir, &$pDB, $arrCo
     if(is_array($arrResult) && $total>0){
         foreach($arrResult as $key => $value){ 
            $value_check = $value['room_model'];
-	    $arrTmp[0] = "<input type='checkbox' name='model' value='$value_check'";
+	    $arrTmp[0] = "<input type='checkbox' name='model' value='$value_check'>";
 	    $arrTmp[1] = $value['room_model'];
             $arrData[] = $arrTmp;
         }

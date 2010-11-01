@@ -85,6 +85,23 @@ class paloSantoRateList {
         return $result;
     }
 
+    function deleteRateList($filter_field, $filter_value)
+    {
+        $where = "";
+        if(isset($filter_field) & $filter_field !="")
+            $where = "where $filter_field = '$filter_value'";
+
+        $query   = "DELETE FROM `rate` $where";
+
+        $result=$this->_DB->genQuery($query);
+
+        if($result==FALSE){
+            $this->errMsg = $this->_DB->errMsg;
+            return 0;
+        }
+        return $result[0];
+    }
+
     function getRateListById($id)
     {
         $query = "SELECT * FROM rate WHERE id=$id";

@@ -34,5 +34,8 @@ $arrLangModule=array(
 "Rate Offset" => "Rate Offset",
 "Rate" => "Rate",
 "Select" => "Select",
+"Delete" => "Delete",
+"Save" => "Save",
+"Cancel" => "Cancel",
 );
 ?>
