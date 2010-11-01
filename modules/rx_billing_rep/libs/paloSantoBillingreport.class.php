@@ -85,6 +85,40 @@ class paloSantoBillingreport {
         return $result;
     }
 
+    function getRoomBillingreport($filter_field, $filter_value)
+    {
+        $where = "where status = '0'";
+        if(isset($filter_field) & $filter_field !="")
+            $where = "where $filter_field like '$filter_value%'";
+
+        $query   = "SELECT * FROM rooms $where";
+
+        $result=$this->_DB->fetchTable($query, true);
+
+        if($result==FALSE){
+            $this->errMsg = $this->_DB->errMsg;
+            return array();
+        }
+        return $result[0];
+    }
+
+    function getGuestBillingreport($filter_field, $filter_value)
+    {
+        $where = "where status = '0'";
+        if(isset($filter_field) & $filter_field !="")
+            $where = "where $filter_field like '$filter_value%'";
+
+        $query   = "SELECT * FROM guest $where";
+
+        $result=$this->_DB->fetchTable($query, true);
+
+        if($result==FALSE){
+            $this->errMsg = $this->_DB->errMsg;
+            return array();
+        }
+        return $result[0];
+    }
+
     function getBillingreportById($id)
     {
         $query = "SELECT * FROM register WHERE id=$id and status = '0'";

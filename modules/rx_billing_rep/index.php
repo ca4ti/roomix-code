@@ -103,11 +103,13 @@ function reportBillingreport($smarty, $module_name, $local_templates_dir, &$pDB,
 
     if(is_array($arrResult) && $total>0){
         foreach($arrResult as $key => $value){ 
+    	    $arrRoom = $pBillingreport->getRoomBillingreport('id',$value['room_id']);	// Get the real room's name.
+           $arrGuest = $pBillingreport->getGuestBillingreport('id',$value['guest_id']);	// Get the real guest's name
 	    $arrTmp[0] = $value['date_ci'];
 	    $arrTmp[1] = $value['date_co'];
-	    $arrTmp[2] = $value['room_id'];
-	    $arrTmp[3] = $value['guest_id'];
-	    $arrTmp[4] = "<a href='roomx_billing/".$value['billing_file']."' target='_news'><button>View</button></a>" ;
+	    $arrTmp[2] = $arrRoom['room_name'];
+	    $arrTmp[3] = $arrGuest['first_name']." ".$arrGuest['last_name'];
+	    $arrTmp[4] = "<a style='text-decoration: none;' href='roomx_billing/".$value['billing_file']."' target='_news'><button>View</button></a>" ;
            $arrData[] = $arrTmp;
         }
     }
@@ -168,7 +170,7 @@ function createFieldFilter($arrLang){
 	    "date_co" => $arrLang["Checkout Date"],
 	    //"room_id" => $arrLang["Room"],
 	    //"guest_id" => $arrLang["Guest"],
-	    "billing_file" => $arrLang["PDF"],
+	    //"billing_file" => $arrLang["PDF"],
                     );
 
     $arrFormElements = array(
