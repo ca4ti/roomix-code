@@ -159,11 +159,13 @@ function saveNewCheckOut($smarty, $module_name, $local_templates_dir, &$pDB, &$p
         $where = "where id = '".$_DATA['room']."'";
         $arrRoom = $pRoom->getCheckOut('rooms', $where);
         $arrExt = $arrRoom['0'];
+						// Capturer les données du minibar pour la facturation! 
 
         // Update room : The room was busy and now it's free and not clean.
         //---------------------------------------------
         $value['free'] = '1';
         $value['clean'] = '0';
+        $value['minibar'] = '';
         $where = "id = '".$_DATA['room']."'";
         $arrUpdateRoom = $pRoom->updateQuery('rooms', $value, $where);
 
@@ -222,7 +224,7 @@ function saveNewCheckOut($smarty, $module_name, $local_templates_dir, &$pDB, &$p
 
         $strMsg = "Checkout Done";
 
-        // Write the biiling into the pdf file. 
+        // Write the billing into the pdf file. 
         //---------------------------------------------
         $arrConf   = $pCheckOut->getCheckOut('config', '');
         $Config    = $arrConf['0'];

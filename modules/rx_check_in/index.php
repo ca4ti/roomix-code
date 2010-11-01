@@ -241,14 +241,14 @@ function createFieldForm($arrLang, &$pDB)
     $arrRmbc=$arrConf[0];
     $rmbc=$arrRmbc['rmbc'];
 
-    $where = "WHERE free = '1' and clean = '0'";
+    $where = "WHERE free = '1'";
     if ($rmbc == "1")
     	$where = "WHERE free = '1' and clean = '1'";
 
     $arrRoom=$pRoom->getCheckIn('rooms',$where);
 
     foreach($arrRoom as $k => $value)
-    $arrOptions[$value['id']] = $value['room_name'];
+    	$arrOptions[$value['id']] = $value['room_name'];
 
     if (!isset($value['room_name']))
     	$arrOptions = array( '1' => 'No Room!' );
