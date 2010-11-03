@@ -51,7 +51,7 @@ class paloSantoAddGroupe {
 
     /*HERE YOUR FUNCTIONS*/
 
-    function getNumAddGroupe($filter_field, $filter_value)
+    function getNumAddGroupe($where)
     {
         $where = "";
         if(isset($filter_field) & $filter_field !="")
@@ -68,12 +68,8 @@ class paloSantoAddGroupe {
         return $result[0];
     }
 
-    function getAddGroupe($filter_field, $filter_value)
+    function getAddGroupe($where)
     {
-        $where = "";
-        if(isset($filter_field) & $filter_field !="")
-            $where = "where $filter_field = '$filter_value'";
-
         $query   = "SELECT * FROM rooms $where";
 
         $result=$this->_DB->fetchTable($query, true);

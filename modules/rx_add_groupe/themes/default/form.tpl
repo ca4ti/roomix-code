@@ -22,13 +22,15 @@
     </tr>
 </table>
 <table class="tabForm" style="font-size: 16px;" width="100%" >
-    <tr class="letra12">
-        <td align="left"><b>{$name.LABEL}: <span  class="required">*</span></b></td>
+    <tr class="letra12" align="left">
+        <td align="right"><b>{$name.LABEL}: </b></td>
         <td align="left">{$name.INPUT}</td>
+        <td align="left" width="500"> </td>
     </tr>
-    <tr class="letra12">
-        <td align="left"><b>{$rooms.LABEL}: <span  class="required">*</span></b></td>
+    <tr class="letra12" align="left">
+        <td align="right"><b>{$rooms.LABEL}: </b></td>
         <td align="left">{$rooms.INPUT}</td>
+        <td align="left" width="500"> </td>
     </tr>
 
 </table>

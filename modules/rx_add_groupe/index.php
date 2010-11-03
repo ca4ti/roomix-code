@@ -123,7 +123,9 @@ function saveNewAddGroupe($smarty, $module_name, $local_templates_dir, &$pDB, $a
     $oForm = new paloForm($smarty,$arrFormAddGroupe);
     $_DATA = $_POST;
 
-    $Rooms_groupe = $pAddGroupe->getAddGroupe('free',0);
+    $where = " where free = '0' and groupe = ''";
+    $Rooms_groupe = $pAddGroupe->getAddGroupe($where);
+
     foreach($Rooms_groupe as $k => $v)
     {
     	$arrRoom[$k] = $v['room_name'];
@@ -150,7 +152,7 @@ function saveNewAddGroupe($smarty, $module_name, $local_templates_dir, &$pDB, $a
     }
     else{
         //NO ERROR, HERE IMPLEMENTATION OF SAVE
-        $content = "The groupe ".$_DATA['name']." is added.";
+        $content = viewFormAddGroupe($smarty, $module_name, $local_templates_dir, $pDB, $arrConf, $arrLang);
     }
     return $content;
 }
@@ -158,16 +160,20 @@ function saveNewAddGroupe($smarty, $module_name, $local_templates_dir, &$pDB, $a
 function createFieldForm($arrLang, &$pDB)
 {
     $pAddGroupe = new paloSantoAddGroupe($pDB);
-    $Rooms_groupe = $pAddGroupe->getAddGroupe('free',0);
+    $where = " where free = '0' and groupe = ''";
+    $Rooms_groupe = $pAddGroupe->getAddGroupe($where);
 
+    if (isset($Rooms_groupe)) {
     foreach($Rooms_groupe as $k => $v)
     	$arrRoom[$k] = $v['room_name'];
-    
-    $arrOptions = $arrRoom;
-
-    if (!isset($arrRoom))
+    }
+    if (isset( $arrRoom)){
+    	$arrOptions = $arrRoom;
+    }
+	else
+    {
     	$arrOptions = array( '1' => 'Empty' );
-
+    }
     $arrFields = array(
             "name"   => array(      "LABEL"                  => $arrLang["Name"],
                                             "REQUIRED"               => "no",
