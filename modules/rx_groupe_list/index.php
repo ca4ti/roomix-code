@@ -100,9 +100,9 @@ function reportGroupeList($smarty, $module_name, $local_templates_dir, &$pDB, $a
     $url    = "?menu=$module_name&filter_field=$filter_field&filter_value=$filter_value";
 
     $arrData = null;
-    $where = "where free= '0'";
+    $where = "where free= '0' and groupe != ''";
       if(isset($filter_field) & $filter_field !="")
-         $where = "where $filter_field like '$filter_value%' and free = '0'";
+         $where = "where $filter_field like '$filter_value%' and free = '0' and groupe != ''";
     
     $arrResult = $pGroupeList->getGroupeList('rooms', $limit, $offset, $where);
     
