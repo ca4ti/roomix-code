@@ -263,7 +263,7 @@ function createFieldForm($arrLang, &$pDB)
     $arrFields = array(
             "operating_mode"   => array(    "LABEL"                  => $arrLang["Operating Mode"],
                                             "REQUIRED"               => "no",
-                                            "INPUT_TYPE"             => "RADIO",
+                                            "INPUT_TYPE"             => "SELECT",
                                             "INPUT_EXTRA_PARAM"      => $arrOptions,
                                             "VALIDATION_TYPE"        => "text",
                                             "VALIDATION_EXTRA_PARAM" => ""
@@ -292,7 +292,7 @@ function createFieldForm($arrLang, &$pDB)
             "reception"      => array(      "LABEL"                  => $arrLang["Reception"],
                                             "REQUIRED"               => "no",
                                             "INPUT_TYPE"             => "TEXT",
-                                            "INPUT_EXTRA_PARAM"      => "",
+                                            "INPUT_EXTRA_PARAM"      => array("style" => "width:50px"),
                                             "VALIDATION_TYPE"        => "text",
                                             "VALIDATION_EXTRA_PARAM" => "",
                                             "EDITABLE"               => "si"
@@ -310,7 +310,7 @@ function createFieldForm($arrLang, &$pDB)
             "clean"          => array(      "LABEL"                  => $arrLang["Clean"],
                                             "REQUIRED"               => "no",
                                             "INPUT_TYPE"             => "TEXT",
-                                            "INPUT_EXTRA_PARAM"      => "",
+                                            "INPUT_EXTRA_PARAM"      => array("style" => "width:50px"),
                                             "VALIDATION_TYPE"        => "text",
                                             "VALIDATION_EXTRA_PARAM" => "",
                                             "EDITABLE"               => "si"
@@ -318,7 +318,7 @@ function createFieldForm($arrLang, &$pDB)
             "minibar"        => array(      "LABEL"                  => $arrLang["Minibar"],
                                             "REQUIRED"               => "no",
                                             "INPUT_TYPE"             => "TEXT",
-                                            "INPUT_EXTRA_PARAM"      => "",
+                                            "INPUT_EXTRA_PARAM"      => array("style" => "width:50px"),
                                             "VALIDATION_TYPE"        => "text",
                                             "VALIDATION_EXTRA_PARAM" => "",
                                             "EDITABLE"               => "si"

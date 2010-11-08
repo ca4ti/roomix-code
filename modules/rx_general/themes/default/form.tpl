@@ -23,38 +23,38 @@
     </tr>
 </table>
 
-<table class="tabForm" style="font-size: 16px;" width="100%" >
+<table class="tabForm" style="font-size: 16px;" width="100%">
     <tr class="letra12">
-        <td align="right"><b>{$operating_mode.LABEL} : </b></td>
-        <td align="left">{$operating_mode.INPUT}</td>
-        <td align="right"><b>{$locked_when_check_out.LABEL} : </b></td>
-        <td align="left">{$locked_when_check_out.INPUT}</td>
+        <td align="right" valign="top"><b>{$operating_mode.LABEL} : </b></td>
+        <td align="left" valign="top">{$operating_mode.INPUT}</td>
+        <td align="right" width="200" valign="top"><b>{$locked_when_check_out.LABEL} : </b></td>
+        <td align="left" valign="top">{$locked_when_check_out.INPUT}</td>
     </tr>
     <tr class="letra12">
-        <td align="right"><b>{$calling_between_rooms.LABEL} : </b></td>
-        <td align="left">{$calling_between_rooms.INPUT}</td>
-        <td align="right"><b>{$Logo.LABEL} : </b></td>
-        <td align="left"><img src="{$LOGO}" align="left" WIDTH=50% HEIGHT="50%"><br>
+        <td align="right" valign="top"><b>{$calling_between_rooms.LABEL} : </b></td>
+        <td align="left" valign="top">{$calling_between_rooms.INPUT}</td>
+        <td align="right" valign="top" width="200"><b>{$Logo.LABEL} : </b><br><br><div align='center'><img src="{$LOGO}" WIDTH=50% HEIGHT="50%" border = "1"></div><br></td>
+        <td align="left" valign="top">
             <input name="file_record" id="file_record" type="file" value="{$file_record_name}" size='30' />
         </td>
     </tr>
     <tr class="letra12">
         <td align="right" valign="top"><b>{$reception.LABEL} : </b></td>
         <td align="left" valign="top">{$reception.INPUT} <span  class="required">*</span></td>
-        <td align="right" valign="top"><b>{$company.LABEL} : </b></td>
+        <td align="right" valign="top" width="200"><b>{$company.LABEL} : </b></td>
         <td align="left" valign="top">{$company.INPUT} <span  class="required">*</span></td>
     </tr>
     <tr class="letra12">
-        <td align="right"><b>{$clean.LABEL} : </b></td>
-        <td align="left">{$clean.INPUT}</td>
-        <td align="right"><b>{$minibar.LABEL} : </b></td>
-        <td align="left">{$minibar.INPUT}</td>
+        <td align="right" valign="top"><b>{$clean.LABEL} : </b></td>
+        <td align="left" valign="top">{$clean.INPUT}</td>
+        <td align="right" width="200" valign="top"><b>{$minibar.LABEL} : </b></td>
+        <td align="left" valign="top">{$minibar.INPUT}</td>
     </tr>
     <tr class="letra12">
-        <td align="right"><b>{$rmbc.LABEL} : </b></td>
-        <td align="left">{$rmbc.INPUT}</td>
-        <td align="right"></td>
-        <td align="left"></td>
+        <td align="right" valign="top"><b>{$rmbc.LABEL} : </b></td>
+        <td align="left" valign="top">{$rmbc.INPUT}</td>
+        <td align="right" width="200" valign="top"></td>
+        <td align="left" valign="top"></td>
     </tr>
 </table>
 
