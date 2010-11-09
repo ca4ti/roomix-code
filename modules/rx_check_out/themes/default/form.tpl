@@ -26,20 +26,14 @@
     <tr class="letra12">
         <td align="right"><b>{$room.LABEL}: </b></td>
         <td align="left">{$room.INPUT}</td>
-        <td align="right"></td>
-        <td align="left"></td>
-    </tr>
-    <tr class="letra12">
+        <td align="right"><b>{$group.LABEL}: </b></td>
+        <td align="left">{$group.INPUT}</td>
         <td align="right"><b>{$billing.LABEL}: </b></td>
         <td align="left">{$billing.INPUT}</td>
         <td align="right"><b>{$details.LABEL}: </b></td>
         <td align="left">{$details.INPUT}</td>
-    </tr>
-    <tr class="letra12">
         <td align="right"><b>{$sending_by_mail.LABEL}: </b></td>
         <td align="left">{$sending_by_mail.INPUT}</td>
-        <td align="right"><b>{$printing_the_billing.LABEL}: </b></td>
-        <td align="left">{$printing_the_billing.INPUT}</td>
     </tr>
 </table>
 

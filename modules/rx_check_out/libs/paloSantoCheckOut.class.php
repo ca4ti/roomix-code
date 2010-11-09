@@ -94,6 +94,20 @@ class paloSantoCheckOut {
         return $result[0];
     }
 
+    function getGroupCheckOut()
+    {
+
+        $query = "SELECT DISTINCT groupe FROM `rooms` WHERE 1 ";
+
+        $result=$this->_DB->fetchTable($query, true);
+
+        if($result==FALSE){
+            $this->errMsg = $this->_DB->errMsg;
+            return 0;
+        }
+        return $result;
+    }
+
     function getCheckOut($table, $where)
     {
 

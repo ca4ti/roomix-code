@@ -291,18 +291,33 @@ function createFieldForm($arrLang, &$pDB)
     $pRoom= new paloSantoCheckOut($pDB);
     $where = "where free = '0'";
     $arrRoom=$pRoom->getCheckOut('rooms', $where);
-        
-    foreach($arrRoom as $k => $value)
-    	$arrOptions[$value['id']] = $value['room_name'];
+    $arrGroup=$pRoom->getGroupCheckOut();
+     
+    foreach($arrRoom as $kR => $valueR)
+    	$arrOptionsR[$valueR['id']] = $valueR['room_name'];
 
-    if (!isset($value['room_name']))
-    	$arrOptions = array( '1' => 'No Room!' );
+    if (!isset($valueR['room_name']))
+    	$arrOptionsR = array( '1' => 'No Room!' );
+
+    $arrOptionsG = array( '0' => 'No Group' );
+    foreach($arrGroup as $kG => $valueG){
+       $kG++;
+    	$arrOptionsG[$kG] = $valueG['groupe'];
+	}
 
     $arrFields = array(
             "room"   => array(      "LABEL"                  => $arrLang["Room"],
                                             "REQUIRED"               => "no",
                                             "INPUT_TYPE"             => "SELECT",
-                                            "INPUT_EXTRA_PARAM"      => $arrOptions,
+                                            "INPUT_EXTRA_PARAM"      => $arrOptionsR,
+                                            "VALIDATION_TYPE"        => "text",
+                                            "VALIDATION_EXTRA_PARAM" => "",
+                                            "EDITABLE"               => "si",
+                                            ),
+            "group"   => array(      "LABEL"                  => $arrLang["Group"],
+                                            "REQUIRED"               => "no",
+                                            "INPUT_TYPE"             => "SELECT",
+                                            "INPUT_EXTRA_PARAM"      => $arrOptionsG,
                                             "VALIDATION_TYPE"        => "text",
                                             "VALIDATION_EXTRA_PARAM" => "",
                                             "EDITABLE"               => "si",
