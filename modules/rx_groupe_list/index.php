@@ -60,17 +60,146 @@ function _moduleContent(&$smarty, $module_name)
     $pDB = new paloDB($arrConf['dsn_conn_database']);
     //$pDB = "";
 
-
     //actions
     $action = getAction();
     $content = "";
 
     switch($action){
+        case "save_edit":
+            $content = saveNewAddGroupe($smarty, $module_name, $local_templates_dir, $pDB, $arrConf, $arrLang);
+            break;
+        case "save_new":
+            $content = viewFormAddGroupe($smarty, $module_name, $local_templates_dir, $pDB, $arrConf, $arrLang);
+            break;
         default:
             $content = reportGroupeList($smarty, $module_name, $local_templates_dir, $pDB, $arrConf, $arrLang);
             break;
     }
     return $content;
+}
+
+function viewFormAddGroupe($smarty, $module_name, $local_templates_dir, &$pDB, $arrConf, $arrLang)
+{
+    $pAddGroupe = new paloSantoGroupeList($pDB);
+    $arrFormAddGroupe = createFieldForm($arrLang, $pDB);
+    $oForm = new paloForm($smarty,$arrFormAddGroupe);
+
+    //begin, Form data persistence to errors and other events.
+    $_DATA  = $_POST;
+    $action = getParameter("action");
+    $id     = getParameter("id");
+    $smarty->assign("ID", $id); //persistence id with input hidden in tpl
+
+    if($action=="view")
+        $oForm->setViewMode();
+    else if($action=="view_edit" || getParameter("save_edit"))
+        $oForm->setEditMode();
+    //end, Form data persistence to errors and other events.
+
+    if($action=="view" || $action=="view_edit"){ // the action is to view or view_edit.
+        $dataAddGroupe = $pAddGroupe->getAddGroupeById($id);
+        if(is_array($dataAddGroupe) & count($dataAddGroupe)>0)
+            $_DATA = $dataAddGroupe;
+        else{
+            $smarty->assign("mb_title", $arrLang["Error get Data"]);
+            $smarty->assign("mb_message", $pAddGroupe->errMsg);
+        }
+    }
+
+    $smarty->assign("SAVE", $arrLang["Save"]);
+    $smarty->assign("EDIT", $arrLang["Edit"]);
+    $smarty->assign("CANCEL", $arrLang["Cancel"]);
+    $smarty->assign("REQUIRED_FIELD", $arrLang["Required field"]);
+    $smarty->assign("IMG", "images/list.png");
+
+    $htmlForm = $oForm->fetchForm("$local_templates_dir/form.tpl",$arrLang["Add Groupe"], $_DATA);
+    $content = "<form  method='POST' style='margin-bottom:0;' action='?menu=$module_name'>".$htmlForm."</form>";
+
+    return $content;
+}
+
+function saveNewAddGroupe($smarty, $module_name, $local_templates_dir, &$pDB, $arrConf, $arrLang)
+{
+    $pAddGroupe = new paloSantoGroupeList($pDB);
+    $arrFormAddGroupe = createFieldForm($arrLang, $pDB);
+    $oForm = new paloForm($smarty,$arrFormAddGroupe);
+    $_DATA = $_POST;
+
+    $where = " where free = '0' and groupe = ''";
+    $Rooms_groupe = $pAddGroupe->getAddGroupe($where);
+
+    foreach($Rooms_groupe as $k => $v)
+    {
+    	$arrRoom[$k] = $v['room_name'];
+    	if ($_DATA['rooms'][$k] == $k) 
+             {
+                     $room_name = $v['room_name'];
+              	$arrValores['groupe'] = "'".$_DATA['name']."'";
+                     $where = "room_name = '".$room_name."'";
+              	$groupe_save = $pAddGroupe->UpDateQuery('rooms',$arrValores,$where);
+             }
+    }
+
+    if(!$oForm->validateForm($_POST)){
+        // Validation basic, not empty and VALIDATION_TYPE 
+        $smarty->assign("mb_title", $arrLang["Validation Error"]);
+        $arrErrores = $oForm->arrErroresValidacion;
+        $strErrorMsg = "<b>{$arrLang['The following fields contain errors']}:</b><br/>";
+        if(is_array($arrErrores) && count($arrErrores) > 0){
+            foreach($arrErrores as $k=>$v)
+                $strErrorMsg .= "$k, ";
+        }
+        $smarty->assign("mb_message", $strErrorMsg);
+
+        $htmlForm = $oForm->fetchForm("$local_templates_dir/form.tpl",$arrLang["Add Groupe"], $_DATA);
+        $content = viewFormAddGroupe($smarty, $module_name, $local_templates_dir, $pDB, $arrConf, $arrLang);
+    }
+    else{
+        //NO ERROR, HERE IMPLEMENTATION OF SAVE
+
+        $htmlForm = $oForm->fetchForm("$local_templates_dir/form.tpl",$arrLang["Add Groupe"], $_DATA);
+        $content = viewFormAddGroupe($smarty, $module_name, $local_templates_dir, $pDB, $arrConf, $arrLang);
+    }
+    return $content;
+}
+
+function createFieldForm($arrLang, &$pDB)
+{
+    $pAddGroupe = new paloSantoGroupeList($pDB);
+    $where = " where free = '0' and groupe = ''";
+    $Rooms_groupe = $pAddGroupe->getAddGroupe($where);
+
+    if (isset($Rooms_groupe)) {
+    foreach($Rooms_groupe as $k => $v)
+    	$arrRoom[$k] = $v['room_name'];
+    }
+    if (isset( $arrRoom)){
+    	$arrOptions = $arrRoom;
+    }
+	else
+    {
+    	$arrOptions = array( '1' => 'Empty' );
+    }
+    $arrFields = array(
+            "name"   => array(      "LABEL"                  => $arrLang["Name"],
+                                            "REQUIRED"               => "yes",
+                                            "INPUT_TYPE"             => "TEXT",
+                                            "INPUT_EXTRA_PARAM"      => "",
+                                            "VALIDATION_TYPE"        => "text",
+                                            "VALIDATION_EXTRA_PARAM" => ""
+                                            ),
+            "rooms"   => array(      "LABEL"                  => $arrLang["Rooms"],
+                                            "REQUIRED"               => "no",
+                                            "INPUT_TYPE"             => "SELECT",
+                                            "INPUT_EXTRA_PARAM"      => $arrOptions,
+                                            "VALIDATION_TYPE"        => "text",
+                                            "VALIDATION_EXTRA_PARAM" => "",
+                                            "EDITABLE"               => "si",
+						  "MULTIPLE"               => true,
+                                            ),
+
+            );
+    return $arrFields;
 }
 
 function reportGroupeList($smarty, $module_name, $local_templates_dir, &$pDB, $arrConf, $arrLang)
@@ -82,6 +211,13 @@ function reportGroupeList($smarty, $module_name, $local_templates_dir, &$pDB, $a
     $start  = getParameter("start");
     $as_csv = getParameter("exportcsv");
 
+    $smarty->assign("SAVE", $arrLang["Save"]);
+    $smarty->assign("DELETE", $arrLang["Delete"]);
+    $smarty->assign("EDIT", $arrLang["Edit"]);
+    $smarty->assign("CANCEL", $arrLang["Cancel"]);
+    $smarty->assign("ADD", $arrLang["Add"]);
+    $smarty->assign("REQUIRED_FIELD", $arrLang["Required field"]);
+    $smarty->assign("IMG", "images/list.png");
 
     //begin grid parameters
     $oGrid  = new paloSantoGrid($smarty);
@@ -121,7 +257,6 @@ function reportGroupeList($smarty, $module_name, $local_templates_dir, &$pDB, $a
         }
     }
 
-
     $arrGrid = array("title"    => $arrLang["Groupe List"],
                         "icon"     => "images/list.png",
                         "width"    => "99%",
@@ -138,7 +273,6 @@ function reportGroupeList($smarty, $module_name, $local_templates_dir, &$pDB, $a
                                    "property1" => ""),
                                         )
                     );
-
 
     //begin section filter
     $arrFormFilterGroupeList = createFieldFilter($arrLang);

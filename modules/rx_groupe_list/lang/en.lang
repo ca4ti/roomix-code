@@ -28,9 +28,15 @@
   $Id: en.lang,v 1.1 2010-04-03 05:04:04 Franck Danard franckd@agmp.org Exp $ */
 global $arrLangModule;
 $arrLangModule=array(
-"Groupe List" => "Groupe List",
+"Groupe List" => "Group List",
+"Add Groupe" => "Add Group",
+"Name" => "Name",
+"Rooms" => "Rooms",
 "Name" => "Name",
 "Room" => "Room",
-"guest" => "guest",
+"guest" => "Guest",
+"Cancel" => "Cancel",
+"Add" => "Add",
+"Edit" => "Edit",
 );
 ?>

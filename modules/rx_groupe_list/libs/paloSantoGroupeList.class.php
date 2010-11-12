@@ -94,5 +94,61 @@ class paloSantoGroupeList {
         }
         return $result;
     }
+
+    function getNumAddGroupe($where)
+    {
+        $where = "";
+        if(isset($filter_field) & $filter_field !="")
+            $where = "where $filter_field like '$filter_value%'";
+
+        $query   = "SELECT COUNT(*) FROM rooms $where";
+
+        $result=$this->_DB->getFirstRowQuery($query);
+
+        if($result==FALSE){
+            $this->errMsg = $this->_DB->errMsg;
+            return 0;
+        }
+        return $result[0];
+    }
+
+    function getAddGroupe($where)
+    {
+        $query   = "SELECT * FROM rooms $where";
+
+        $result=$this->_DB->fetchTable($query, true);
+
+        if($result==FALSE){
+            $this->errMsg = $this->_DB->errMsg;
+            return array();
+        }
+        return $result;
+    }
+
+    function UpDateQuery($sTabla, $arrValores, $where){
+	// call function construirInsert
+	$query = $this->_DB->construirUpdate($sTabla, $arrValores, $where) ;
+
+	// now execute the query with genQuery(fucntion of the paloSantoDB.class)
+	$result = $this->_DB->genQuery($query);
+
+	// catch the error
+	if($result==FALSE)
+         return false;
+         return true; 
+    }
+
+    function getAddGroupeById($id)
+    {
+        $query = "SELECT * FROM rooms WHERE id=$id";
+
+        $result=$this->_DB->getFirstRowQuery($query,true);
+
+        if($result==FALSE){
+            $this->errMsg = $this->_DB->errMsg;
+            return null;
+        }
+        return $result;
+    }
 }
 ?>
