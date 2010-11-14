@@ -84,9 +84,8 @@ function saveModels($smarty, $module_name, $local_templates_dir, &$pDB, $arrConf
     $_DATA = $_POST;
 
     $value = $_DATA['model'];
-print_r ($_DATA['model']);
     $save_model = $pModels->DeletModels("room_model", $value);
-    $content = "<Div align='Center'><b>Model : ".$_DATA['model']." is added";
+    $content = reportModels($smarty, $module_name, $local_templates_dir, $pDB, $arrConf, $arrLang);
 
     return $content;
     
@@ -133,7 +132,8 @@ function reportModels($smarty, $module_name, $local_templates_dir, &$pDB, $arrCo
            $value_check = $value['room_model'];
 	    $arrTmp[0] = "<input type='checkbox' name='model' value='$value_check'>";
 	    $arrTmp[1] = $value['room_model'];
-            $arrData[] = $arrTmp;
+	    $arrTmp[2] = $value['room_price'];
+           $arrData[] = $arrTmp;
         }
     }
 
@@ -149,6 +149,8 @@ function reportModels($smarty, $module_name, $local_templates_dir, &$pDB, $arrCo
 			0 => array("name"      => $arrLang["Delete"],
                                    "property1" => ""),
 			1 => array("name"      => $arrLang["Models"],
+                                   "property1" => ""),
+			2 => array("name"      => $arrLang["Prices"],
                                    "property1" => ""),
                                         )
                     );

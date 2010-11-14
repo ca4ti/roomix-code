@@ -30,5 +30,6 @@ global $arrLangModule;
 $arrLangModule=array(
 "Add Model" => "Add Model",
 "Model" => "Model",
+"Price" => "Price",
 );
 ?>

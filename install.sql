@@ -35,9 +35,9 @@ CREATE TABLE IF NOT EXISTS `minibar` (
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 CREATE TABLE IF NOT EXISTS `models` (
-  `room_model` varchar(20) NOT NULL
+  `room_model` varchar(20) NOT NULL,
+  `price` decimal(6,2) NOT NULL default '0.00'
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
-
 
 CREATE TABLE IF NOT EXISTS `rate` (
   `name` varchar(20) NOT NULL,
@@ -45,7 +45,6 @@ CREATE TABLE IF NOT EXISTS `rate` (
   `rate` decimal(8,5) NOT NULL default '0.00000',
   `rate_offset` decimal(8,5) NOT NULL default '0.00000'
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
-
 
 CREATE TABLE IF NOT EXISTS `register` (
   `id` int(11) NOT NULL auto_increment,

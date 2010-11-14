@@ -138,11 +138,12 @@ function saveNewAddModel($smarty, $module_name, $local_templates_dir, &$pDB, $ar
     else{
         //NO ERROR, HERE IMPLEMENTATION OF SAVE
         $arrValores['room_model'] = "'".$_DATA['model']."'";
+        $arrValores['room_price'] = "'".$_DATA['price']."'";
 
         //genQuery($query, $param = NULL)
 
         $save_model = $pAddModel->insertModel("models", $arrValores);
-        $content = "<Div align='Center'><b>Model : ".$_DATA['model']." is added";
+        $content = viewFormAddModel($smarty, $module_name, $local_templates_dir, $pDB, $arrConf, $arrLang);
 
     }
     return $content;
@@ -153,7 +154,14 @@ function createFieldForm($arrLang)
    
     $arrFields = array(
             "model"   => array(      "LABEL"                  => $arrLang["Model"],
-                                            "REQUIRED"               => "no",
+                                            "REQUIRED"               => "yes",
+                                            "INPUT_TYPE"             => "TEXT",
+                                            "INPUT_EXTRA_PARAM"      => "",
+                                            "VALIDATION_TYPE"        => "text",
+                                            "VALIDATION_EXTRA_PARAM" => ""
+                                            ),
+            "price"   => array(      "LABEL"                  => $arrLang["Price"],
+                                            "REQUIRED"               => "yes",
                                             "INPUT_TYPE"             => "TEXT",
                                             "INPUT_EXTRA_PARAM"      => "",
                                             "VALIDATION_TYPE"        => "text",

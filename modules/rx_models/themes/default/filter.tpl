@@ -15,7 +15,7 @@
             <input class="button" type="submit" name="cancel" value="{$CANCEL}">
         </td>
         {/if}
-        <td align="right" nowrap><span class="letra12"><span  class="required">*</span> {$REQUIRED_FIELD}</span></td>
+        <td align="right" nowrap></td>
     </tr>
 </table>
 <table width="99%" border="0" cellspacing="0" cellpadding="0" align="center">

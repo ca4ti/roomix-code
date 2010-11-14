@@ -18,14 +18,16 @@
             <input class="button" type="submit" name="cancel" value="{$CANCEL}">
         </td>
         {/if}
-        <td align="right" nowrap><span class="letra12"></span></td>
+        <td align="right" nowrap><span class="letra12"><span  class="required">*</span> {$REQUIRED_FIELD}</span></td>
     </tr>
 </table>
 
 <table class="tabForm" style="font-size: 16px;" width="100%" >
     <tr class="letra12">
         <td align="right"><b>{$model.LABEL}: </b></td>
-        <td align="left">{$model.INPUT}</td>
+        <td align="left">{$model.INPUT} <span  class="required">*</span></td>
+        <td align="right"><b>{$price.LABEL}: </b></td>
+        <td align="left">{$price.INPUT} <span  class="required">*</span></td>
     </tr>
 </table>
 <input class="button" type="hidden" name="id" value="{$ID}" />
