@@ -41,6 +41,7 @@ function _moduleContent(&$smarty, $module_name)
     $lang=get_language();
     $base_dir=dirname($_SERVER['SCRIPT_FILENAME']);
     $lang_file="modules/$module_name/lang/$lang.lang";
+    $image_dir="modules/$module_name/images/";
     if (file_exists("$base_dir/$lang_file")) include_once "$lang_file";
     else include_once "modules/$module_name/lang/en.lang";
 
@@ -102,14 +103,19 @@ function reportRoomList($smarty, $module_name, $local_templates_dir, &$pDB, $arr
     $arrData = null;
 
     $arrResult =$pRoomList->getRoomList($limit, $offset, $filter_field, $filter_value);
-    $ok=array("0" => "No", "1" => "Yes");
+    $enable  = "<img src='modules/".$module_name."/images/1.png'>";
+    $disable = "<img src='modules/".$module_name."/images/0.png'>";
+    $dnd_yes = "<img src='modules/".$module_name."/images/dnd.png'>";
+    $dnd_no  = "<img src='modules/".$module_name."/images/d.png'>";
+    $dnd     = array("1" => $dnd_yes, "0" => $dnd_no);
+    $ok      = array("0" => $disable, "1" => $enable);
 
     if(is_array($arrResult) && $total>0){
         foreach($arrResult as $key => $value){ 
 	    // Check MiniBar 
-    	    $minibar = "No";		
+    	    $minibar = " ";		
     	    if ( strlen($value['mini_bar']) != 0)
-	    	$minibar= "Yes";
+	    	$minibar= "<img src='modules/".$module_name."/images/m.png'>";
 	    $arrTmp[0] = $value['room_name'];
 	    $arrTmp[1] = $value['extension'];
 	    $arrTmp[2] = $value['model'];
@@ -117,7 +123,7 @@ function reportRoomList($smarty, $module_name, $local_templates_dir, &$pDB, $arr
 	    $arrTmp[4] = $ok[$value['free']];
 	    $arrTmp[5] = $ok[$value['clean']];
 	    $arrTmp[6] = $minibar;
-	    $arrTmp[7] = $ok[$value['dnd']];
+	    $arrTmp[7] = $dnd[$value['dnd']];
            $arrData[] = $arrTmp;
         }
     }
