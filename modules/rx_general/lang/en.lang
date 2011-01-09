@@ -38,5 +38,8 @@ $arrLangModule=array(
 "Minibar" => "Mini-bar Prefix",
 "Company" => "Company",
 "Room must be clean" => "Room must be clean",
+"VAT1" => "V.A.T 1",
+"VAT2" => "V.A.T 2",
+"Mail" => "Mail"
 );
 ?>

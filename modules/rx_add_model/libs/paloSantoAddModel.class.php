@@ -85,6 +85,19 @@ class paloSantoAddModel {
         return $result;
     }
 
+    function getVatModel()
+    {
+        $query   = "SELECT DISTINCT `vat_1` , `vat_2` FROM config";
+
+        $result=$this->_DB->fetchTable($query, true);
+
+        if($result==FALSE){
+            $this->errMsg = $this->_DB->errMsg;
+            return array();
+        }
+        return $result[0];
+    }
+
     function insertModel($sTabla, $arrValores){
 	// call function construirInsert
 	$query = $this->_DB->construirInsert($sTabla, $arrValores) ;

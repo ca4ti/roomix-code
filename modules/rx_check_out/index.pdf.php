@@ -26,9 +26,12 @@
   | The Initial Developer of the Original Code is PaloSanto Solutions    |
   +----------------------------------------------------------------------+
   $Id: index.php,v 1.1 2010-05-08 11:05:33 Franck Danard franckd@agmp.org Exp $ */
+//include elastix framework
+//define('FPDF_FONTPATH','/var/www/html/libs/font/');
 
 include_once "libs/paloSantoGrid.class.php";
 include_once "libs/paloSantoForm.class.php";
+//include_once "libs/fpdf.php";
 
 function _moduleContent(&$smarty, $module_name)
 {
@@ -61,7 +64,6 @@ function _moduleContent(&$smarty, $module_name)
     $pDB_Ast = new paloDB("mysql://root:eLaStIx.2oo7@localhost/asterisk");
     $pDB_CDR = new paloDB("mysql://root:eLaStIx.2oo7@localhost/asteriskcdrdb");
     $pDB_Set = new paloDB("sqlite3:///$arrConf[elastix_dbdir]/settings.db");
-    $pDB_Rat = new paloDB("sqlite3:///$arrConf[elastix_dbdir]/rate.db");
 
     //actions
     $action = getAction();
@@ -69,16 +71,16 @@ function _moduleContent(&$smarty, $module_name)
 
     switch($action){
         case "save_new":
-            $content = saveNewCheckOut($smarty, $module_name, $local_templates_dir, $pDB, $pDB_Ast, $pDB_CDR, $pDB_Set, $pDB_Rat, $arrConf, $arrLang);
+            $content = saveNewCheckOut($smarty, $module_name, $local_templates_dir, $pDB, $pDB_Ast, $pDB_CDR, $pDB_Set, $arrConf, $arrLang);
             break;
         default: // view_form
-            $content = viewFormCheckOut($smarty, $module_name, $local_templates_dir, $pDB, $pDB_Ast, $pDB_CDR, $pDB_Set, $pDB_Rat, $arrConf, $arrLang);
+            $content = viewFormCheckOut($smarty, $module_name, $local_templates_dir, $pDB, $pDB_Ast, $pDB_CDR, $pDB_Set, $arrConf, $arrLang);
             break;
     }
     return $content;
 }
 
-function viewFormCheckOut($smarty, $module_name, $local_templates_dir, &$pDB, &$pDB_Ast, &$pDB_CDR, &$pDB_Set, &$pDB_Rat, $arrConf, $arrLang)
+function viewFormCheckOut($smarty, $module_name, $local_templates_dir, &$pDB, &$pDB_Ast, &$pDB_CDR, $pDB_Set, $arrConf, $arrLang)
 {
     $pCheckOut = new paloSantoCheckOut($pDB);
     $arrFormCheckOut = createFieldForm($arrLang, $pDB);
@@ -129,13 +131,14 @@ function TimeCall($second)
        return $result;
 }
 
-function saveNewCheckOut($smarty, $module_name, $local_templates_dir, &$pDB, &$pDB_Ast, &$pDB_CDR, &$pDB_Set, &$pDB_Rat, $arrConf, $arrLang)
+function saveNewCheckOut($smarty, $module_name, $local_templates_dir, &$pDB, &$pDB_Ast, &$pDB_CDR, $pDB_Set, $arrConf, $arrLang)
 {
-    include "modules/$module_name/libs/billing_lib.php";
-    $pCur    = new paloSantoCheckOut($pDB_Set);
-    $pSQLite = new paloSantoCheckOut($pDB_Rat);
-    $curr    = $pCur->loadCurrency();
-    $arrRate = $pSQLite->loadRates();
+    global $module_billing_pdf;
+    $module_billing_pdf = $module_name;
+    include_once "modules/$module_name/libs/invoice.php";
+
+    $pCur = new paloSantoCheckOut($pDB_Set);
+    $curr = $pCur->loadCurrency();
 
     $pCheckOut = new paloSantoCheckOut($pDB);
     $pCheckOut_Ast = new paloSantoCheckOut($pDB_Ast);
@@ -155,7 +158,7 @@ function saveNewCheckOut($smarty, $module_name, $local_templates_dir, &$pDB, &$p
                 $strErrorMsg .= "$k, ";
         }
         $smarty->assign("mb_message", $strErrorMsg);
-        $content = viewFormCheckOut($smarty, $module_name, $local_templates_dir, $pDB, $pDB_Ast, $pDB_CDR, $pDB_Set, $pDB_Rat, $arrConf, $arrLang);
+        $content = viewFormCheckOut($smarty, $module_name, $local_templates_dir, $pDB, $pDB_Ast, $pDB_CDR, $pDB_Set, $arrConf, $arrLang);
     }
     else{
         $pRoom = new paloSantoCheckOut($pDB); // <------------- inutile  $pRoom = $pCheckOut !!!
@@ -228,24 +231,43 @@ function saveNewCheckOut($smarty, $module_name, $local_templates_dir, &$pDB, &$p
 
         $strMsg = "Checkout Done";
 
-        // Write the billing into the html file. 
+        // Write the billing into the pdf file. 
         //---------------------------------------------
         $arrConf   = $pCheckOut->getCheckOut('config', '');
         $Config    = $arrConf['0'];
 
-	 $Billing_page = Billing_Header();
-        $Bnumber=$arrGuest['id'].date('Ymd');
-	 $title = "Billing  at ".date('D j M Y')." Number : ".$Bnumber;
-	 $Billing_page = $Billing_page."".Title($title);
+	 $pdf = new PDF_Invoice( 'P', 'mm', 'A4' );
+	 $pdf->AddPage();
+	 $pdf->addSociete("",$Config['company']);
+	 $pdf->addDate( date('D j M Y') );
 
         $where = "where id = '".$arrGuest['guest_id']."'";
         $arrFor = $pCheckOut->getCheckOut('guest', $where);
         $For = $arrFor[0];
-	 $for= $For['first_name']." ".$For['last_name']."<br>\n".$For['address']."<br>\n".$For['cp']." ".$For['city'];
-        $Billing_page = $Billing_page.Header_company($Config['company'],"<img src='".$Config['logo64']."'>",$for);
+	 $for= $For['first_name']." ".$For['last_name']."\n".$For['address']."\n".$For['cp']." ".$For['city'];
 
-        $Billing_page = $Billing_page."".Sale_title("Sale");
+        $Bnumber=$arrGuest['id'].date('Ymd');
+	 $pdf->fact_dev( "Billing ", $Bnumber );
+        //$pdf->temporaire( "Payé le : ".date('d M Y')." ");
+	 $pdf->addClient($For['id']);
+	 $pdf->addPageNumber("1");
+        $pdf->addClientAdresse( $for );
 
+	 $cols=array( "Label" => 122,
+             		"Q.T."  => 22,
+             		"P.U."  => 26,
+             		"Total" => 20
+             	     );
+	 $pdf->addCols( $cols);
+	 $cols=array( "Label" => "L",
+             		"Q.T."  => "C",
+            		"P.U."  => "R",
+             		"Total" => "R"
+             		);
+	 $pdf->addLineFormat( $cols);
+	 $pdf->addLineFormat( $cols);
+
+	 $y    = 70; 
 	 // How many nights ?
         $arrNight = $pCheckOut->getNightNumber($arrGuest['date_ci'], $arrGuest['date_co'], $arrGuest['id']);
 	 foreach($arrNight as $key => $value)
@@ -253,82 +275,81 @@ function saveNewCheckOut($smarty, $module_name, $local_templates_dir, &$pDB, &$p
         if( $Night == '0')
 	 	$Night = "1";  // A night should be calculated, even if there's no night. 
 				 // The room could be took in the day and be free in the same day. 
-
 	 // Line with the number of Nights
 	 //----------------------------------
 
         $where = "where room_model = '".$arrExt['model']."'";
         $arrModel = $pCheckOut->getCheckOut('models', $where);
 	 $Model = $arrModel[0];
-        $puht   = strval($Model['room_price']);
-        $patc  = ($puht*$Night)*(1+(strval($Model['room_vat'])/100));
-	 $vat   = $patc - ($puht*$Night) ;
-        $Billing_page = $Billing_page."".Sale("Nights with room ".$Model['room_model'], $Night, $puht, $vat, $patc, $curr);
+	 $line = array( "Label" => "Nights",
+               	  "Q.T."  => strval($Night),
+               	  "P.U."  => $Model['room_price'],
+               	  "Total" => (strval($Night)*strval($Model['room_price']))
+			);
+	 $size = $pdf->addLine( $y, $line );
+	 $y   += $size + 2;
+
+	 $line = array( "Label"  => "Mini-Bar :",
+               "Q.T."     => "",
+               "P.U."      => "",
+               "Total" => "",
+             );
+	 $size = $pdf->addLine( $y, $line );
+	 $y   += $size + 2;
 
 	 // There's a mini-bar?
 	 //------------------------------------
 
 	 if (isset($arrExt['mini_bar']))
 	 {
-		$Billing_page = $Billing_page.Sale("<b>Nini Bar :</b>", "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;", "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;", "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;", "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;", "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;");
 		$minibar=str_replace(" ","",$arrExt['mini_bar']);
 		foreach(count_chars($minibar,1) as $val_min => $QT)
 		{
 		        $where = "where digit = '".chr($val_min)."'";
         		 $arrMiniBar = $pCheckOut->getCheckOut('minibar', $where);
 			 $MiniBar    = $arrMiniBar[0];
-			 $Billing_page = $Billing_page.Sale($MiniBar['label'], $QT, $MiniBar['price'], "1", strval($QT)*strval($MiniBar['price']), $curr);		 
+	 		 $line = array( 
+			 	"Label" => $MiniBar['label'],
+               		"Q.T."  => $QT,
+               		"P.U."  => $MiniBar['price'],
+               		"Total" => strval($QT)*strval($MiniBar['price'])
+             			);
+	 		$size = $pdf->addLine( $y, $line );
+	 		$y   += $size + 2;			 
 		}	
+		 		
 	 }
 
-	// The client has made some call? 
-       //--------------------------------
-
-	 if ($i > 0)
-	 	$Billing_page = $Billing_page.Sale("There is some calls", $i, "&nbsp;", "&nbsp;", "&nbsp;", $curr);
-        $Billing_page = $Billing_page."</tbody></table><br>";
-
-	// We want some details ?
-	//------------------------
+        $info="Number of call : ".$i." for a billing at :".$total_bill."€";
 
 	 if($_DATA['details'] == 'on'){
         	$key=0;
-		$Billing_page = $Billing_page.Detail_table_Title();
-	 	foreach($arrCDR as $key => $value)
-			$Billing_page = $Billing_page.Detail_table_Line($value['calldate']." - ".$value['dst'], TimeCall($value['billsec']), $value['billsec'], "&nbsp;", ($value['billsec'] * $billing_rate), $curr);
-	 }
-	 $Billing_page = $Billing_page."</tbody></table><br>";
-	 $Billing_page = $Billing_page.Total_Billing($ht, $vat, $total, $curr);
 
-        $name	     = $Bnumber.".html";
+              $line = array( 
+		 	"Label" => "Calls Details :",
+               	"Q.T."  => "",
+               	"P.U."  => "",
+               	"Total" => "",
+             		);
+	 	$size = $pdf->addLine( $y, $line );
+	 	$y   += $size + 2;
+
+	 	foreach($arrCDR as $key => $value){
+              	$line = array( 
+		 		"Label" => $value['calldate']." - ".$value['dst'],
+               		"Q.T."  => TimeCall($value['billsec']),
+               		"P.U."  => $value['billsec'],
+               		"Total" => ($value['billsec'] * $billing_rate),
+             			);
+	 		$size = $pdf->addLine( $y, $line );
+	 		$y   += $size + 2;
+	 	}
+	 }
+
+        $name	     = $Bnumber.".pdf";
 	 $name_path = "/var/www/html/roomx_billing/".$name;
 
-	 $Billing_file = fopen($name_path, 'w+');
-	 fwrite($Billing_file,$Billing_page);
-	 fclose($Billing_file);
-
-	 if($_DATA['sending_by_mail'] == 'on' && isset($For['mail']) ){
-     	 	$headers = "From: ".$For['mail']."\n"
-     			   ."Reply-To: ".$congif['mail']."\n"
-     		  	   ."Content-Type: text/html; charset='iso-8859-1\n"
-     			   ."Content-Transfer-Encoding: 8bit";
-
-	 	$Billing_file = fopen($name_path, 'r');
-		$contents = fread($Billing_file, filesize($name_path));
-		fclose($Billing_file);
-		$message = $contents;
-
-     		if(mail($For['mail'], 'Your Billing', $message, $headers))
-     		{
-          		$strMsg .= " and mail sent.";
-     		}
-     		else
-     		{
-          		$strMsg .= " and <b>mail error!!!</b>";
-     		} 
-
-	
-	 }
+	 $pdf->Output($name_path,"F");
 
         // Put the register with the status O.
         //---------------------------------------------
@@ -344,7 +365,7 @@ function saveNewCheckOut($smarty, $module_name, $local_templates_dir, &$pDB, &$p
 	 $smarty->assign("bil_link", $name);
 
         $htmlForm = $oForm->fetchForm("$local_templates_dir/form.tpl",$arrLang["CheckOut"], $_DATA);
-        $content = viewFormCheckOut($smarty, $module_name, $local_templates_dir, $pDB, $pDB_Ast, $pDB_CDR, $pDB_Set, $pDB_Rat, $arrConf, $arrLang);        
+        $content = viewFormCheckOut($smarty, $module_name, $local_templates_dir, $pDB, $pDB_Ast, $pDB_CDR, $pDB_Set, $arrConf, $arrLang);        
 
     }
     return $content;

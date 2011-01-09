@@ -75,7 +75,6 @@ class paloSantoModels {
             $where = "where $filter_field = '$filter_value'";
 
         $query   = "DELETE FROM `models` $where";
-        echo $query;
 
         $result=$this->_DB->genQuery($query);
 

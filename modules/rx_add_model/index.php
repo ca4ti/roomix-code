@@ -58,8 +58,6 @@ function _moduleContent(&$smarty, $module_name)
 
     //conexion resource
     $pDB = new paloDB($arrConf['dsn_conn_database']);
-    //$pDB = "";
-
 
     //actions
     $action = getAction();
@@ -137,8 +135,21 @@ function saveNewAddModel($smarty, $module_name, $local_templates_dir, &$pDB, $ar
     }
     else{
         //NO ERROR, HERE IMPLEMENTATION OF SAVE
+
+	 // Checking VAT idx -> VAT
+        //------------------------------
+
+        $VATOptions = $pAddModel->getVatModel();
+	 $n = 1;
+	 foreach($VATOptions as $v => $value){
+	 	if ($_DATA['vat'] == $n)
+	 		$_DATA['vat'] = $value;
+		$n++;
+	 }
+	
         $arrValores['room_model'] = "'".$_DATA['model']."'";
         $arrValores['room_price'] = "'".$_DATA['price']."'";
+        $arrValores['room_vat']   = "'".$_DATA['vat']."'";
 
         //genQuery($query, $param = NULL)
 
@@ -149,9 +160,12 @@ function saveNewAddModel($smarty, $module_name, $local_templates_dir, &$pDB, $ar
     return $content;
 }
 
-function createFieldForm($arrLang)
+function createFieldForm($arrLang,&$pDB)
 {
-   
+    $VAT_Model  = new paloSantoAddModel($pDB);
+    $VATOptions = $VAT_Model->getVatModel();
+    $arrOptions =array('1' => $VATOptions['vat_1'], '2' => $VATOptions['vat_2']);
+
     $arrFields = array(
             "model"   => array(      "LABEL"                  => $arrLang["Model"],
                                             "REQUIRED"               => "yes",
@@ -164,6 +178,13 @@ function createFieldForm($arrLang)
                                             "REQUIRED"               => "yes",
                                             "INPUT_TYPE"             => "TEXT",
                                             "INPUT_EXTRA_PARAM"      => "",
+                                            "VALIDATION_TYPE"        => "text",
+                                            "VALIDATION_EXTRA_PARAM" => ""
+                                            ),
+            "vat"   => array(      "LABEL"                  => $arrLang["VAT"],
+                                            "REQUIRED"               => "yes",
+                                            "INPUT_TYPE"             => "SELECT",
+                                            "INPUT_EXTRA_PARAM"      => $arrOptions,
                                             "VALIDATION_TYPE"        => "text",
                                             "VALIDATION_EXTRA_PARAM" => ""
                                             ),

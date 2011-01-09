@@ -135,6 +135,9 @@ function viewFormGeneral($smarty, $module_name, $local_templates_dir, &$pDB, $ar
     $_DATA["clean"]     = $get_config['clean'];
     $_DATA["minibar"]   = $get_config['minibar'];
     $_DATA["reception"] = $get_config['reception'];
+    $_DATA["mail"]      = $get_config['mail'];
+    $_DATA["vat_1"]     = $get_config['vat_1'];
+    $_DATA["vat_2"]     = $get_config['vat_2'];
     
     $smarty->assign("LOGO", $get_config['logo']);
 
@@ -200,6 +203,9 @@ function saveNewGeneral($smarty, $module_name, $local_templates_dir, &$pDB, $arr
         $reception = $_DATA['reception'];
         $clean     = $_DATA['clean'];
         $minibar   = $_DATA['minibar'];
+        $mail      = $_DATA['mail'];
+        $vat_1     = $_DATA['vat_1'];
+        $vat_2     = $_DATA['vat_2'];
         //$company = nl2br(stro_replace ($search, $replace, $_DATA['company']));
         $company   = $_DATA['company'];
         //$route_archive = $_DATA['logo'];
@@ -237,6 +243,9 @@ function saveNewGeneral($smarty, $module_name, $local_templates_dir, &$pDB, $arr
 	 $arrValores['minibar']   = "'".$minibar."'";
 	 $arrValores['reception'] = "'".$reception."'";
 	 $arrValores['company']   = "'".$company."'";
+	 $arrValores['mail']      = "'".$mail."'";
+	 $arrValores['vat_1']     = "'".$vat_1."'";
+	 $arrValores['vat_2']     = "'".$vat_2."'";
 	 if (isset($route_archive))
 	 	$arrValores['logo']= "'".$route_archive."'";
         $save_general = $pSG->updateGeneral('config', $arrValores);
@@ -329,9 +338,31 @@ function createFieldForm($arrLang, &$pDB)
                                             "INPUT_EXTRA_PARAM"      => "",
                                             "VALIDATION_TYPE"        => "text",
                                             "VALIDATION_EXTRA_PARAM" => ""
-                                            )
-		
-
+                                            ),
+            "mail"           => array(      "LABEL"                  => $arrLang["Mail"],
+                                            "REQUIRED"               => "no",
+                                            "INPUT_TYPE"             => "TEXT",
+                                            "INPUT_EXTRA_PARAM"      => array("style" => "width:250px"),
+                                            "VALIDATION_TYPE"        => "text",
+                                            "VALIDATION_EXTRA_PARAM" => "",
+                                            "EDITABLE"               => "si"
+						  ),
+            "vat_1"          => array(      "LABEL"                  => $arrLang["VAT1"],
+                                            "REQUIRED"               => "no",
+                                            "INPUT_TYPE"             => "TEXT",
+                                            "INPUT_EXTRA_PARAM"      => array("style" => "width:50px"),
+                                            "VALIDATION_TYPE"        => "text",
+                                            "VALIDATION_EXTRA_PARAM" => "",
+                                            "EDITABLE"               => "si"
+						  ),
+            "vat_2"          => array(      "LABEL"                  => $arrLang["VAT2"],
+                                            "REQUIRED"               => "no",
+                                            "INPUT_TYPE"             => "TEXT",
+                                            "INPUT_EXTRA_PARAM"      => array("style" => "width:50px"),
+                                            "VALIDATION_TYPE"        => "text",
+                                            "VALIDATION_EXTRA_PARAM" => "",
+                                            "EDITABLE"               => "si"
+						  )
             );
     return $arrFields;
 }

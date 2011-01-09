@@ -32,5 +32,6 @@ $arrLangModule=array(
 "Delete" => "Delete",
 "Models" => "Models",
 "Prices" => "Prices",
+"V.A.T"  => "V.A.T",
 );
 ?>

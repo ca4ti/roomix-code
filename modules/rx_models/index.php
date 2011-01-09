@@ -133,6 +133,7 @@ function reportModels($smarty, $module_name, $local_templates_dir, &$pDB, $arrCo
 	    $arrTmp[0] = "<input type='checkbox' name='model' value='$value_check'>";
 	    $arrTmp[1] = $value['room_model'];
 	    $arrTmp[2] = $value['room_price'];
+	    $arrTmp[3] = $value['room_vat'];
            $arrData[] = $arrTmp;
         }
     }
@@ -151,6 +152,8 @@ function reportModels($smarty, $module_name, $local_templates_dir, &$pDB, $arrCo
 			1 => array("name"      => $arrLang["Models"],
                                    "property1" => ""),
 			2 => array("name"      => $arrLang["Prices"],
+                                   "property1" => ""),
+			3 => array("name"      => $arrLang["V.A.T"],
                                    "property1" => ""),
                                         )
                     );

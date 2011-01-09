@@ -32,5 +32,6 @@
         <td align="left">{$rooms.INPUT}</td>
         <td align="left" width="500"> </td>
     </tr>
+
 </table>
 <input class="button" type="hidden" name="id" value="{$ID}" />

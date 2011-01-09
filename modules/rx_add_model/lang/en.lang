@@ -31,5 +31,6 @@ $arrLangModule=array(
 "Add Model" => "Add Model",
 "Model" => "Model",
 "Price" => "Price",
+"VAT" => "V.A.T.",
 );
 ?>

@@ -53,8 +53,14 @@
     <tr class="letra12">
         <td align="right" valign="top"><b>{$rmbc.LABEL} : </b></td>
         <td align="left" valign="top">{$rmbc.INPUT}</td>
-        <td align="right" width="200" valign="top"></td>
-        <td align="left" valign="top"></td>
+        <td align="right" width="200" valign="top"><b>{$mail.LABEL} : </b></td>
+        <td align="left" valign="top">{$mail.INPUT}</td>
+    </tr>
+    <tr class="letra12">
+        <td align="right" valign="top"><b>{$vat_1.LABEL} : </b></td>
+        <td align="left" valign="top">{$vat_1.INPUT}</td>
+        <td align="right" width="200" valign="top"><b>{$vat_2.LABEL} : </b></td>
+        <td align="left" valign="top">{$vat_2.INPUT}</td>
     </tr>
 </table>
 

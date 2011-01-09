@@ -112,6 +112,17 @@ class paloSantoCheckOut {
     {
 
         $query   = "SELECT * FROM $table $where";
+        $result=$this->_DB->fetchTable($query, true);
+        if($result==FALSE){
+            $this->errMsg = $this->_DB->errMsg;
+            return array();
+        }
+        return $result;
+    }
+
+    function getNightNumber($ci, $co, $id)
+    {
+        $query   = "SELECT DATEDIFF('".$co."','".$ci."') FROM `register` WHERE id ='".$id."'";
 
         $result=$this->_DB->fetchTable($query, true);
 
@@ -119,7 +130,7 @@ class paloSantoCheckOut {
             $this->errMsg = $this->_DB->errMsg;
             return array();
         }
-        return $result;
+        return $result[0];
     }
 
     function getCDR($where)
@@ -147,5 +158,35 @@ class paloSantoCheckOut {
         }
         return $result;
     }
+
+    function loadCurrency()
+    {
+        $query = "SELECT * FROM settings WHERE key='currency'";
+        $result = $this->_DB->fetchTable($query, true);
+
+        if($result==FALSE){
+            $this->errMsg = $this->_DB->errMsg;
+            return false;
+        }
+
+        $result = $result[0];
+        $curr = $result['value'];
+
+        return $curr;
+    }
+
+    function loadRates()
+    {
+        $query = "select * from rate";
+        $result = $this->_DB->fetchTable($query, true);
+
+        if($result==FALSE){
+            $this->errMsg = $this->_DB->errMsg;
+            return false;
+        }
+
+        return $result;
+    }
+
 }
 ?>

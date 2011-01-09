@@ -35,14 +35,22 @@
         <td align="right"><b>{$sending_by_mail.LABEL}: </b></td>
         <td align="left">{$sending_by_mail.INPUT}</td>
     </tr>
+    {if $bil eq '1'}
+    <tr class="letra12">
+        <td align="center"></td>
+        <td align="center"></td>
+        <td align="center"></td>
+        <td align="right">{$call_number} Call(s)</td>
+        <td align="center">Total {$total} Euro.</td>
+        <td align="center"><a style="text-decoration: none;" href="roomx_billing/{$bil_link}" target="_blank"><b>Display</b></a></td>
+        <td align="center"></td>
+        <td align="center"></td>
+        <td align="center"></td>
+        <td align="center"></td>
+    </tr>
+    {/if}
 </table>
 
-	{if $bil eq '1'}
-		<div align="center">
-			<br>
-			Il y a {$call_number} appels pour une somme de {$total} Euro.<br>
-			<a href="roomx_billing/{$bil_link}" target="_blank"><button>Display</button></a>
-		</div>
-	{/if}
+
 
 <input class="button" type="hidden" name="id" value="{$ID}" />
