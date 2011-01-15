@@ -109,7 +109,8 @@ function reportBillingreport($smarty, $module_name, $local_templates_dir, &$pDB,
 	    $arrTmp[1] = $value['date_co'];
 	    $arrTmp[2] = $arrRoom['room_name'];
 	    $arrTmp[3] = $arrGuest['first_name']." ".$arrGuest['last_name'];
-	    $arrTmp[4] = "<a style='text-decoration: none;' href='roomx_billing/".$value['billing_file']."' target='_news'><button>View</button></a>" ;
+	    $arrTmp[4] = $value['paid'];
+	    $arrTmp[5] = "<a style='text-decoration: none;' href='roomx_billing/".$value['billing_file']."' target='_news'><button>View</button></a>" ;
            $arrData[] = $arrTmp;
         }
     }
@@ -131,7 +132,9 @@ function reportBillingreport($smarty, $module_name, $local_templates_dir, &$pDB,
                                    "property1" => ""),
 			3 => array("name"      => $arrLang["Guest"],
                                    "property1" => ""),
-			4 => array("name"      => $arrLang["PDF"],
+			4 => array("name"      => $arrLang["Paid"],
+                                   "property1" => ""),
+			5 => array("name"      => $arrLang["File"],
                                    "property1" => ""),
                                         )
                     );
@@ -168,9 +171,10 @@ function createFieldFilter($arrLang){
     $arrFilter = array(
 	    "date_ci" => $arrLang["Checkin Date"],
 	    "date_co" => $arrLang["Checkout Date"],
+	    "paid"    => $arrLang["Paid"],
 	    //"room_id" => $arrLang["Room"],
 	    //"guest_id" => $arrLang["Guest"],
-	    //"billing_file" => $arrLang["PDF"],
+	    //"billing_file" => $arrLang["File"],
                     );
 
     $arrFormElements = array(

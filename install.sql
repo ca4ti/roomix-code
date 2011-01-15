@@ -1,4 +1,23 @@
+-- phpMyAdmin SQL Dump
+-- version 2.11.10
+-- http://www.phpmyadmin.net
+--
+-- Serveur: localhost
+-- Généré le : Sam 15 Janvier 2011 à 17:14
+-- Version du serveur: 5.0.77
+-- Version de PHP: 5.1.6
+
 SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
+
+--
+-- Base de données: `roomix`
+--
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `config`
+--
 
 CREATE TABLE IF NOT EXISTS `config` (
   `o_m` varchar(10) NOT NULL default 'Hotel',
@@ -10,9 +29,18 @@ CREATE TABLE IF NOT EXISTS `config` (
   `clean` varchar(6) NOT NULL,
   `minibar` varchar(6) NOT NULL,
   `logo` varchar(100) NOT NULL,
-  `VAT` int(10) NOT NULL,
+  `logo64` mediumtext NOT NULL,
+  `vat_1` decimal(5,2) NOT NULL default '19.60',
+  `vat_2` decimal(5,2) NOT NULL default '5.50',
+  `mail` varchar(50) NOT NULL,
   `version` varchar(10) NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `guest`
+--
 
 CREATE TABLE IF NOT EXISTS `guest` (
   `id` int(10) NOT NULL auto_increment,
@@ -26,18 +54,38 @@ CREATE TABLE IF NOT EXISTS `guest` (
   `fax` varchar(15) NOT NULL,
   `mail` varchar(30) NOT NULL,
   KEY `id` (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=5 ;
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `minibar`
+--
 
 CREATE TABLE IF NOT EXISTS `minibar` (
   `digit` int(1) NOT NULL,
   `label` varchar(50) NOT NULL,
-  `price` decimal(8,2) NOT NULL
+  `price` decimal(8,2) NOT NULL,
+  `vat` decimal(5,2) NOT NULL default '0.00'
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `models`
+--
 
 CREATE TABLE IF NOT EXISTS `models` (
   `room_model` varchar(20) NOT NULL,
-  `price` decimal(6,2) NOT NULL default '0.00'
+  `room_price` decimal(6,2) NOT NULL default '0.00',
+  `room_vat` decimal(5,2) NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `rate`
+--
 
 CREATE TABLE IF NOT EXISTS `rate` (
   `name` varchar(20) NOT NULL,
@@ -45,6 +93,12 @@ CREATE TABLE IF NOT EXISTS `rate` (
   `rate` decimal(8,5) NOT NULL default '0.00000',
   `rate_offset` decimal(8,5) NOT NULL default '0.00000'
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `register`
+--
 
 CREATE TABLE IF NOT EXISTS `register` (
   `id` int(11) NOT NULL auto_increment,
@@ -54,8 +108,15 @@ CREATE TABLE IF NOT EXISTS `register` (
   `date_co` datetime NOT NULL,
   `status` tinyint(1) NOT NULL,
   `billing_file` varchar(100) NOT NULL,
+  `paid` tinyint(1) NOT NULL,
   KEY `id` (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=102 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=latin1 AUTO_INCREMENT=106 ;
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `rooms`
+--
 
 CREATE TABLE IF NOT EXISTS `rooms` (
   `id` int(11) NOT NULL auto_increment,

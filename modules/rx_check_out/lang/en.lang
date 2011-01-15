@@ -32,8 +32,8 @@ $arrLangModule=array(
 "Room" => "Room",
 "Group" => "Group",
 "Billing" => "Billing",
+"Paid" => "Paid",
 "Details" => "Details",
 "Sending by mail" => "Sending by mail",
-"Printing the billing" => "Printing the billing",
 );
 ?>

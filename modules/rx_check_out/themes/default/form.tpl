@@ -28,8 +28,8 @@
         <td align="left">{$room.INPUT}</td>
         <td align="right"><b>{$group.LABEL}: </b></td>
         <td align="left">{$group.INPUT}</td>
-        <td align="right"><b>{$billing.LABEL}: </b></td>
-        <td align="left">{$billing.INPUT}</td>
+        <td align="right"><b>{$paid.LABEL}: </b></td>
+        <td align="left">{$paid.INPUT}</td>
         <td align="right"><b>{$details.LABEL}: </b></td>
         <td align="left">{$details.INPUT}</td>
         <td align="right"><b>{$sending_by_mail.LABEL}: </b></td>
@@ -40,9 +40,9 @@
         <td align="center"></td>
         <td align="center"></td>
         <td align="center"></td>
-        <td align="right">{$call_number} Call(s)</td>
-        <td align="center">Total {$total} Euro.</td>
-        <td align="center"><a style="text-decoration: none;" href="roomx_billing/{$bil_link}" target="_blank"><b>Display</b></a></td>
+        <td align="right"><b>{$call_number}</b> Call(s)</td>
+        <td align="center"><b>Total</b> : {$total}</td>
+        <td align="center"><a style="text-decoration: none;" href="roomx_billing/{$bil_link}" target="_next"><button>Display</button></a></td>
         <td align="center"></td>
         <td align="center"></td>
         <td align="center"></td>

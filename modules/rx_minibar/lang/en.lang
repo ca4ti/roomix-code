@@ -29,6 +29,11 @@
 global $arrLangModule;
 $arrLangModule=array(
 "Mini Bar" => "Mini Bar",
+"vat" => "for every products",
+"VAT" => "VAT",
+"Digits" => "Digits",
+"Prices" => "Prices without VAT",
+"Labels" => "Products",
 "_1" => "1",
 "Cost (1)" => "Cost (1)",
 "_2" => "2",

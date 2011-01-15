@@ -33,6 +33,7 @@ $arrLangModule=array(
 "Checkout Date" => "Checkout Date",
 "Room" => "Room",
 "Guest" => "Guest",
-"PDF" => "PDF",
+"File" => "File",
+"Paid" => "Paid",
 );
 ?>

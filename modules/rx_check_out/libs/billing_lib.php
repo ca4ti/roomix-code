@@ -88,10 +88,10 @@ function Sale($service, $qt, $puht, $vat, $price, $curr)
 	$content ="
 	<tr class='line'>
 		<td style='vertical-align: top; width: 502px; text-align: left'>$service</td>
-		<td style='vertical-align: top; width: 70px;' text-align: right>$qt</td>
-		<td style='vertical-align: top; width: 70px;' text-align: right>$puht $curr</td>
-		<td style='vertical-align: top; width: 70px;' text-align: right>$vat $curr</td>
-		<td style='vertical-align: top; width: 70px;' text-align: right>$price $curr<br></td>
+		<td style='vertical-align: top; width: 70px; text-align: right'>$qt</td>
+		<td style='vertical-align: top; width: 70px; text-align: right'>$puht $curr</td>
+		<td style='vertical-align: top; width: 70px; text-align: right'>$vat $curr</td>
+		<td style='vertical-align: top; width: 70px; text-align: right'>$price $curr<br></td>
 	</tr>
 ";
 
@@ -105,7 +105,7 @@ function Detail_table_Title()
 <table style='text-align: left; width: 100%;' border='0' cellpadding='0' cellspacing='0'>
 <tbody>
 	<tr class='header'>
-		<td style='vertical-align: top; text-align: center; font-weight: bold; width: 504px;'>Date - Time</td>
+		<td style='vertical-align: top; text-align: center; font-weight: bold; width: 504px;'>Date - Time - Call to</td>
 		<td style='vertical-align: top; text-align: center; font-weight: bold; width: 140px;'>Call</td>
 		<td style='vertical-align: top; text-align: center; font-weight: bold; width: 70px;'>Duration</td>
 		<td style='vertical-align: top; text-align: center; font-weight: bold; width: 70px;'>Price</td>

@@ -109,6 +109,10 @@ function viewFormMiniBar($smarty, $module_name, $local_templates_dir, &$pDB, $ar
     $smarty->assign("CANCEL", $arrLang["Cancel"]);
     $smarty->assign("REQUIRED_FIELD", $arrLang["Required field"]);
     $smarty->assign("IMG", "images/list.png");
+    $smarty->assign("Digits", $arrLang["Digits"]);
+    $smarty->assign("Prices", $arrLang["Prices"]);
+    $smarty->assign("Labels", $arrLang["Labels"]);
+    $smarty->assign("VAT", $arrLang["VAT"]);
 
     $arr_MiniBar = $pMiniBar->getMiniBar();
 
@@ -117,7 +121,8 @@ function viewFormMiniBar($smarty, $module_name, $local_templates_dir, &$pDB, $ar
 		$idx_d = "t".$value['digit'];
 		$idx_c = "cost_".$value['digit'];
 		$_DATA[$idx_d] = $value['label'];
-		$_DATA[$idx_c] = $value['price'];		
+		$_DATA[$idx_c] = $value['price'];
+		$_DATA['vat'] = $value['vat'];			
 	}
 
     $htmlForm = $oForm->fetchForm("$local_templates_dir/form.tpl",$arrLang["Mini Bar"], $_DATA);
@@ -137,6 +142,10 @@ function saveNewMiniBar($smarty, $module_name, $local_templates_dir, &$pDB, $arr
     $smarty->assign("CANCEL", $arrLang["Cancel"]);
     $smarty->assign("REQUIRED_FIELD", $arrLang["Required field"]);
     $smarty->assign("IMG", "images/list.png");
+    $smarty->assign("Digits", $arrLang["Digits"]);
+    $smarty->assign("Prices", $arrLang["Prices"]);
+    $smarty->assign("Labels", $arrLang["Labels"]);
+    $smarty->assign("VAT", $arrLang["VAT"]);
 
     $_DATA  = $_POST;
 
@@ -155,6 +164,14 @@ function saveNewMiniBar($smarty, $module_name, $local_templates_dir, &$pDB, $arr
     else{
         //NO ERROR, HERE IMPLEMENTATION OF SAV
 
+        $VATOptions = $pMiniBar->getVat();
+	 $n = 1;
+	 foreach($VATOptions as $v => $value){
+	 	if ($_DATA['vat'] == $n)
+	 		$value_vat = $value;
+		$n++;
+	 }
+
     	foreach($_DATA as $key => $value)
 		{	
 			$digit = $key{strlen($key)-1};
@@ -171,6 +188,7 @@ function saveNewMiniBar($smarty, $module_name, $local_templates_dir, &$pDB, $arr
 				else
 					{
 					$value_m['price'] 	= "'".$value."'";
+					$value_m['vat'] 	= "'".$value_vat."'";
 					$where = "digit = ".$digit;
 					$save_MiniBar = $pMiniBar->updateMiniBar('minibar', $value_m , $where );	
 					}
@@ -185,150 +203,162 @@ function saveNewMiniBar($smarty, $module_name, $local_templates_dir, &$pDB, $arr
 
 function createFieldForm($arrLang, &$pDB)
 {
-    $arrOptions = array('val1' => 'Value 1', 'val2' => 'Value 2', 'val3' => 'Value 3');
+    $pMiniBar = new paloSantoMiniBar($pDB);
+    $arr_MiniBar = $pMiniBar->getMiniBar();
+	
+    $VATOptions = $pMiniBar->getVat();
+    $arrOptions =array('1' => $VATOptions['vat_2'], '2' => $VATOptions['vat_1']);
+    If($arr_MiniBar[0]['vat'] == $VATOptions['vat_1'])
+    	$arrOptions =array('1' => $VATOptions['vat_1'], '2' => $VATOptions['vat_2']);
 
     $arrFields = array(
-            "t1"   => array(      "LABEL"                  => $arrLang["_1"],
+            "t1"       => array(      "LABEL"                        => $arrLang["_1"],
                                             "REQUIRED"               => "no",
                                             "INPUT_TYPE"             => "TEXT",
                                             "INPUT_EXTRA_PARAM"      => "",
                                             "VALIDATION_TYPE"        => "text",
                                             "VALIDATION_EXTRA_PARAM" => ""
                                             ),
-            "cost_1"   => array(      "LABEL"                  => $arrLang["Cost (1)"],
+            "cost_1"   => array(      "LABEL"                        => $arrLang["Cost (1)"],
+                                            "REQUIRED"               => "no",
+                                            "INPUT_TYPE"             => "TEXT",
+                                            "INPUT_EXTRA_PARAM"      => array("style" => "width:50px"),
+                                            "VALIDATION_TYPE"        => "text",
+                                            "VALIDATION_EXTRA_PARAM" => ""
+                                            ),
+            "t2"       => array(      "LABEL"                         => $arrLang["_2"],
                                             "REQUIRED"               => "no",
                                             "INPUT_TYPE"             => "TEXT",
                                             "INPUT_EXTRA_PARAM"      => "",
                                             "VALIDATION_TYPE"        => "text",
                                             "VALIDATION_EXTRA_PARAM" => ""
                                             ),
-            "t2"   => array(      "LABEL"                  => $arrLang["_2"],
+            "cost_2"   => array(      "LABEL"                        => $arrLang["Cost (2)"],
+                                            "REQUIRED"               => "no",
+                                            "INPUT_TYPE"             => "TEXT",
+                                            "INPUT_EXTRA_PARAM"      => array("style" => "width:50px"),
+                                            "VALIDATION_TYPE"        => "text",
+                                            "VALIDATION_EXTRA_PARAM" => ""
+                                            ),
+            "t3"       => array(      "LABEL"                        => $arrLang["_3"],
                                             "REQUIRED"               => "no",
                                             "INPUT_TYPE"             => "TEXT",
                                             "INPUT_EXTRA_PARAM"      => "",
                                             "VALIDATION_TYPE"        => "text",
                                             "VALIDATION_EXTRA_PARAM" => ""
                                             ),
-            "cost_2"   => array(      "LABEL"                  => $arrLang["Cost (2)"],
+            "cost_3"   => array(      "LABEL"                        => $arrLang["Cost (3)"],
+                                            "REQUIRED"               => "no",
+                                            "INPUT_TYPE"             => "TEXT",
+                                            "INPUT_EXTRA_PARAM"      => array("style" => "width:50px"),
+                                            "VALIDATION_TYPE"        => "text",
+                                            "VALIDATION_EXTRA_PARAM" => ""
+                                            ),
+            "t4"       => array(      "LABEL"                        => $arrLang["_4"],
                                             "REQUIRED"               => "no",
                                             "INPUT_TYPE"             => "TEXT",
                                             "INPUT_EXTRA_PARAM"      => "",
                                             "VALIDATION_TYPE"        => "text",
                                             "VALIDATION_EXTRA_PARAM" => ""
                                             ),
-            "t3"   => array(      "LABEL"                  => $arrLang["_3"],
+            "cost_4"   => array(      "LABEL"                        => $arrLang["Cost (4)"],
+                                            "REQUIRED"               => "no",
+                                            "INPUT_TYPE"             => "TEXT",
+                                            "INPUT_EXTRA_PARAM"      => array("style" => "width:50px"),
+                                            "VALIDATION_TYPE"        => "text",
+                                            "VALIDATION_EXTRA_PARAM" => ""
+                                            ),
+            "t5"       => array(      "LABEL"                        => $arrLang["_5"],
                                             "REQUIRED"               => "no",
                                             "INPUT_TYPE"             => "TEXT",
                                             "INPUT_EXTRA_PARAM"      => "",
                                             "VALIDATION_TYPE"        => "text",
                                             "VALIDATION_EXTRA_PARAM" => ""
                                             ),
-            "cost_3"   => array(      "LABEL"                  => $arrLang["Cost (3)"],
+            "cost_5"   => array(      "LABEL"                        => $arrLang["Cost (5)"],
+                                            "REQUIRED"               => "no",
+                                            "INPUT_TYPE"             => "TEXT",
+                                            "INPUT_EXTRA_PARAM"      => array("style" => "width:50px"),
+                                            "VALIDATION_TYPE"        => "text",
+                                            "VALIDATION_EXTRA_PARAM" => ""
+                                            ),
+            "t6"       => array(      "LABEL"                        => $arrLang["_6"],
                                             "REQUIRED"               => "no",
                                             "INPUT_TYPE"             => "TEXT",
                                             "INPUT_EXTRA_PARAM"      => "",
                                             "VALIDATION_TYPE"        => "text",
                                             "VALIDATION_EXTRA_PARAM" => ""
                                             ),
-            "t4"   => array(      "LABEL"                  => $arrLang["_4"],
+            "cost_6"   => array(      "LABEL"                        => $arrLang["Cost (6)"],
+                                            "REQUIRED"               => "no",
+                                            "INPUT_TYPE"             => "TEXT",
+                                            "INPUT_EXTRA_PARAM"      => array("style" => "width:50px"),
+                                            "VALIDATION_TYPE"        => "text",
+                                            "VALIDATION_EXTRA_PARAM" => ""
+                                            ),
+            "t7"       => array(      "LABEL"                        => $arrLang["_7"],
                                             "REQUIRED"               => "no",
                                             "INPUT_TYPE"             => "TEXT",
                                             "INPUT_EXTRA_PARAM"      => "",
                                             "VALIDATION_TYPE"        => "text",
                                             "VALIDATION_EXTRA_PARAM" => ""
                                             ),
-            "cost_4"   => array(      "LABEL"                  => $arrLang["Cost (4)"],
+            "cost_7"   => array(      "LABEL"                        => $arrLang["Cost (7)"],
+                                            "REQUIRED"               => "no",
+                                            "INPUT_TYPE"             => "TEXT",
+                                            "INPUT_EXTRA_PARAM"      => array("style" => "width:50px"),
+                                            "VALIDATION_TYPE"        => "text",
+                                            "VALIDATION_EXTRA_PARAM" => ""
+                                            ),
+            "t8"       => array(      "LABEL"                        => $arrLang["_8"],
                                             "REQUIRED"               => "no",
                                             "INPUT_TYPE"             => "TEXT",
                                             "INPUT_EXTRA_PARAM"      => "",
                                             "VALIDATION_TYPE"        => "text",
                                             "VALIDATION_EXTRA_PARAM" => ""
                                             ),
-            "t5"   => array(      "LABEL"                  => $arrLang["_5"],
+            "cost_8"   => array(      "LABEL"                        => $arrLang["Cost (8)"],
+                                            "REQUIRED"               => "no",
+                                            "INPUT_TYPE"             => "TEXT",
+                                            "INPUT_EXTRA_PARAM"      => array("style" => "width:50px"),
+                                            "VALIDATION_TYPE"        => "text",
+                                            "VALIDATION_EXTRA_PARAM" => ""
+                                            ),
+            "t9"       => array(      "LABEL"                        => $arrLang["_9"],
                                             "REQUIRED"               => "no",
                                             "INPUT_TYPE"             => "TEXT",
                                             "INPUT_EXTRA_PARAM"      => "",
                                             "VALIDATION_TYPE"        => "text",
                                             "VALIDATION_EXTRA_PARAM" => ""
                                             ),
-            "cost_5"   => array(      "LABEL"                  => $arrLang["Cost (5)"],
+            "cost_9"   => array(      "LABEL"                        => $arrLang["Cost (9)"],
+                                            "REQUIRED"               => "no",
+                                            "INPUT_TYPE"             => "TEXT",
+                                            "INPUT_EXTRA_PARAM"      => array("style" => "width:50px"),
+                                            "VALIDATION_TYPE"        => "text",
+                                            "VALIDATION_EXTRA_PARAM" => ""
+                                            ),
+            "t0"       => array(      "LABEL"                        => $arrLang["_0"],
                                             "REQUIRED"               => "no",
                                             "INPUT_TYPE"             => "TEXT",
                                             "INPUT_EXTRA_PARAM"      => "",
                                             "VALIDATION_TYPE"        => "text",
                                             "VALIDATION_EXTRA_PARAM" => ""
                                             ),
-            "t6"   => array(      "LABEL"                  => $arrLang["_6"],
+            "cost_0"   => array(      "LABEL"                        => $arrLang["Cost (0)"],
                                             "REQUIRED"               => "no",
                                             "INPUT_TYPE"             => "TEXT",
-                                            "INPUT_EXTRA_PARAM"      => "",
+                                            "INPUT_EXTRA_PARAM"      => array("style" => "width:50px"),
                                             "VALIDATION_TYPE"        => "text",
                                             "VALIDATION_EXTRA_PARAM" => ""
                                             ),
-            "cost_6"   => array(      "LABEL"                  => $arrLang["Cost (6)"],
+            "vat"      => array(    "LABEL"                          => $arrLang["vat"],
                                             "REQUIRED"               => "no",
-                                            "INPUT_TYPE"             => "TEXT",
-                                            "INPUT_EXTRA_PARAM"      => "",
+                                            "INPUT_TYPE"             => "SELECT",
+                                            "INPUT_EXTRA_PARAM"      => $arrOptions,
                                             "VALIDATION_TYPE"        => "text",
                                             "VALIDATION_EXTRA_PARAM" => ""
-                                            ),
-            "t7"   => array(      "LABEL"                  => $arrLang["_7"],
-                                            "REQUIRED"               => "no",
-                                            "INPUT_TYPE"             => "TEXT",
-                                            "INPUT_EXTRA_PARAM"      => "",
-                                            "VALIDATION_TYPE"        => "text",
-                                            "VALIDATION_EXTRA_PARAM" => ""
-                                            ),
-            "cost_7"   => array(      "LABEL"                  => $arrLang["Cost (7)"],
-                                            "REQUIRED"               => "no",
-                                            "INPUT_TYPE"             => "TEXT",
-                                            "INPUT_EXTRA_PARAM"      => "",
-                                            "VALIDATION_TYPE"        => "text",
-                                            "VALIDATION_EXTRA_PARAM" => ""
-                                            ),
-            "t8"   => array(      "LABEL"                  => $arrLang["_8"],
-                                            "REQUIRED"               => "no",
-                                            "INPUT_TYPE"             => "TEXT",
-                                            "INPUT_EXTRA_PARAM"      => "",
-                                            "VALIDATION_TYPE"        => "text",
-                                            "VALIDATION_EXTRA_PARAM" => ""
-                                            ),
-            "cost_8"   => array(      "LABEL"                  => $arrLang["Cost (8)"],
-                                            "REQUIRED"               => "no",
-                                            "INPUT_TYPE"             => "TEXT",
-                                            "INPUT_EXTRA_PARAM"      => "",
-                                            "VALIDATION_TYPE"        => "text",
-                                            "VALIDATION_EXTRA_PARAM" => ""
-                                            ),
-            "t9"   => array(      "LABEL"                  => $arrLang["_9"],
-                                            "REQUIRED"               => "no",
-                                            "INPUT_TYPE"             => "TEXT",
-                                            "INPUT_EXTRA_PARAM"      => "",
-                                            "VALIDATION_TYPE"        => "text",
-                                            "VALIDATION_EXTRA_PARAM" => ""
-                                            ),
-            "cost_9"   => array(      "LABEL"                  => $arrLang["Cost (9)"],
-                                            "REQUIRED"               => "no",
-                                            "INPUT_TYPE"             => "TEXT",
-                                            "INPUT_EXTRA_PARAM"      => "",
-                                            "VALIDATION_TYPE"        => "text",
-                                            "VALIDATION_EXTRA_PARAM" => ""
-                                            ),
-            "t0"   => array(      "LABEL"                  => $arrLang["_0"],
-                                            "REQUIRED"               => "no",
-                                            "INPUT_TYPE"             => "TEXT",
-                                            "INPUT_EXTRA_PARAM"      => "",
-                                            "VALIDATION_TYPE"        => "text",
-                                            "VALIDATION_EXTRA_PARAM" => ""
-                                            ),
-            "cost_0"   => array(      "LABEL"                  => $arrLang["Cost (0)"],
-                                            "REQUIRED"               => "no",
-                                            "INPUT_TYPE"             => "TEXT",
-                                            "INPUT_EXTRA_PARAM"      => "",
-                                            "VALIDATION_TYPE"        => "text",
-                                            "VALIDATION_EXTRA_PARAM" => ""
-                                            ),
-
+                                            ), 
             );
     return $arrFields;
 }

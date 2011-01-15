@@ -95,6 +95,19 @@ class paloSantoMiniBar {
         return $result;
     }
 
+    function getVat()
+    {
+        $query   = "SELECT DISTINCT `vat_1` , `vat_2` FROM config";
+
+        $result=$this->_DB->fetchTable($query, true);
+
+        if($result==FALSE){
+            $this->errMsg = $this->_DB->errMsg;
+            return array();
+        }
+        return $result[0];
+    }
+
     function getMiniBarById($id)
     {
         $query = "SELECT * FROM minibar WHERE id=$id";

@@ -125,7 +125,7 @@ function TimeCall($second)
 	$time[2] = $temp % 60 ;
 	$time[1] = ( $temp - $time[2] ) / 60;
 
-	$result = $time[0].":".$time[1].":".$time[2];
+	$result = $time[0]." h ".$time[1]."' ".$time[2]."\"";
        return $result;
 }
 
@@ -169,7 +169,7 @@ function saveNewCheckOut($smarty, $module_name, $local_templates_dir, &$pDB, &$p
         //---------------------------------------------
         $value['free'] = '1';
         $value['clean'] = '0';
-        $value['minibar'] = '';
+        $value['mini_bar'] = null;
         $where = "id = '".$_DATA['room']."'";
         $arrUpdateRoom = $pRoom->updateQuery('rooms', $value, $where);
 
@@ -205,30 +205,36 @@ function saveNewCheckOut($smarty, $module_name, $local_templates_dir, &$pDB, &$p
         // Find any room calls
         //---------------------------------------------
         
-	 $where 	  = "where room_id = '".$_DATA['room']."' and status = '0'";
+	 $where 	  = "where room_id = '".$_DATA['room']."' and status = '1'";
         $arrConf_Guest = $pCheckOut->getCheckOut('register', $where);
-        $arrGuest      = $arrConf_Guest['0'];
+	 $arrGuest      = $arrConf_Guest['0'];
+
+    	 foreach($arrRate as $idx_prefix => $Rate_parameters)
+		{
+        	}
 
 	 $where         = "WHERE src = '".$arrExt['extension']."' and billsec > '0' and calldate > '".$arrGuest['date_ci']."'".
  			    " and calldate < '".$arrGuest['date_co']."' and disposition = 'ANSWERED' and accountcode ='".$arrGuest['guest_id']."'".
-			    " and dcontext = 'from-internal' and dst <> '100'";
+			    " and dstchannel LIKE '".$Rate_parameters['trunk']."%' and dst <> '100'";
 
         $arrCDR = $pCheckOut_CDR->getCDR($where);
-        $i=0;
-	 $total_bill=0;
-        $billing_rate = 0.01;
 
-	 foreach($arrCDR as $key => $value){
-	 	$calldate[$key] = $value['calldate'];
-              $dst[$key]	  = $value['dst'];
-		$billsec[$key]  = TimeCall($value['billsec']);
-		$total_bill	  = $total_bill + ($value['billsec'] * $billing_rate);
-              $i++;		
+        $i=0;
+	 if($arrCDR){
+	       foreach($arrCDR as $key => $value){
+	 		$calldate[$key] = $value['calldate'];
+              	$dst[$key]	  = $value['dst'];
+			$billsec[$key]  = TimeCall($value['billsec']);
+              	$i++;		
+	 	}
 	 }
 
         $strMsg = "Checkout Done";
-
-        // Write the billing into the html file. 
+	 $cmd="asterisk -rx 'sip show peer ".$arrExt['extension']."' | grep Status | grep OK";
+        if (!exec($cmd))
+		$strMsg .= "<br><img src='modules/".$module_name."/images/warning.png'><br><b> WARNING !!!! </b><br>The phone in this room is unreachable.<br> Going verify  this room to see if the phone still there.";
+        
+	 // Write the billing into the html file. 
         //---------------------------------------------
         $arrConf   = $pCheckOut->getCheckOut('config', '');
         $Config    = $arrConf['0'];
@@ -250,6 +256,7 @@ function saveNewCheckOut($smarty, $module_name, $local_templates_dir, &$pDB, &$p
         $arrNight = $pCheckOut->getNightNumber($arrGuest['date_ci'], $arrGuest['date_co'], $arrGuest['id']);
 	 foreach($arrNight as $key => $value)
 	 	$Night = $value;
+
         if( $Night == '0')
 	 	$Night = "1";  // A night should be calculated, even if there's no night. 
 				 // The room could be took in the day and be free in the same day. 
@@ -257,48 +264,113 @@ function saveNewCheckOut($smarty, $module_name, $local_templates_dir, &$pDB, &$p
 	 // Line with the number of Nights
 	 //----------------------------------
 
-        $where = "where room_model = '".$arrExt['model']."'";
-        $arrModel = $pCheckOut->getCheckOut('models', $where);
-	 $Model = $arrModel[0];
-        $puht   = strval($Model['room_price']);
-        $patc  = ($puht*$Night)*(1+(strval($Model['room_vat'])/100));
-	 $vat   = $patc - ($puht*$Night) ;
-        $Billing_page = $Billing_page."".Sale("Nights with room ".$Model['room_model'], $Night, $puht, $vat, $patc, $curr);
+        $where        = "where room_model = '".$arrExt['model']."'";
+        $arrModel     = $pCheckOut->getCheckOut('models', $where);
+	 $Model        = $arrModel[0];
+        $puht         = strval($Model['room_price']);
+        $patc         = ($puht*$Night)*(1+(strval($Model['room_vat'])/100));
+	 $vat          = $patc - ($puht*$Night) ;
+	 $vat_Nights   = $vat;
+	 $TT_Nights    = $patc; 
+        $Billing_page = $Billing_page.Sale("Nights with room ".$Model['room_model'], $Night, sprintf("%01.2f", $puht), sprintf("%01.2f", $vat), sprintf("%01.2f", $patc), $curr);
 
 	 // There's a mini-bar?
 	 //------------------------------------
 
 	 if (isset($arrExt['mini_bar']))
 	 {
-		$Billing_page = $Billing_page.Sale("<b>Nini Bar :</b>", "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;", "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;", "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;", "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;", "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;");
-		$minibar=str_replace(" ","",$arrExt['mini_bar']);
+		$TT_MiniBar	= 0;
+		$TT_MiniBar_v = 0;
+		$Billing_page = $Billing_page.Sale("<b>Nini Bar :</b>", "&nbsp;", "&nbsp;", "&nbsp;", "&nbsp;", "&nbsp;");
+		$minibar	= str_replace(" ","",$arrExt['mini_bar']);
 		foreach(count_chars($minibar,1) as $val_min => $QT)
 		{
-		        $where = "where digit = '".chr($val_min)."'";
-        		 $arrMiniBar = $pCheckOut->getCheckOut('minibar', $where);
-			 $MiniBar    = $arrMiniBar[0];
-			 $Billing_page = $Billing_page.Sale($MiniBar['label'], $QT, $MiniBar['price'], "1", strval($QT)*strval($MiniBar['price']), $curr);		 
+		        $where        = "where digit = '".chr($val_min)."'";
+        		 $arrMiniBar   = $pCheckOut->getCheckOut('minibar', $where);
+			 $MiniBar      = $arrMiniBar[0];
+			 $mb_vat	 = strval($QT)*strval($MiniBar['price']);
+			 $mb_price	 = $mb_vat*(1+(strval($MiniBar['vat'])/100));
+			 $TT_MiniBar	 = $TT_MiniBar + $mb_price;
+			 $TT_MiniBar_v = $TT_MiniBar_v + ($mb_price - $mb_vat);
+			 $Billing_page = $Billing_page.Sale($MiniBar['label'], $QT, sprintf("%01.2f", $MiniBar['price']), sprintf("%01.2f",$mb_price - $mb_vat), sprintf("%01.2f", $mb_price), $curr);		 
 		}	
 	 }
 
-	// The client has made some call? 
+	// The client has used the phone? 
        //--------------------------------
+	 if ($i>0) 
+		{
+	  	if($_DATA['details'] == 'off')
+			{
+			$Total_Calls = 0;
+	 		foreach($arrCDR as $key => $value)
+				{
+				for ($Scan_Rate = 1; $Scan_Rate < count($arrRate); $Scan_Rate++)
+					{
+					if (!substr_compare($value['dst'],$arrRate[$Scan_Rate]['prefix'], 0, strlen($arrRate[$Scan_Rate]['prefix']))) 
+						{
+						$price_rate = ($value['billsec'] * ($arrRate[$Scan_Rate]['rate'] / 60)) + $arrRate[$Scan_Rate]['rate_offset'];
+						$price_rate = intval($price_rate*100)/100;
+						$idx_rate   = $Scan_Rate;
+						}
+					if (!isset($price_rate))
+						{
+						$price_rate = ($value['billsec'] * ($arrRate[0]['rate'] / 60)) + $arrRate[0]['rate_offset'];
+						$price_rate = intval($price_rate*100)/100;
+						$idx_rate   = 0;
+						}
+					}
+				$Total_Calls = $Total_Calls + $price_rate;
+	 			}
+			$Total_Call_VAT = $Total_Calls / (1+(strval($Config['vat_1'])/100));
+			$Total_Call_VAT = intval($Total_Call_VAT*100)/100;
+	 		$Billing_page = $Billing_page.Sale("There is some call", $i, " ----- ", sprintf("%01.2f", $Total_Call_VAT) , sprintf("%01.2f", $Total_Calls), $curr);
+         		$Billing_page = $Billing_page."</tbody></table><br>";
+	  		}
 
-	 if ($i > 0)
-	 	$Billing_page = $Billing_page.Sale("There is some calls", $i, "&nbsp;", "&nbsp;", "&nbsp;", $curr);
-        $Billing_page = $Billing_page."</tbody></table><br>";
+	  // We want some details ?
+	  //------------------------
 
-	// We want some details ?
-	//------------------------
-
-	 if($_DATA['details'] == 'on'){
-        	$key=0;
-		$Billing_page = $Billing_page.Detail_table_Title();
-	 	foreach($arrCDR as $key => $value)
-			$Billing_page = $Billing_page.Detail_table_Line($value['calldate']." - ".$value['dst'], TimeCall($value['billsec']), $value['billsec'], "&nbsp;", ($value['billsec'] * $billing_rate), $curr);
-	 }
-	 $Billing_page = $Billing_page."</tbody></table><br>";
-	 $Billing_page = $Billing_page.Total_Billing($ht, $vat, $total, $curr);
+	  	if($_DATA['details'] == 'on')
+			{
+        		$key=0;
+             	 	$Total_Calls = 0; 
+			$Billing_page = $Billing_page.Detail_table_Title();
+	 		foreach($arrCDR as $key => $value)
+				{
+				for ($Scan_Rate = 1; $Scan_Rate < count($arrRate); $Scan_Rate++)
+					{
+					if (!substr_compare($value['dst'],$arrRate[$Scan_Rate]['prefix'], 0, strlen($arrRate[$Scan_Rate]['prefix']))) 
+						{
+						$price_rate = ($value['billsec'] * ($arrRate[$Scan_Rate]['rate'] / 60)) + $arrRate[$Scan_Rate]['rate_offset'];
+						$price_rate = intval($price_rate*100)/100;
+						$idx_rate   = $Scan_Rate;
+						}
+					if (!isset($price_rate))
+						{
+						$price_rate = ($value['billsec'] * ($arrRate[0]['rate'] / 60)) + $arrRate[0]['rate_offset'];
+						$price_rate = intval($price_rate*100)/100;
+						$idx_rate   = 0;
+						}
+					}
+					$Total_Calls = $Total_Calls + $price_rate;
+					$Total_Call_VAT = $Total_Calls / (1+(strval($Config['vat_1'])/100));
+					$Total_Call_VAT = intval($Total_Call_VAT*100)/100;
+					$Billing_page = $Billing_page.Detail_table_Line($value['calldate']." - ".$arrRate[$idx_rate]['name'], $value['dst'], TimeCall($value['billsec']), sprintf("%01.2f", $price_rate), $curr);
+	 			}
+		
+	  		}
+	  		$Billing_page = $Billing_page."</tbody></table><br>";
+	 	}
+		else
+		{
+		$Total_Call_VAT=0;
+		$Total_Calls=0;
+		}
+	 $ht		 = $vat_Nights + $Total_Call_VAT + $TT_MiniBar_v;
+	 $total_bill	 = $TT_Nights + $Total_Calls + $TT_MiniBar;
+	 
+	 $Billing_page = $Billing_page.Total_Billing(sprintf("%01.2f", $total_bill - $ht), sprintf("%01.2f", $ht), sprintf("%01.2f", $total_bill), $curr);
 
         $name	     = $Bnumber.".html";
 	 $name_path = "/var/www/html/roomx_billing/".$name;
@@ -307,9 +379,10 @@ function saveNewCheckOut($smarty, $module_name, $local_templates_dir, &$pDB, &$p
 	 fwrite($Billing_file,$Billing_page);
 	 fclose($Billing_file);
 
-	 if($_DATA['sending_by_mail'] == 'on' && isset($For['mail']) ){
+	 if($_DATA['sending_by_mail'] == 'on' && isset($For['mail']) )
+		{
      	 	$headers = "From: ".$For['mail']."\n"
-     			   ."Reply-To: ".$congif['mail']."\n"
+     			   ."Reply-To: ".$Config['mail']."\n"
      		  	   ."Content-Type: text/html; charset='iso-8859-1\n"
      			   ."Content-Transfer-Encoding: 8bit";
 
@@ -319,19 +392,20 @@ function saveNewCheckOut($smarty, $module_name, $local_templates_dir, &$pDB, &$p
 		$message = $contents;
 
      		if(mail($For['mail'], 'Your Billing', $message, $headers))
-     		{
-          		$strMsg .= " and mail sent.";
-     		}
-     		else
-     		{
-          		$strMsg .= " and <b>mail error!!!</b>";
-     		} 
+     			{
+          			$strMsg .= " and mail sent.";
+     			}
+     			else
+     			{
+          			$strMsg .= " and <b>mail error!!!</b>";
+     			} 
+		 }
 
-	
-	 }
-
-        // Put the register with the status O.
+        // Put the register with the status 0 (So ).
         //---------------------------------------------
+	 $value_re['status']	= "'0'";
+	 if ($_DATA['paid'] == 'on')
+	 	$value_re['status']	= "'1'";
         $value_re['status'] 	= "'0'";
         $value_re['billing_file']  = "'".$name."'";
         $where 			= "room_id = '".$arrExt['id']."' and status = '1'";
@@ -339,7 +413,7 @@ function saveNewCheckOut($smarty, $module_name, $local_templates_dir, &$pDB, &$p
 
         $smarty->assign("mb_message", $strMsg);
         $smarty->assign("call_number", $i);
-        $smarty->assign("total", $total_bill);
+        $smarty->assign("total", $total_bill." ".$curr);
         $smarty->assign("bil", "1");
 	 $smarty->assign("bil_link", $name);
 
@@ -353,8 +427,8 @@ function saveNewCheckOut($smarty, $module_name, $local_templates_dir, &$pDB, &$p
 function createFieldForm($arrLang, &$pDB)
 {
     $pRoom= new paloSantoCheckOut($pDB);
-    $where = "where free = '0'";
-    $arrRoom=$pRoom->getCheckOut('rooms', $where);
+    $where = "where free = '0'";				// The Room is busy?
+    $arrRoom=$pRoom->getCheckOut('rooms', $where);	//
     $arrGroup=$pRoom->getGroupCheckOut();
      
     foreach($arrRoom as $kR => $valueR)
@@ -386,7 +460,7 @@ function createFieldForm($arrLang, &$pDB)
                                             "VALIDATION_EXTRA_PARAM" => "",
                                             "EDITABLE"               => "si",
                                             ),
-            "billing"   => array(      "LABEL"                  => $arrLang["Billing"],
+            "paid"   => array(      "LABEL"                  => $arrLang["Paid"],
                                             "REQUIRED"               => "no",
                                             "INPUT_TYPE"             => "CHECKBOX",
                                             "INPUT_EXTRA_PARAM"      => "",
@@ -407,14 +481,6 @@ function createFieldForm($arrLang, &$pDB)
                                             "VALIDATION_TYPE"        => "text",
                                             "VALIDATION_EXTRA_PARAM" => ""
                                             ),
-            "printing_the_billing" => array("LABEL"                  => $arrLang["Printing the billing"],
-                                            "REQUIRED"               => "no",
-                                            "INPUT_TYPE"             => "CHECKBOX",
-                                            "INPUT_EXTRA_PARAM"      => "",
-                                            "VALIDATION_TYPE"        => "text",
-                                            "VALIDATION_EXTRA_PARAM" => ""
-                                            ),
-
             );
     return $arrFields;
 }
