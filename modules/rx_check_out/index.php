@@ -166,28 +166,31 @@ function saveNewCheckOut($smarty, $module_name, $local_templates_dir, &$pDB, &$p
         // Capturer les données du minibar pour la facturation! 
 
         // Update room : The room was busy and now it's free and not clean.
+	 // In same time, deleting the guest name and group.
         //---------------------------------------------
-        $value['free'] = '1';
-        $value['clean'] = '0';
-        $value['mini_bar'] = null;
-        $where = "id = '".$_DATA['room']."'";
-        $arrUpdateRoom = $pRoom->updateQuery('rooms', $value, $where);
+        $value['free'] 	= '1';
+        $value['clean'] 	= '0';
+	 $value['groupe'] 	= null;
+	 $value['guest_name']= null;
+        $value['mini_bar'] 	= null;
+        $where 		= "id = '".$_DATA['room']."'";
+        $arrUpdateRoom 	= $pRoom->updateQuery('rooms', $value, $where);
 
         // Lock the extension after checkout or not.
         //---------------------------------------------
-        $arrConfig = $pRoom->getCheckOut('config', '');
-        $arrLock = $arrConfig['0'];
+        $arrConfig 		= $pRoom->getCheckOut('config', '');
+        $arrLock 		= $arrConfig['0'];
 
-        $cmd = "/usr/sbin/asterisk -rx 'database put LOCKED ".$arrExt['extension']." 0'";
+        $cmd 			= "/usr/sbin/asterisk -rx 'database put LOCKED ".$arrExt['extension']." 0'";
 	 if ( $arrLock['locked'] == "1")
-        	$cmd = "/usr/sbin/asterisk -rx 'database put LOCKED ".$arrExt['extension']." ".$arrLock['locked']."'";
+        	$cmd 		= "/usr/sbin/asterisk -rx 'database put LOCKED ".$arrExt['extension']." ".$arrLock['locked']."'";
         exec($cmd);
 
         // Put a date of checkout
         //---------------------------------------------
-        $value_re['date_co'] = "'".date('Y-m-d H:i:s')."'";
-        $where = "room_id = '".$arrExt['id']."' and status = '1'";
-        $arrUpdateRoom = $pRoom->updateQuery('register', $value_re, $where);
+        $value_re['date_co']= "'".date('Y-m-d H:i:s')."'";
+        $where 		= "room_id = '".$arrExt['id']."' and status = '1'";
+        $arrUpdateRoom 	= $pRoom->updateQuery('register', $value_re, $where);
 
         // Delete the account code extension into Freepbx data
         //---------------------------------------------
@@ -210,8 +213,8 @@ function saveNewCheckOut($smarty, $module_name, $local_templates_dir, &$pDB, &$p
 	 $arrGuest      = $arrConf_Guest['0'];
 
     	 foreach($arrRate as $idx_prefix => $Rate_parameters)
-		{
-        	}
+		//{
+        	//}
 
 	 $where         = "WHERE src = '".$arrExt['extension']."' and billsec > '0' and calldate > '".$arrGuest['date_ci']."'".
  			    " and calldate < '".$arrGuest['date_co']."' and disposition = 'ANSWERED' and accountcode ='".$arrGuest['guest_id']."'".
@@ -379,6 +382,9 @@ function saveNewCheckOut($smarty, $module_name, $local_templates_dir, &$pDB, &$p
 	 fwrite($Billing_file,$Billing_page);
 	 fclose($Billing_file);
 
+	 // We want to send the billing by mail? 
+	 //----------------------------------------
+
 	 if($_DATA['sending_by_mail'] == 'on' && isset($For['mail']) )
 		{
      	 	$headers = "From: ".$For['mail']."\n"
@@ -403,7 +409,8 @@ function saveNewCheckOut($smarty, $module_name, $local_templates_dir, &$pDB, &$p
 
         // Put the register with the status 0 (So ).
         //---------------------------------------------
-	 $value_re['status']	= "'0'";
+
+	 $value_re['status']		= "'0'";
 	 if ($_DATA['paid'] == 'on')
 	 	$value_re['status']	= "'1'";
         $value_re['status'] 	= "'0'";

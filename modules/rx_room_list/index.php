@@ -105,25 +105,45 @@ function reportRoomList($smarty, $module_name, $local_templates_dir, &$pDB, $arr
     $arrResult =$pRoomList->getRoomList($limit, $offset, $filter_field, $filter_value);
     $enable  = "<img src='modules/".$module_name."/images/1.png'>";
     $disable = "<img src='modules/".$module_name."/images/0.png'>";
-    $dnd_yes = "<img src='modules/".$module_name."/images/dnd.png'>";
-    $dnd_no  = "<img src='modules/".$module_name."/images/d.png'>";
-    $dnd     = array("1" => $dnd_yes, "0" => $dnd_no);
-    $ok      = array("0" => $disable, "1" => $enable);
+
+    $ok  = array("0" => $disable, "1" => $enable);
 
     if(is_array($arrResult) && $total>0){
         foreach($arrResult as $key => $value){ 
+
 	    // Check MiniBar 
-    	    $minibar = " ";		
+	    //------------------
+
+    	    $minibar = " ";	
+           $warning = " ";			
     	    if ( strlen($value['mini_bar']) != 0)
 	    	$minibar= "<img src='modules/".$module_name."/images/m.png'>";
-	    $arrTmp[0] = $value['room_name'];
-	    $arrTmp[1] = $value['extension'];
-	    $arrTmp[2] = $value['model'];
-	    $arrTmp[3] = $value['groupe'];
-	    $arrTmp[4] = $ok[$value['free']];
-	    $arrTmp[5] = $ok[$value['clean']];
-	    $arrTmp[6] = $minibar;
-	    $arrTmp[7] = $dnd[$value['dnd']];
+
+	    // The phone is reachable ?
+	    //----------------------------
+
+           $cmd="asterisk -rx 'sip show peer ".$value['extension']."' | grep Status | grep OK";
+	    if (!exec($cmd))
+	    	$warning= "<img src='modules/".$module_name."/images/warning.png' border='0'>";
+
+    	    // DND is YES ?
+    	    //-----------------------------
+
+    	    $dnd = "<img src='modules/".$module_name."/images/dnd.png'>";
+
+    	    $cmd = "asterisk -rx 'database show DND ".$value['extension']."' | grep YES ";
+    	    if (!exec($cmd))
+    		$dnd = "<img src='modules/".$module_name."/images/d.png'>";
+
+	    $arrTmp[0] = $value['guest_name'];
+	    $arrTmp[1] = $value['room_name'];	
+	    $arrTmp[2] = $value['extension']." ".$warning;
+	    $arrTmp[3] = $value['model'];
+	    $arrTmp[4] = $value['groupe'];
+	    $arrTmp[5] = $ok[$value['free']];
+	    $arrTmp[6] = $ok[$value['clean']];
+	    $arrTmp[7] = $minibar;
+	    $arrTmp[8] = $dnd;
            $arrData[] = $arrTmp;
         }
     }
@@ -139,19 +159,21 @@ function reportRoomList($smarty, $module_name, $local_templates_dir, &$pDB, $arr
                         "columns"  => array(
 			0 => array("name"      => $arrLang["Name"],
                                    "property1" => ""),
-			1 => array("name"      => $arrLang["Extension"],
+			1 => array("name"      => $arrLang["Room Name"],
                                    "property1" => ""),
-			2 => array("name"      => $arrLang["Model "],
+			2 => array("name"      => $arrLang["Extension"],
                                    "property1" => ""),
-			3 => array("name"      => $arrLang["Groupe"],
+			3 => array("name"      => $arrLang["Model "],
                                    "property1" => ""),
-			4 => array("name"      => $arrLang["Free"],
+			4 => array("name"      => $arrLang["Groupe"],
                                    "property1" => ""),
-			5 => array("name"      => $arrLang["Clean"],
+			5 => array("name"      => $arrLang["Free"],
                                    "property1" => ""),
-			6 => array("name"      => $arrLang["Mini bar"],
+			6 => array("name"      => $arrLang["Clean"],
                                    "property1" => ""),
-			7 => array("name"      => $arrLang["DND"],
+			7 => array("name"      => $arrLang["Mini bar"],
+                                   "property1" => ""),
+			8 => array("name"      => $arrLang["DND"],
                                    "property1" => ""),
                                         )
                     );
@@ -186,14 +208,15 @@ function reportRoomList($smarty, $module_name, $local_templates_dir, &$pDB, $arr
 
 function createFieldFilter($arrLang){
     $arrFilter = array(
-	    "room_name" => $arrLang["Name"],
+	    "guest_name"      => $arrLang["Name"],
+	    "room_name" => $arrLang["Room Name"],
 	    "extension" => $arrLang["Extension"],
-	    "model" => $arrLang["Model "],
-	    "groupe" => $arrLang["Groupe"],
-	    "free" => $arrLang["Free"],
-	    "clean" => $arrLang["Clean"],
-	    "mini_bar" => $arrLang["Mini bar"],
-	    "dnd" => $arrLang["DND"],
+	    "model" 	  => $arrLang["Model "],
+	    "groupe"    => $arrLang["Groupe"],
+	    "free" 	  => $arrLang["Free"],
+	    "clean" 	  => $arrLang["Clean"],
+	    "mini_bar"  => $arrLang["Mini bar"],
+	    //"dnd"     => $arrLang["DND"],
                     );
 
     $arrFormElements = array(

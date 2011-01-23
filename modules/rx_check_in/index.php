@@ -178,57 +178,60 @@ function saveNewCheckIn($smarty, $module_name, $local_templates_dir, &$pDB, &$pD
 
 	 }
 
-        //Save all Datas into the table register. 
+        // Save all Datas into the table register. 
         //---------------------------------------------
-        $value_register['room_id']  = "'".$_DATA['room']."'";
-        $value_register['guest_id'] = "'".$GuestID['id']."'";
-        $value_register['date_ci']  = "'".$_DATA['date']."'";
-        $value_register['status']   = "'1'";
-        $arrRegister = $pCheckIn->insertQuery('register',$value_register);
+        $value_register['room_id'] = "'".$_DATA['room']."'";
+        $value_register['guest_id']= "'".$GuestID['id']."'";
+        $value_register['date_ci'] = "'".$_DATA['date']."'";
+        $value_register['status']  = "'1'";
+        $arrRegister 		= $pCheckIn->insertQuery('register',$value_register);
 
-        //Update the room status (Free -> Busy)
+        // Update the room status (Free -> Busy)
+	 // Put the guest name into the room.
         //---------------------------------------------
-        $value_rooms['free'] = '0'; 
-        $where = "id = '".$_DATA['room']."'";
-        $arrRegister = $pCheckIn->updateQuery('rooms',$value_rooms, $where);
+	 $guest_name 			= $value_guest['first_name']." ".$value_guest['last_name'];
+        $value_rooms['free'] 	= '0'; 
+        $value_rooms['guest_name'] = $guest_name;
+        $where 			= "id = '".$_DATA['room']."'";
+        $arrRegister 		= $pCheckIn->updateQuery('rooms',$value_rooms, $where);
 
 	 // Take the rooms extension from id 
         //---------------------------------------------
-        $where = "WHERE id = '".$_DATA['room']."'";
-        $arrRooms = $pCheckIn->getCheckIn('rooms',$where);
-        $Rooms = $arrRooms['0'];
+        $where 			= "WHERE id = '".$_DATA['room']."'";
+        $arrRooms 			= $pCheckIn->getCheckIn('rooms',$where);
+        $Rooms 			= $arrRooms['0'];
 
         // Modify the account code extension into Freepbx data
         //---------------------------------------------
-        $value_rl['value']  = "'true'";
-        $where              = "variable = 'need_reload';";
-        $arrReload          = $pCheckIn_Ast->updateQuery('admin',$value_rl, $where);
+        $value_rl['value']  	= "'true'";
+        $where              	= "variable = 'need_reload';";
+        $arrReload          	= $pCheckIn_Ast->updateQuery('admin',$value_rl, $where);
 
-        $value_ac['data']   = "'".$GuestID['id']."'";
-        $where              = "id = '".$Rooms['extension']."' and keyword = 'accountcode';";
-        $arrAccount         = $pCheckIn_Ast->updateQuery('sip',$value_ac, $where);
+        $value_ac['data']   	= "'".$GuestID['id']."'";
+        $where              	= "id = '".$Rooms['extension']."' and keyword = 'accountcode';";
+        $arrAccount         	= $pCheckIn_Ast->updateQuery('sip',$value_ac, $where);
 
         $cmd="/var/lib/asterisk/bin/module_admin reload";
         exec($cmd);
 
         // Unlock the extension 
         //---------------------------------------------
-	 $cmd = "/usr/sbin/asterisk -rx 'database put LOCKED ".$Rooms['extension']." 0'";
+	 $cmd 				= "/usr/sbin/asterisk -rx 'database put LOCKED ".$Rooms['extension']." 0'";
 
         exec($cmd);
 
         // Call Between rooms enabled or not.
         //---------------------------------------------
-        $where = "";
-        $arrConfig = $pCheckIn->getCheckIn('config',$where);
-        $arrAstDB = $arrConfig['0'];
+        $where 			= "";
+        $arrConfig 			= $pCheckIn->getCheckIn('config',$where);
+        $arrAstDB 			= $arrConfig['0'];
 
-        $cmd = "/usr/sbin/asterisk -rx 'database put CBR ".$Rooms['extension']." ".$arrAstDB['cbr']."'";
+        $cmd				= "/usr/sbin/asterisk -rx 'database put CBR ".$Rooms['extension']." ".$arrAstDB['cbr']."'";
         exec($cmd);
 
-        $strMsg = $news_guest."Checkin Done";
+        $strMsg 			= $news_guest."Checkin Done";
         $smarty->assign("mb_message", $strMsg);
-        $content = viewFormCheckIn($smarty, $module_name, $local_templates_dir, $pDB,$dDP_Ast, $arrConf, $arrLang);
+        $content 			= viewFormCheckIn($smarty, $module_name, $local_templates_dir, $pDB,$dDP_Ast, $arrConf, $arrLang);
     }
     return $content;
 }

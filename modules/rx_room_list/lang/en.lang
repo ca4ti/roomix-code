@@ -30,6 +30,7 @@ global $arrLangModule;
 $arrLangModule=array(
 "Room List" => "Room List",
 "Name" => "Name",
+"Room Name" => "Room Name",
 "Extension" => "Extension",
 "Model " => "Model ",
 "Groupe" => "Groupe",
