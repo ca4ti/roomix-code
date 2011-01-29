@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module>
+  <menulist>
+    <menuitem menuid="roomx"          desc="RoomX"       parent=""         module="no"  link="" order="11"></menuitem>
+    <menuitem menuid="rx_home"        desc="Home"        parent="roomx"    module="yes" link="" order="1"></menuitem>
+    <menuitem menuid="rx_check_in"    desc="Check In"    parent="roomx"    module="yes" link="" order="2"></menuitem>
+    <menuitem menuid="rx_check_out"   desc="Check Out"   parent="roomx"    module="yes" link="" order="3"></menuitem>
+    <menuitem menuid="rx_room"        desc="Room"        parent="roomx"    module="no"  link="" order="4"></menuitem>
+    <menuitem menuid="rx_room_list"   desc="Room List"   parent="rx_room"  module="yes" link="" order="41"></menuitem>
+    <menuitem menuid="rx_config"      desc="Config"      parent="roomx"    module="no"  link="" order="5"></menuitem>
+    <menuitem menuid="rx_general"     desc="General"     parent="rx_config" module="yes" link="" order="51"></menuitem>
+    <menuitem menuid="rx_add_room"    desc="Add Room"    parent="rx_config" module="yes" link="" order="52"></menuitem>
+    <menuitem menuid="rx_models"      desc="Models"      parent="rx_config" module="yes" link="" order="53"></menuitem>
+	<menuitem menuid="rx_add_model"   desc="Add Model"   parent="rx_config" module="yes" link="" order="54"></menuitem>
+	<menuitem menuid="rx_groupe_list" desc="Groupe List" parent="rx_config" module="yes" link="" order="55"></menuitem>
+    <menuitem menuid="rx_minibar"     desc="Mini Bar"    parent="rx_config" module="yes" link="" order="56"></menuitem>
+	<menuitem menuid="rx_billing_rep" desc="Billing Report" parent="roomx"  module="yes" link="" order="6"></menuitem>
+  </menulist>
+</module>
