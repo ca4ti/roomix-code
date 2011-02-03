@@ -81,15 +81,19 @@ function viewFormHome($smarty, $module_name, $local_templates_dir, &$pDB, $arrCo
     $pHome = new paloSantoHome($pDB);
     $arrFormHome = createFieldForm($arrLang, $pDB);
     $oForm = new paloForm($smarty,$arrFormHome);
+	$DocumentRoot = (isset($_SERVER['argv'][1]))?$_SERVER['argv'][1]:"/var/www/html";
+    require_once("$DocumentRoot/libs/misc.lib.php");
 
     // Moving context file at first using.
     //------------------------------------
     $context	= "modules/rx_general/extensions_roomx.conf";
     if (file_exists($context)){
-       $cmd="mv /var/www/html/".$context." /etc/asterisk/";
-	exec($cmd);
-       $cmd="chown asterisk:asterisk /etc/asterisk/extensions_roomx.conf";
-	exec($cmd);
+	    $cmd = "sed -i 's|eLaStIx.2oo7|".obtenerClaveConocidaMySQL('root')."|' modules/rx_general/extensions_roomx.conf";
+	    exec($cmd);
+        $cmd="mv /var/www/html/".$context." /etc/asterisk/";
+	    exec($cmd);
+        $cmd="chown asterisk:asterisk /etc/asterisk/extensions_roomx.conf";
+	    exec($cmd);
 	}
 
     //begin, Form data persistence to errors and other events.
