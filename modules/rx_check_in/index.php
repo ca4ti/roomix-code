@@ -35,6 +35,8 @@ function _moduleContent(&$smarty, $module_name)
     //include module files
     include_once "modules/$module_name/configs/default.conf.php";
     include_once "modules/$module_name/libs/paloSantoCheckIn.class.php";
+    $DocumentRoot = (isset($_SERVER['argv'][1]))?$_SERVER['argv'][1]:"/var/www/html";
+    require_once("$DocumentRoot/libs/misc.lib.php");
 
     //include file language agree to elastix configuration
     //if file language not exists, then include language by default (en)
@@ -58,7 +60,7 @@ function _moduleContent(&$smarty, $module_name)
 
     //conexion resource
     $pDB = new paloDB($arrConf['dsn_conn_database']);
-    $pDB_Ast = new paloDB("mysql://root:eLaStIx.2oo7@localhost/asterisk");
+    $pDB_Ast = new paloDB("mysql://root:".obtenerClaveConocidaMySQL('root')."@localhost/asterisk");
 
     //actions
     $action = getAction();

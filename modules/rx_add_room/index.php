@@ -36,6 +36,8 @@ function _moduleContent(&$smarty, $module_name)
     include_once "modules/$module_name/configs/default.conf.php";
     include_once "modules/$module_name/libs/paloSantoAddRoom.class.php";
     include_once "modules/$module_name/libs/paloSantoModel.class.php";
+    $DocumentRoot = (isset($_SERVER['argv'][1]))?$_SERVER['argv'][1]:"/var/www/html";
+    require_once("$DocumentRoot/libs/misc.lib.php");
 
     //include file language agree to elastix configuration
     //if file language not exists, then include language by default (en)
@@ -59,7 +61,7 @@ function _moduleContent(&$smarty, $module_name)
 
     //conexion resource
     $pDB = new paloDB($arrConf['dsn_conn_database']);
-    $pDBM = "mysql://root:eLaStIx.2oo7@localhost/roomx";
+    $pDBM = "mysql://root:".obtenerClaveConocidaMySQL('root')."@localhost/roomx";
 
     //actions
     $action = getAction();
@@ -109,7 +111,20 @@ function saveAddRoom($smarty, $module_name, $local_templates_dir, &$pDB, &$pDBM,
 		else
 		{
 			$save_rooms = $pRoomX->updateQuery('rooms',$arrValores);
-		}	
+		}
+
+        // Modify the context extension into Freepbx data
+        //-----------------------------------------------
+        $value_rl['value']  	= "'true'";
+        $where              	= "variable = 'need_reload';";
+        $arrReload          	= $pFreePBX->updateFreepbx('admin',$value_rl, $where);
+
+        $value_ac['data']   	= "'from-roomx'";
+        $where              	= "id = '".$value."' and keyword = 'context';";
+        $arrAccount         	= $pFreePBX->updateFreepbx('sip',$value_ac, $where);
+
+        $cmd="/var/lib/asterisk/bin/module_admin reload";
+        exec($cmd);	
         }
 
 }

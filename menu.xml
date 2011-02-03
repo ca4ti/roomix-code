@@ -11,9 +11,9 @@
     <menuitem menuid="rx_general"     desc="General"     parent="rx_config" module="yes" link="" order="51"></menuitem>
     <menuitem menuid="rx_add_room"    desc="Add Room"    parent="rx_config" module="yes" link="" order="52"></menuitem>
     <menuitem menuid="rx_models"      desc="Models"      parent="rx_config" module="yes" link="" order="53"></menuitem>
-	<menuitem menuid="rx_add_model"   desc="Add Model"   parent="rx_config" module="yes" link="" order="54"></menuitem>
-	<menuitem menuid="rx_groupe_list" desc="Groupe List" parent="rx_config" module="yes" link="" order="55"></menuitem>
+    <menuitem menuid="rx_add_model"   desc="Add Model"   parent="rx_config" module="yes" link="" order="54"></menuitem>
+    <menuitem menuid="rx_groupe_list" desc="Groupe List" parent="rx_config" module="yes" link="" order="55"></menuitem>
     <menuitem menuid="rx_minibar"     desc="Mini Bar"    parent="rx_config" module="yes" link="" order="56"></menuitem>
-	<menuitem menuid="rx_billing_rep" desc="Billing Report" parent="roomx"  module="yes" link="" order="6"></menuitem>
+    <menuitem menuid="rx_billing_rep" desc="Billing Report" parent="roomx"  module="yes" link="" order="6"></menuitem>
   </menulist>
 </module>

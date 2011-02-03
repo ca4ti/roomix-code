@@ -105,6 +105,7 @@ class paloSantoModel {
        return; 
     }
 
+
     function insertQuery($sTabla, $arrValores){
 	// call function construirInsert
 	$query = $this->_DB->construirInsert($sTabla, $arrValores) ;

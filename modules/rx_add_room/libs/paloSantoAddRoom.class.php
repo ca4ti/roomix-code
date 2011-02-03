@@ -102,6 +102,19 @@ class paloSantoAddRoom {
         return $result;
     }
 
+    function updateFreepbx($sTabla, $arrValores, $where){
+	// call function construirInsert
+	$query = $this->_DB->construirUpdate($sTabla, $arrValores, $where);
+
+	// now execute the query with genQuery(fucntion of the paloSantoDB.class)
+	$result = $this->_DB->genQuery($query);
+
+	// catch the error
+	if($result==FALSE)
+         return false;
+         return true; 
+    }
+
     function getModel($limit, $offset, $filter_field, $filter_value)
     {
         $where = "";
