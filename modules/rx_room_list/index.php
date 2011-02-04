@@ -131,8 +131,9 @@ function reportRoomList($smarty, $module_name, $local_templates_dir, &$pDB, $arr
     	    $cmd = "asterisk -rx 'database show DND ".$value['extension']."' | grep YES ";
     	    if (!exec($cmd))
     		$dnd = "<img src='modules/".$module_name."/images/d.png'>";
-
-	    $arrTmp[0] = $value['guest_name'];
+	    $arrTmp[0] = "<b>".$arrLang['free']."</b>";
+ 	    if ($value['guest_name'] != "")
+	    	$arrTmp[0] = $value['guest_name'];
 	    $arrTmp[1] = $value['room_name'];	
 	    $arrTmp[2] = $value['extension']." ".$warning;
 	    $arrTmp[3] = $value['model'];

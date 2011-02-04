@@ -40,5 +40,6 @@ $arrLangModule=array(
 "DND" 		=> "DND",
 "Search" 	=> "Search",
 "Show" 	=> "Show",
+"free" 	=> "Free",
 );
 ?>

@@ -40,5 +40,6 @@ $arrLangModule=array(
 "DND" 		=> "NPD",
 "Search" 	=> "Recherche",
 "Show" 	=> "Filtrer",
+"free" 	=> "Libre",
 );
 ?>
