@@ -41,6 +41,7 @@ $arrLangModule=array(
 "Checkout Done"      => "Checkout done",
 "No Room!"		=> "No Room!",
 "No Group"		=> "No Group",
+"Mini Bar"		=> "Mini Bar",
 "Warning"		=> "<b> WARNING !!!! </b><br>The phone in this room is unreachable.<br> Going verify  this room to see if the phone still there.",
 );
 ?>

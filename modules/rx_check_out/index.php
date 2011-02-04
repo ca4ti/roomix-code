@@ -295,11 +295,11 @@ function saveNewCheckOut($smarty, $module_name, $local_templates_dir, &$pDB, &$p
 
 	 // There's a mini-bar?
 	 //--------------------
-	 if (isset($arrExt['mini_bar']))
+	 if ($arrExt['mini_bar'] != "")
 	 {
 		$TT_MiniBar	= 0;
 		$TT_MiniBar_v = 0;
-		$Billing_page = $Billing_page.Sale("<b>Nini Bar :</b>", "&nbsp;", "&nbsp;", "&nbsp;", "&nbsp;", "&nbsp;");
+		$Billing_page = $Billing_page.Sale("<b>".$arrLang['Mini Bar']." :</b>", "&nbsp;", "&nbsp;", "&nbsp;", "&nbsp;", "&nbsp;");
 		$minibar	= str_replace(" ","",$arrExt['mini_bar']);
 		foreach(count_chars($minibar,1) as $val_min => $QT)
 		{
@@ -312,6 +312,10 @@ function saveNewCheckOut($smarty, $module_name, $local_templates_dir, &$pDB, &$p
 			 $TT_MiniBar_v = $TT_MiniBar_v + ($mb_price - $mb_vat);
 			 $Billing_page = $Billing_page.Sale($MiniBar['label'], $QT, sprintf("%01.2f", $MiniBar['price']), sprintf("%01.2f",$mb_price - $mb_vat), sprintf("%01.2f", $mb_price), $curr);		 
 		}	
+	 }
+	 else
+	 {
+		$Billing_page = $Billing_page.Sale("&nbsp;", "&nbsp;", "&nbsp;", "&nbsp;", "&nbsp;", "&nbsp;");
 	 }
 
 	// The client has used the phone? 

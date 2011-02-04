@@ -41,6 +41,7 @@ $arrLangModule=array(
 "Checkout Done"      => "Départ fait",
 "No Room!"		=> "Aucune Chambre!",
 "No Group"		=> "Aucun Groupe",
+"Mini Bar"		=> "Mini Bar",
 "Warning"		=> "<b> Attention !!!! </b><br>Le téléphone de la chambre n'est pas détecté.<br>Allez verifier si le téléphone est bien présent.",
 "Dismiss"		=> "Masquer",
 );
