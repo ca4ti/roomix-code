@@ -79,13 +79,13 @@ function _moduleContent(&$smarty, $module_name)
 function saveModels($smarty, $module_name, $local_templates_dir, &$pDB, $arrConf, $arrLang)
 {
     $pModels = new paloSantoModels($pDB);
-    $filter_field = getParameter("filter_field");
-    $filter_value = getParameter("filter_value");
-    $_DATA = $_POST;
+    $filter_field 	= getParameter("filter_field");
+    $filter_value 	= getParameter("filter_value");
+    $_DATA 		= $_POST;
 
-    $value = $_DATA['model'];
-    $save_model = $pModels->DeletModels("room_model", $value);
-    $content = reportModels($smarty, $module_name, $local_templates_dir, $pDB, $arrConf, $arrLang);
+    $value 	   	= $_DATA['model'];
+    $save_model 	= $pModels->DeletModels("room_model", $value);
+    $content 		= reportModels($smarty, $module_name, $local_templates_dir, $pDB, $arrConf, $arrLang);
 
     return $content;
     

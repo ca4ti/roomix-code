@@ -106,27 +106,72 @@ function saveAddRoom($smarty, $module_name, $local_templates_dir, &$pDB, &$pDBM,
 
 		if ( $arrRoomExist['extension'] != $value ) 
 		{
-       		$save_rooms = $pRoomX->insertQuery('rooms',$arrValores);	
+       		$save_rooms = $pRoomX->insertQuery('rooms',$arrValores);
+
+        		// Modify the context extension into Freepbx data
+        		//-----------------------------------------------
+       		$value_rl['value']  	= "'true'";
+        		$where              	= "variable = 'need_reload';";
+        		$arrReload          	= $pFreePBX->updateFreepbx('admin',$value_rl, $where);
+
+        		$value_ac['data']   	= "'from-roomx'";
+       		$where              	= "id = '".$value."' and keyword = 'context';";
+        		$arrAccount         	= $pFreePBX->updateFreepbx('sip',$value_ac, $where);
+
+        		$cmd="/var/lib/asterisk/bin/module_admin reload";
+       		exec($cmd);	
 		}
 		else
 		{
 			$save_rooms = $pRoomX->updateQuery('rooms',$arrValores);
 		}
+      }
+}
 
-        // Modify the context extension into Freepbx data
-        //-----------------------------------------------
-        $value_rl['value']  	= "'true'";
-        $where              	= "variable = 'need_reload';";
-        $arrReload          	= $pFreePBX->updateFreepbx('admin',$value_rl, $where);
+function deleteAddRoom($smarty, $module_name, $local_templates_dir, &$pDB, &$pDBM, $arrConf, $arrLang)
+{
+       $pFreePBX = new paloSantoAddRoom($pDB);
+       $pRoomX = new paloSantoModel($pDBM);
 
-        $value_ac['data']   	= "'from-roomx'";
-        $where              	= "id = '".$value."' and keyword = 'context';";
-        $arrAccount         	= $pFreePBX->updateFreepbx('sip',$value_ac, $where);
+       $_DATA = $_POST;
 
-        $cmd="/var/lib/asterisk/bin/module_admin reload";
-        exec($cmd);	
-        }
+	$r_selected=$_DATA['room'];
 
+       foreach($r_selected as $key => $value)
+	{
+       	$room_idx 	= $pFreePBX -> getAddRoom('','','extension',$value);
+       	$room_name 	= $room_idx[0];
+
+		$where 	= "where extension = '$value'";
+              $arrRoomExist = $pRoomX->get_Room('rooms' , $where);
+
+		$arrValores['id']	    = "'".$arrRoomExist['id']."'";
+       	$arrValores['extension'] = "'".$value."'";
+       	$arrValores['room_name'] = "'".$room_name['name']."'";
+       	$arrValores['model']     = "'".$_DATA[intval($value)]."'";
+
+		if ( $arrRoomExist['extension'] != $value ) 
+		{
+       		$delete_rooms = $pRoomX->DeleteRoom('extension',$value);
+
+        		// Modify the context extension into Freepbx data
+        		//-----------------------------------------------
+       		$value_rl['value']  	= "'true'";
+        		$where              	= "variable = 'need_reload';";
+        		$arrReload          	= $pFreePBX->updateFreepbx('admin',$value_rl, $where);
+
+        		$value_ac['data']   	= "'from-internal'";
+       		$where              	= "id = '".$value."' and keyword = 'context';";
+        		$arrAccount         	= $pFreePBX->updateFreepbx('sip',$value_ac, $where);
+
+        		$cmd			="/var/lib/asterisk/bin/module_admin reload";
+       		exec($cmd);	
+		}
+		else
+		{
+			$save_rooms 		= $pRoomX->updateQuery('rooms',$arrValores);
+		}
+      }
 }
 
 function reportAddRoom($smarty, $module_name, $local_templates_dir, &$pDB, &$pDBM, $arrConf, $arrLang)
