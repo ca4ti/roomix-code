@@ -353,12 +353,12 @@ function saveNewCheckOut($smarty, $module_name, $local_templates_dir, &$pDB, &$p
 	  // We want some details ?
 	  //-----------------------
 	  	if($_DATA['details'] == 'on')
-			{
+		{
         		$key=0;
              	 	$Total_Calls = 0; 
 			$Billing_page = $Billing_page.Detail_table_Title();
 	 		foreach($arrCDR as $key => $value)
-				{
+			{
 				for ($Scan_Rate = 1; $Scan_Rate < count($arrRate); $Scan_Rate++)
 					{
 					if (!substr_compare($value['dst'],$arrRate[$Scan_Rate]['prefix'], 0, strlen($arrRate[$Scan_Rate]['prefix']))) 
@@ -385,11 +385,36 @@ function saveNewCheckOut($smarty, $module_name, $local_templates_dir, &$pDB, &$p
 	 	}
 		else
 		{
-		$Total_Call_VAT=0;
-		$Total_Calls=0;
+			//$Total_Call_VAT=0;
+			//$Total_Calls=0;
+
+        		$key=0;
+             	 	$Total_Calls = 0; 
+	 		foreach($arrCDR as $key => $value)
+			{
+				for ($Scan_Rate = 1; $Scan_Rate < count($arrRate); $Scan_Rate++)
+					{
+					if (!substr_compare($value['dst'],$arrRate[$Scan_Rate]['prefix'], 0, strlen($arrRate[$Scan_Rate]['prefix']))) 
+						{
+						$price_rate = ($value['billsec'] * ($arrRate[$Scan_Rate]['rate'] / 60)) + $arrRate[$Scan_Rate]['rate_offset'];
+						$price_rate = intval($price_rate*100)/100;
+						$idx_rate   = $Scan_Rate;
+						}
+					if (!isset($price_rate))
+						{
+						$price_rate = ($value['billsec'] * ($arrRate[0]['rate'] / 60)) + $arrRate[0]['rate_offset'];
+						$price_rate = intval($price_rate*100)/100;
+						$idx_rate   = 0;
+						}
+					}
+					$Total_Calls = $Total_Calls + $price_rate;
+					$Total_Call_VAT = $Total_Calls / (1+(strval($Config['vat_1'])/100));
+					$Total_Call_VAT = intval($Total_Call_VAT*100)/100;
+	 			}		
+	  		}
 		}
 	 $ht		 = $vat_Nights + $Total_Call_VAT + $TT_MiniBar_v;
-	 $total_bill	 = $TT_Nights + $Total_Calls + $TT_MiniBar;
+	 $total_bill	 = $TT_Nights  + $Total_Calls    + $TT_MiniBar;
 	 
 	 $Billing_page = $Billing_page.Total_Billing(sprintf("%01.2f", $total_bill - $ht), sprintf("%01.2f", $ht), sprintf("%01.2f", $total_bill), $curr);
 
@@ -436,7 +461,7 @@ function saveNewCheckOut($smarty, $module_name, $local_templates_dir, &$pDB, &$p
 
         $smarty->assign("mb_message", $strMsg);
         $smarty->assign("call_number", $i);
-        $smarty->assign("total", $total_bill." ".$curr);
+        $smarty->assign("total", sprintf("%01.2f",$total_bill)." ".$curr);
         $smarty->assign("bil", "1");
 	 $smarty->assign("bil_link", $name);
 
