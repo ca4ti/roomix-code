@@ -360,7 +360,7 @@ function saveNewCheckOut($smarty, $module_name, $local_templates_dir, &$pDB, &$p
 	 		foreach($arrCDR as $key => $value)
 			{
 				for ($Scan_Rate = 1; $Scan_Rate < count($arrRate); $Scan_Rate++)
-					{
+				{
 					if (!substr_compare($value['dst'],$arrRate[$Scan_Rate]['prefix'], 0, strlen($arrRate[$Scan_Rate]['prefix']))) 
 						{
 						$price_rate = ($value['billsec'] * ($arrRate[$Scan_Rate]['rate'] / 60)) + $arrRate[$Scan_Rate]['rate_offset'];
@@ -373,14 +373,12 @@ function saveNewCheckOut($smarty, $module_name, $local_templates_dir, &$pDB, &$p
 						$price_rate = intval($price_rate*100)/100;
 						$idx_rate   = 0;
 						}
-					}
-					$Total_Calls = $Total_Calls + $price_rate;
-					$Total_Call_VAT = $Total_Calls / (1+(strval($Config['vat_1'])/100));
-					$Total_Call_VAT = intval($Total_Call_VAT*100)/100;
-					$Billing_page = $Billing_page.Detail_table_Line($value['calldate']." - ".$arrRate[$idx_rate]['name'], $value['dst'], TimeCall($value['billsec']), sprintf("%01.2f", $price_rate), $curr);
-	 			}
-		
-	  		}
+				}
+				$Total_Calls    = $Total_Calls + $price_rate;
+				$Total_Call_VAT = $Total_Calls / (1+(strval($Config['vat_1'])/100));
+				$Total_Call_VAT = intval($Total_Call_VAT*100)/100;
+				$Billing_page   = $Billing_page.Detail_table_Line($value['calldate']." - ".$arrRate[$idx_rate]['name'], $value['dst'], TimeCall($value['billsec']), sprintf("%01.2f", $price_rate), $curr);
+	 		}
 	  		$Billing_page = $Billing_page."</tbody></table><br>";
 	 	}
 		else
@@ -393,7 +391,7 @@ function saveNewCheckOut($smarty, $module_name, $local_templates_dir, &$pDB, &$p
 	 		foreach($arrCDR as $key => $value)
 			{
 				for ($Scan_Rate = 1; $Scan_Rate < count($arrRate); $Scan_Rate++)
-					{
+				{
 					if (!substr_compare($value['dst'],$arrRate[$Scan_Rate]['prefix'], 0, strlen($arrRate[$Scan_Rate]['prefix']))) 
 						{
 						$price_rate = ($value['billsec'] * ($arrRate[$Scan_Rate]['rate'] / 60)) + $arrRate[$Scan_Rate]['rate_offset'];
@@ -406,13 +404,13 @@ function saveNewCheckOut($smarty, $module_name, $local_templates_dir, &$pDB, &$p
 						$price_rate = intval($price_rate*100)/100;
 						$idx_rate   = 0;
 						}
-					}
-					$Total_Calls = $Total_Calls + $price_rate;
-					$Total_Call_VAT = $Total_Calls / (1+(strval($Config['vat_1'])/100));
-					$Total_Call_VAT = intval($Total_Call_VAT*100)/100;
-	 			}		
-	  		}
-		}
+				}
+				$Total_Calls    = $Total_Calls + $price_rate;
+				$Total_Call_VAT = $Total_Calls / (1+(strval($Config['vat_1'])/100));
+				$Total_Call_VAT = intval($Total_Call_VAT*100)/100;
+	 		}		
+	  	}
+	 }
 	 $ht		 = $vat_Nights + $Total_Call_VAT + $TT_MiniBar_v;
 	 $total_bill	 = $TT_Nights  + $Total_Calls    + $TT_MiniBar;
 	 
