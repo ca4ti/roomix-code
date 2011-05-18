@@ -42,7 +42,7 @@
         <td align="center"></td>
         <td align="right"><b>{$call_number}</b> {$Call}</td>
         <td align="center"><b>{$Total}</b> : {$total}</td>
-        <td align="center"><a style="text-decoration: none;" href="roomx_billing/{$bil_link}" target="_next"><button>{$Display}</button></a></td>
+        <td align="center"><a style="text-decoration: none;" href="roomx_billing/{$bil_link}" target="_next"><button type="button">{$Display}</button></a></td>
         <td align="center"></td>
         <td align="center"></td>
         <td align="center"></td>

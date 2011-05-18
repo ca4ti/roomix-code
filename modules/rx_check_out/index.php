@@ -230,7 +230,7 @@ function saveNewCheckOut($smarty, $module_name, $local_templates_dir, &$pDB, &$p
 		//{
         	//}
 
-	 $where         = "WHERE src = '".$arrExt['extension']."' and billsec > '0' and calldate > '".$arrGuest['date_ci']."'".
+	 $where         = "WHERE channel LIKE 'SIP/".$arrExt['extension']."%' and billsec > '0' and calldate > '".$arrGuest['date_ci']."'".
  			    " and calldate < '".$arrGuest['date_co']."' and disposition = 'ANSWERED' and accountcode ='".$arrGuest['guest_id']."'".
 			    " and dstchannel LIKE '".$Rate_parameters['trunk']."%' and dst <> '100'";
 

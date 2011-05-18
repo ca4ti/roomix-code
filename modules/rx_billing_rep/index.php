@@ -141,7 +141,7 @@ function reportBillingreport($smarty, $module_name, $local_templates_dir, &$pDB,
 	    $arrTmp[2] = $arrRoom['room_name'];
 	    $arrTmp[3] = $arrGuest['first_name']." ".$arrGuest['last_name'];
 	    $arrTmp[4] = $paid;
-	    $arrTmp[5] = "<a style='text-decoration: none;' href='roomx_billing/".$value['billing_file']."' target='_news'><button>".$arrLang['View']."</button></a>" ;
+	    $arrTmp[5] = "<a style='text-decoration: none;' href='./roomx_billing/".$value['billing_file']."' target='_blank'><button type='button'>".$arrLang['View']."</button></a>" ;
            $arrData[] = $arrTmp;
         }
     }
