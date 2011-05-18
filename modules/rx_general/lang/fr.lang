@@ -40,6 +40,10 @@ $arrLangModule=array(
 "Room must be clean" 	=> "La Chambre doit être Faite",
 "VAT1" 			=> "TVA 1",
 "VAT2" 			=> "TVA 2",
-"Mail" 			=> "@Mail"
+"Mail" 			=> "@Mail",
+"Functions"			=> "Fonctions",
+"Company"			=> "Compagnie",
+"RoomX Dial Plan"		=> "Plan de num. RoomX",
+"Tax"				=> "Taxes",
 );
 ?>

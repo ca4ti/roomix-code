@@ -41,5 +41,9 @@ $arrLangModule=array(
 "VAT1" 			=> "V.A.T 1",
 "VAT2" 			=> "V.A.T 2",
 "Mail" 			=> "Mail"
+"Functions"			=> "Functions",
+"Company"			=> "Company",
+"RoomX Dial Plan"		=> "RoomX Dial Plan",
+"Tax"				=> "Tax",
 );
 ?>

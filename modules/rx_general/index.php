@@ -111,6 +111,10 @@ function viewFormGeneral($smarty, $module_name, $local_templates_dir, &$pDB, $ar
     $smarty->assign("CANCEL", $arrLang["Cancel"]);
     $smarty->assign("REQUIRED_FIELD", $arrLang["Required field"]);
     $smarty->assign("IMG", "images/list.png");
+    $smarty->assign("Functions",$arrLang["Functions"]);
+    $smarty->assign("Company",$arrLang["Company"]);
+    $smarty->assign("RoomXDialPlan",$arrLang["RoomX Dial Plan"]);
+    $smarty->assign("Tax",$arrLang["Tax"]);
     $smarty->caching = 0;
 
     $get_config = $pGeneral->getGeneral(); 
@@ -164,6 +168,10 @@ function saveNewGeneral($smarty, $module_name, $local_templates_dir, &$pDB, $arr
     $smarty->assign("CANCEL", $arrLang["Cancel"]);
     $smarty->assign("REQUIRED_FIELD", $arrLang["Required field"]);
     $smarty->assign("IMG", "images/list.png");
+    $smarty->assign("Functions",$arrLang["Functions"]);
+    $smarty->assign("Company",$arrLang["Company"]);
+    $smarty->assign("RoomXDialPlan",$arrLang["RoomX Dial Plan"]);
+    $smarty->assign("Tax",$arrLang["Tax"]);
     $smarty->caching = 0;
 
     if(!$oForm->validateForm($_POST)){
