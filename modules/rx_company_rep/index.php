@@ -27,8 +27,16 @@
   +----------------------------------------------------------------------+
   $Id: index.php,v 1.1 2011-05-18 04:05:28 Franck Danard franckd@agmp.org Exp $ */
 //include elastix framework
+require_once("libs/jpgraph/jpgraph.php");
+require_once "libs/jpgraph/jpgraph_bar.php";
+require_once("libs/jpgraph/jpgraph_pie.php");
+require_once("libs/jpgraph/jpgraph_pie3d.php");
+require_once "libs/jpgraph/jpgraph_line.php";
 include_once "libs/paloSantoGrid.class.php";
 include_once "libs/paloSantoForm.class.php";
+
+
+
 
 function _moduleContent(&$smarty, $module_name)
 {
@@ -57,7 +65,6 @@ function _moduleContent(&$smarty, $module_name)
     $local_templates_dir="$base_dir/modules/$module_name/".$templates_dir.'/'.$arrConf['theme'];
 
     //conexion resource
-    //$pDB = new paloDB($arrConf['dsn_conn_database']);
     $pDB = new paloDB($arrConf['dsn_conn_database']);
     $pDB_Ast = new paloDB("mysql://root:".obtenerClaveConocidaMySQL('root')."@localhost/asterisk");
     $pDB_CDR = new paloDB("mysql://root:".obtenerClaveConocidaMySQL('root')."@localhost/asteriskcdrdb");
@@ -113,6 +120,7 @@ function viewFormCompanyReport($smarty, $module_name, $local_templates_dir, &$pD
     $smarty->assign("CANCEL", _tr("Cancel"));
     $smarty->assign("REQUIRED_FIELD", _tr("Required field"));
     $smarty->assign("IMG", "images/list.png");
+    //$smarty->assign("Graph", $graph->Stroke());
 
     $htmlForm = $oForm->fetchForm("$local_templates_dir/form.tpl",_tr("Company Report"), $_DATA);
     $content = "<form  method='POST' style='margin-bottom:0;' action='?menu=$module_name'>".$htmlForm."</form>";
@@ -125,6 +133,71 @@ function saveNewCompanyReport($smarty, $module_name, $local_templates_dir, &$pDB
     $pCompanyReport = new paloSantoCompanyReport($pDB);
     $arrFormCompanyReport = createFieldForm();
     $oForm = new paloForm($smarty,$arrFormCompanyReport);
+    $_DATA = $_POST;
+
+    $date_start = $_DATA['date_start'];
+    $date_end = $_DATA['date_end'];
+
+    $smarty->assign("SAVE", _tr("Save"));
+    $smarty->assign("EDIT", _tr("Edit"));
+    $smarty->assign("CANCEL", _tr("Cancel"));
+    $smarty->assign("REQUIRED_FIELD", _tr("Required field"));
+    $smarty->assign("IMG", "images/list.png");
+    
+    if ($date_start != "" and $date_end !="" ){
+    switch ($_DATA['type_of_report'])
+    {
+	case 'Checkin Checkout':
+
+		$where = "where date_ci >= '".$date_start." 00:00:00' and date_ci <= '"
+			  .$date_end." 23:59:59' GROUP BY day( date_ci );";
+		$arrGuestLeave = $pCompanyReport->getCheckInCompanyReport($where);
+
+		foreach ($arrGuestLeave as $day => $value) {
+			foreach($value as $key => $val) {
+			switch ($key) {
+				case "count(date_ci)" :
+					$data_y_ci[$day] = $val;
+					//echo "Day : $day; Valeur : $val <br />\n";	
+					break;
+				case "DATE_FORMAT(date_ci,'%d-%m')" :
+					$data_x_ci[$day] = $val;
+					//echo "data_x_ci : $day; Valeur : $val <br />\n";	
+					break;
+			}
+
+			}	
+		}
+
+		$where = "where date_co >= '".$date_start." 00:00:00' and date_co IS NOT NULL and date_co <= '"
+			  .$date_end." 23:59:59' and status = '0' GROUP BY day( date_co );";
+		$arrGuestLeave = $pCompanyReport->getCheckOutCompanyReport($where);
+
+		foreach ($arrGuestLeave as $day => $value) {
+			foreach($value as $key => $val) {
+			switch ($key) {
+				case "count(date_co)" :
+					$data_y_co[$day] = $val;
+					//echo "Day : $day; Valeur : $val <br />\n";	
+					break;
+				case "DATE_FORMAT(date_co,'%d-%m')" :
+					$data_x_co[$day] = $val;
+					//echo "data_x_co : $day; Valeur : $val <br />\n";	
+					break;
+			}
+
+			}	
+		}
+
+		CreateCkeckGraph($data_x_ci,$data_y_ci,"modules/$module_name/images/CheckIn.png","CheckIn Graph","Days","Rooms");
+		CreateCkeckGraph($data_x_co,$data_y_co,"modules/$module_name/images/CheckOut.png","CheckOut Graph","Days","Rooms");
+		$smarty->assign("CheckinGraph","modules/$module_name/images/CheckIn.png");
+		$smarty->assign("CheckoutGraph","modules/$module_name/images/CheckOut.png");
+		break;
+    	default:
+       	$where = "";
+    }
+    }
 
     if(!$oForm->validateForm($_POST)){
         // Validation basic, not empty and VALIDATION_TYPE 
@@ -140,20 +213,51 @@ function saveNewCompanyReport($smarty, $module_name, $local_templates_dir, &$pDB
     }
     else{
         //NO ERROR, HERE IMPLEMENTATION OF SAVE
-        $content = "Code to save yet undefined.";
+        $htmlForm = $oForm->fetchForm("$local_templates_dir/form.tpl",_tr("Company Report"), $_DATA);
+        $content = "<form  method='POST' style='margin-bottom:0;' action='?menu=$module_name'>".$htmlForm."</form>";
+
     }
+
     return $content;
+}
+
+function CreateCkeckGraph($data_x,$data_y,$files_graph, $title, $Xlabel, $Ylabel){
+
+		$graph  = new Graph(350, 250);  
+
+		$graph->SetScale("textlin",0,5);
+		$bplot  = new BarPlot($data_y);
+		$graph->SetMarginColor('white');
+		$graph->SetFrame(false);
+ 
+
+		$bplot->SetFillGradient("navy","lightsteelblue",GRAD_HOR);
+		$graph->Add($bplot);
+
+		$graph->title->Set($title);
+		$graph->xaxis->title->Set($Xlabel);
+		$graph->yaxis->title->Set($Ylabel);
+		$graph->title->SetFont(FF_FONT1,FS_BOLD);
+		$graph->yaxis->title->SetFont(FF_FONT1,FS_BOLD);
+		$graph->xaxis->title->SetFont(FF_FONT1,FS_BOLD);
+
+		$graph->xaxis->SetTickLabels($data_x);
+		$graph->xaxis->SetLabelAngle(90);
+
+		$graph->Stroke($files_graph);
 }
 
 function createFieldForm()
 {
-    $arrOptions = array('val1' => 'Value 1', 'val2' => 'Value 2', 'val3' => 'Value 3');
+    $arrOptions = array('Checkin Checkout' => 'Checkin Checkout', 
+			   'val2' 	   => 'Value 2', 
+			   'val3' 	   => 'Value 3');
 
     $arrFields = array(
             "date_start"   => array(      "LABEL"                  => _tr("Date Start"),
                                             "REQUIRED"               => "yes",
                                             "INPUT_TYPE"             => "DATE",
-                                            "INPUT_EXTRA_PARAM"      => array("TIME" => true, "FORMAT" => "%d %b %Y","TIMEFORMAT" => "24"),
+                                            "INPUT_EXTRA_PARAM"      => array("TIME" => true, "FORMAT" => "%Y-%m-%d","TIMEFORMAT" => "24"),
                                             "VALIDATION_TYPE"        => "",
                                             "EDITABLE"               => "si",
                                             "VALIDATION_EXTRA_PARAM" => ""
@@ -161,7 +265,7 @@ function createFieldForm()
             "date_end"   => array(      "LABEL"                  => _tr("Date End"),
                                             "REQUIRED"               => "yes",
                                             "INPUT_TYPE"             => "DATE",
-                                            "INPUT_EXTRA_PARAM"      => array("TIME" => true, "FORMAT" => "%d %b %Y","TIMEFORMAT" => "24"),
+                                            "INPUT_EXTRA_PARAM"      => array("TIME" => true, "FORMAT" => "%Y-%m-%d","TIMEFORMAT" => "24"),
                                             "VALIDATION_TYPE"        => "",
                                             "EDITABLE"               => "si",
                                             "VALIDATION_EXTRA_PARAM" => ""

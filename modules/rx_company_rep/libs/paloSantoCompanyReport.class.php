@@ -71,17 +71,37 @@ class paloSantoCompanyReport{
         return $result[0];
     }
 
-    function getCompanyReport($limit, $offset, $filter_field, $filter_value)
+    function getCheckInCompanyReport($where)
     {
-        $where    = "";
-        $arrParam = null;
-        if(isset($filter_field) & $filter_field !=""){
-            $where    = "where $filter_field like ?";
-            $arrParam = array("$filter_value%");
+        //$where    = "";
+        //$arrParam = null;
+        //if(isset($filter_field) & $filter_field !=""){
+            //$where    = "where $filter_field like ?";
+            $arrParam = "";
+        //}
+
+        $query   = "SELECT DATE_FORMAT(date_ci,'%d-%m'), count(date_ci) FROM register $where";
+//echo $query;
+        $result=$this->_DB->fetchTable($query, true, $arrParam);
+
+        if($result==FALSE){
+            $this->errMsg = $this->_DB->errMsg;
+            return array();
         }
+        return $result;
+    }
 
-        $query   = "SELECT * FROM table $where LIMIT $limit OFFSET $offset";
+    function getCheckOutCompanyReport($where)
+    {
+        //$where    = "";
+        //$arrParam = null;
+        //if(isset($filter_field) & $filter_field !=""){
+            //$where    = "where $filter_field like ?";
+            $arrParam = "";
+        //}
 
+        $query   = "SELECT DATE_FORMAT(date_co,'%d-%m'), count(date_co) FROM register $where";
+//echo $query;
         $result=$this->_DB->fetchTable($query, true, $arrParam);
 
         if($result==FALSE){
