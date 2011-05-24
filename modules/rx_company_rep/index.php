@@ -149,18 +149,16 @@ function saveNewCompanyReport($smarty, $module_name, $local_templates_dir, &$pDB
     {
 	case 'Checkin Checkout':
 
-		$where = "where date_ci >= '".$date_start." 00:00:00' and date_ci <= '"
-			  .$date_end." 23:59:59' GROUP BY day( date_ci );";
-		$arrGuestLeave = $pCompanyReport->getCheckInCompanyReport($where);
+		$arrGuestLeave = $pCompanyReport->getCheckInCompanyReport($date_start,$date_end);
 
 		foreach ($arrGuestLeave as $day => $value) {
 			foreach($value as $key => $val) {
 			switch ($key) {
-				case "count(date_ci)" :
+				case "Num_ci" :
 					$data_y_ci[$day] = $val;
 					//echo "Day : $day; Valeur : $val <br />\n";	
 					break;
-				case "DATE_FORMAT(date_ci,'%d-%m')" :
+				case "DATE" :
 					$data_x_ci[$day] = $val;
 					//echo "data_x_ci : $day; Valeur : $val <br />\n";	
 					break;
@@ -169,18 +167,16 @@ function saveNewCompanyReport($smarty, $module_name, $local_templates_dir, &$pDB
 			}	
 		}
 
-		$where = "where date_co >= '".$date_start." 00:00:00' and date_co IS NOT NULL and date_co <= '"
-			  .$date_end." 23:59:59' and status = '0' GROUP BY day( date_co );";
-		$arrGuestLeave = $pCompanyReport->getCheckOutCompanyReport($where);
+		$arrGuestLeave = $pCompanyReport->getCheckOutCompanyReport($date_start,$date_end);
 
 		foreach ($arrGuestLeave as $day => $value) {
 			foreach($value as $key => $val) {
 			switch ($key) {
-				case "count(date_co)" :
+				case "Num_co" :
 					$data_y_co[$day] = $val;
 					//echo "Day : $day; Valeur : $val <br />\n";	
 					break;
-				case "DATE_FORMAT(date_co,'%d-%m')" :
+				case "DATE" :
 					$data_x_co[$day] = $val;
 					//echo "data_x_co : $day; Valeur : $val <br />\n";	
 					break;
@@ -189,10 +185,9 @@ function saveNewCompanyReport($smarty, $module_name, $local_templates_dir, &$pDB
 			}	
 		}
 
-		CreateCkeckGraph($data_x_ci,$data_y_ci,"modules/$module_name/images/CheckIn.png","CheckIn Graph","Days","Rooms");
-		CreateCkeckGraph($data_x_co,$data_y_co,"modules/$module_name/images/CheckOut.png","CheckOut Graph","Days","Rooms");
-		$smarty->assign("CheckinGraph","modules/$module_name/images/CheckIn.png");
-		$smarty->assign("CheckoutGraph","modules/$module_name/images/CheckOut.png");
+		CreateTwinGraph($data_x_ci,$data_y_ci,$data_x_co,$data_y_co,"modules/$module_name/images/CheckInOut.png","CheckIn - CheckOut Graph","Date","Rooms");
+		$smarty->assign("CheckInOutGraph","modules/$module_name/images/CheckInOut.png");
+
 		break;
     	default:
        	$where = "";
@@ -242,6 +237,39 @@ function CreateCkeckGraph($data_x,$data_y,$files_graph, $title, $Xlabel, $Ylabel
 		$graph->xaxis->title->SetFont(FF_FONT1,FS_BOLD);
 
 		$graph->xaxis->SetTickLabels($data_x);
+		$graph->xaxis->SetLabelAngle(90);
+
+		$graph->Stroke($files_graph);
+}
+
+function CreateTwinGraph($data1x,$data1y,$data2x,$data2y,$files_graph, $title, $Xlabel, $Ylabel){
+
+		$graph = new Graph(350,400,"auto");    
+		$graph->SetScale("textint");
+		
+		$graph->SetMarginColor('white');
+		$graph->SetFrame(false);
+		
+		// Create the bar plots
+		$b1plot = new BarPlot($data1y);
+		$b1plot->SetFillGradient("navy","lightsteelblue",GRAD_HOR);
+
+		$b2plot = new BarPlot($data2y);
+		$b2plot->SetFillGradient("orange","yellow",GRAD_HOR);
+ 
+		$bplot = new GroupBarPlot(array($b1plot,$b2plot));
+
+		$graph->Add($bplot);
+		$graph->title->Set($title);
+		$graph->xaxis->SetTitleSide(SIDE_TOP); 
+		$graph->xaxis->title->Set($Xlabel,'low');
+		$graph->yaxis->title->Set($Ylabel);
+		$graph->title->SetFont(FF_FONT1,FS_BOLD);
+		$graph->yaxis->title->SetFont(FF_FONT1,FS_BOLD);
+		$graph->xaxis->title->SetFont(FF_FONT1,FS_BOLD);
+		$graph->xaxis->SetLabelSide(SIDE_DOWN);
+		$graph->xaxis->SetLabelMargin(5);
+		$graph->xaxis->SetTickLabels($data1x);
 		$graph->xaxis->SetLabelAngle(90);
 
 		$graph->Stroke($files_graph);

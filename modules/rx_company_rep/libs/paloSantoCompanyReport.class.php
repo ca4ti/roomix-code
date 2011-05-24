@@ -71,18 +71,16 @@ class paloSantoCompanyReport{
         return $result[0];
     }
 
-    function getCheckInCompanyReport($where)
+    function getCheckInCompanyReport($date_start,$date_end)
     {
-        //$where    = "";
-        //$arrParam = null;
-        //if(isset($filter_field) & $filter_field !=""){
-            //$where    = "where $filter_field like ?";
-            $arrParam = "";
-        //}
 
-        $query   = "SELECT DATE_FORMAT(date_ci,'%d-%m'), count(date_ci) FROM register $where";
-//echo $query;
-        $result=$this->_DB->fetchTable($query, true, $arrParam);
+        $query	= "SELECT calendar.datefield AS DATE,
+       		   IFNULL(count(date_ci),0) AS Num_ci
+			   FROM register RIGHT JOIN calendar ON (DATE(date_ci) = calendar.datefield)
+			   WHERE (calendar.datefield BETWEEN (SELECT MIN(DATE('$date_start')) FROM register) AND (SELECT MAX(DATE('$date_end')) FROM register))
+			   GROUP BY DATE;";
+
+        $result=$this->_DB->fetchTable($query, true, "");
 
         if($result==FALSE){
             $this->errMsg = $this->_DB->errMsg;
@@ -91,18 +89,15 @@ class paloSantoCompanyReport{
         return $result;
     }
 
-    function getCheckOutCompanyReport($where)
+    function getCheckOutCompanyReport($date_start,$date_end)
     {
-        //$where    = "";
-        //$arrParam = null;
-        //if(isset($filter_field) & $filter_field !=""){
-            //$where    = "where $filter_field like ?";
-            $arrParam = "";
-        //}
+        $query	= "SELECT calendar.datefield AS DATE,
+       		   IFNULL(count(date_co),0) AS Num_co
+			   FROM register RIGHT JOIN calendar ON (DATE(date_co) = calendar.datefield)
+			   WHERE (calendar.datefield BETWEEN (SELECT MIN(DATE('$date_start')) FROM register) AND (SELECT MAX(DATE('$date_end')) FROM register))
+			   GROUP BY DATE;";
 
-        $query   = "SELECT DATE_FORMAT(date_co,'%d-%m'), count(date_co) FROM register $where";
-//echo $query;
-        $result=$this->_DB->fetchTable($query, true, $arrParam);
+        $result=$this->_DB->fetchTable($query, true, "");
 
         if($result==FALSE){
             $this->errMsg = $this->_DB->errMsg;

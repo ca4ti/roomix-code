@@ -1,6 +1,22 @@
 CREATE DATABASE IF NOT EXISTS roomx;
 USE roomx; 
 
+CREATE TABLE IF NOT EXISTS calendar (datefield DATE);
+
+DROP PROCEDURE IF EXISTS `fill_calendar`;
+
+DELIMITER $$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `fill_calendar`(start_date DATE, end_date DATE)
+BEGIN
+  DECLARE crt_date DATE;
+  SET crt_date=start_date;
+  WHILE crt_date < end_date DO
+    INSERT INTO calendar VALUES(crt_date);
+    SET crt_date = ADDDATE(crt_date, INTERVAL 1 DAY);
+  END WHILE;
+END$$
+DELIMITER ;
+
 CREATE TABLE IF NOT EXISTS `config` (
   `o_m` varchar(10) NOT NULL default 'Hotel',
   `locked` tinyint(1) NOT NULL default '1',
