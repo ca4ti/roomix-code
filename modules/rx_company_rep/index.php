@@ -35,9 +35,6 @@ require_once "libs/jpgraph/jpgraph_line.php";
 include_once "libs/paloSantoGrid.class.php";
 include_once "libs/paloSantoForm.class.php";
 
-
-
-
 function _moduleContent(&$smarty, $module_name)
 {
     //include module files
@@ -185,10 +182,31 @@ function saveNewCompanyReport($smarty, $module_name, $local_templates_dir, &$pDB
 			}	
 		}
 
-		CreateTwinGraph($data_x_ci,$data_y_ci,$data_x_co,$data_y_co,"modules/$module_name/images/CheckInOut.png","CheckIn - CheckOut Graph","Date","Rooms");
-		$smarty->assign("CheckInOutGraph","modules/$module_name/images/CheckInOut.png");
+		CreateTwinGraph($data_x_ci,$data_y_ci,$data_x_co,$data_y_co,"modules/$module_name/images/Graph.png","CheckIn - CheckOut Graph","","","Checkin","Checkout");
+		$smarty->assign("CheckInOutGraph","modules/$module_name/images/Graph.png");
 
 		break;
+
+	case 'Total Rooms' :
+		$arrTotalRooms = $pCompanyReport->getTotalRooms($date_start,$date_end);
+		print_r ($arrTotalRooms);
+		foreach ($arrTotalRooms as $day => $value) {
+			foreach($value as $key => $val) {
+			switch ($key) {
+				case "Total_Room" :
+					$data_y[$day] = $val;
+					break;
+				case "DATE" :
+					$data_x[$day] = $val;	
+					break;
+				}
+
+			}	
+		}
+
+		CreateCkeckGraph($data_x,$data_y,"modules/$module_name/images/Graph.png", "Total By Rooms", "", "");
+		$smarty->assign("CheckInOutGraph","modules/$module_name/images/Graph.png");
+		break; 
     	default:
        	$where = "";
     }
@@ -218,9 +236,18 @@ function saveNewCompanyReport($smarty, $module_name, $local_templates_dir, &$pDB
 
 function CreateCkeckGraph($data_x,$data_y,$files_graph, $title, $Xlabel, $Ylabel){
 
-		$graph  = new Graph(350, 250);  
+		$Width = 300;
+		if (count($data_x) > 7)
+			$Width = 400;
+		if (count($data_x) > 14)
+			$Width = 600;
+		if (count($data_x) > 21)
+			$Width = 800;
+		if (count($data_x) > 28)
+			$Width = 1000;
+		$graph = new Graph($Width,500,"auto");  
 
-		$graph->SetScale("textlin",0,5);
+		$graph->SetScale("textint");
 		$bplot  = new BarPlot($data_y);
 		$graph->SetMarginColor('white');
 		$graph->SetFrame(false);
@@ -242,21 +269,34 @@ function CreateCkeckGraph($data_x,$data_y,$files_graph, $title, $Xlabel, $Ylabel
 		$graph->Stroke($files_graph);
 }
 
-function CreateTwinGraph($data1x,$data1y,$data2x,$data2y,$files_graph, $title, $Xlabel, $Ylabel){
+function CreateTwinGraph($data1x,$data1y,$data2x,$data2y,$files_graph, $title, $Xlabel, $Ylabel,$legend1,$legend2){
 
-		$graph = new Graph(350,400,"auto");    
+		$Width = 300;
+		if (count($data1x) > 7)
+			$Width = 400;
+		if (count($data1x) > 14)
+			$Width = 600;
+		if (count($data1x) > 21)
+			$Width = 800;
+		if (count($data1x) > 28)
+			$Width = 1000;
+		$graph = new Graph($Width,500,"auto");    
 		$graph->SetScale("textint");
-		
+				
 		$graph->SetMarginColor('white');
 		$graph->SetFrame(false);
 		
 		// Create the bar plots
 		$b1plot = new BarPlot($data1y);
+		$b1plot->SetLegend($legend1);
 		$b1plot->SetFillGradient("navy","lightsteelblue",GRAD_HOR);
-
+		
 		$b2plot = new BarPlot($data2y);
+		$b2plot->SetLegend($legend2);
 		$b2plot->SetFillGradient("orange","yellow",GRAD_HOR);
  
+		$graph->legend->SetShadow(false);
+		$graph->legend->SetPos(0.1,0.13,'right','bottom');
 		$bplot = new GroupBarPlot(array($b1plot,$b2plot));
 
 		$graph->Add($bplot);
@@ -278,8 +318,11 @@ function CreateTwinGraph($data1x,$data1y,$data2x,$data2y,$files_graph, $title, $
 function createFieldForm()
 {
     $arrOptions = array('Checkin Checkout' => 'Checkin Checkout', 
-			   'val2' 	   => 'Value 2', 
-			   'val3' 	   => 'Value 3');
+			   'Total Rooms' 	 => 'Total Rooms', 
+			   'Total Calls' 	 => 'Total Calls', 
+			   'Total Bar' 	 => 'Total Bar', 
+			   'Total Billings' 	 => 'Total Billings', 
+			   );
 
     $arrFields = array(
             "date_start"   => array(      "LABEL"                  => _tr("Date Start"),

@@ -33,5 +33,5 @@
 
 </table>
 
-<div align="center"><br><img src="{$CheckInOutGraph}"></div>
+<div align="Center"><br><img src="{$CheckInOutGraph}"></div>
 <input class="button" type="hidden" name="id" value="{$ID}" />

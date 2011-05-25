@@ -77,8 +77,26 @@ class paloSantoCompanyReport{
         $query	= "SELECT calendar.datefield AS DATE,
        		   IFNULL(count(date_ci),0) AS Num_ci
 			   FROM register RIGHT JOIN calendar ON (DATE(date_ci) = calendar.datefield)
-			   WHERE (calendar.datefield BETWEEN (SELECT MIN(DATE('$date_start')) FROM register) AND (SELECT MAX(DATE('$date_end')) FROM register))
+			   WHERE (calendar.datefield BETWEEN (SELECT MIN(DATE('$date_start')) FROM register) AND (SELECT MAX(DATE('$date_end')) FROM register WHERE status = '0'))
 			   GROUP BY DATE;";
+
+        $result=$this->_DB->fetchTable($query, true, "");
+
+        if($result==FALSE){
+            $this->errMsg = $this->_DB->errMsg;
+            return array();
+        }
+        return $result;
+    }
+
+    function getTotalRooms($date_start,$date_end)
+    {
+	 $query 	= "SELECT calendar.datefield AS DATE, 
+			   IFNULL(sum(total_room),0) AS Total_Room
+			   FROM register RIGHT JOIN calendar ON (DATE(date_ci) = calendar.datefield)
+			   WHERE (calendar.datefield BETWEEN (SELECT MIN(DATE('$date_start')) FROM register) AND 
+			   (SELECT MAX(DATE('$date_end')) FROM register WHERE status ='0'))
+			   GROUP BY DATE";
 
         $result=$this->_DB->fetchTable($query, true, "");
 
@@ -94,7 +112,7 @@ class paloSantoCompanyReport{
         $query	= "SELECT calendar.datefield AS DATE,
        		   IFNULL(count(date_co),0) AS Num_co
 			   FROM register RIGHT JOIN calendar ON (DATE(date_co) = calendar.datefield)
-			   WHERE (calendar.datefield BETWEEN (SELECT MIN(DATE('$date_start')) FROM register) AND (SELECT MAX(DATE('$date_end')) FROM register))
+			   WHERE (calendar.datefield BETWEEN (SELECT MIN(DATE('$date_start')) FROM register) AND (SELECT MAX(DATE('$date_end')) FROM register WHERE status = '0'))
 			   GROUP BY DATE;";
 
         $result=$this->_DB->fetchTable($query, true, "");
