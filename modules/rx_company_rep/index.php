@@ -188,8 +188,9 @@ function saveNewCompanyReport($smarty, $module_name, $local_templates_dir, &$pDB
 		break;
 
 	case 'Total Rooms' :
+
 		$arrTotalRooms = $pCompanyReport->getTotalRooms($date_start,$date_end);
-		print_r ($arrTotalRooms);
+
 		foreach ($arrTotalRooms as $day => $value) {
 			foreach($value as $key => $val) {
 			switch ($key) {
@@ -205,6 +206,28 @@ function saveNewCompanyReport($smarty, $module_name, $local_templates_dir, &$pDB
 		}
 
 		CreateCkeckGraph($data_x,$data_y,"modules/$module_name/images/Graph.png", "Total By Rooms", "", "");
+		$smarty->assign("CheckInOutGraph","modules/$module_name/images/Graph.png");
+		break; 
+
+	case 'Total Calls' :
+
+		$arrTotalRooms = $pCompanyReport->getTotalCalls($date_start,$date_end);
+
+		foreach ($arrTotalRooms as $day => $value) {
+			foreach($value as $key => $val) {
+			switch ($key) {
+				case "Total_Calls" :
+					$data_y[$day] = $val;
+					break;
+				case "DATE" :
+					$data_x[$day] = $val;	
+					break;
+				}
+
+			}	
+		}
+
+		CreateCkeckGraph($data_x,$data_y,"modules/$module_name/images/Graph.png", "Total Calls", "", "");
 		$smarty->assign("CheckInOutGraph","modules/$module_name/images/Graph.png");
 		break; 
     	default:

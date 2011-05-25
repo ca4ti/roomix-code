@@ -93,7 +93,25 @@ class paloSantoCompanyReport{
     {
 	 $query 	= "SELECT calendar.datefield AS DATE, 
 			   IFNULL(sum(total_room),0) AS Total_Room
-			   FROM register RIGHT JOIN calendar ON (DATE(date_ci) = calendar.datefield)
+			   FROM register RIGHT JOIN calendar ON (DATE(date_co) = calendar.datefield)
+			   WHERE (calendar.datefield BETWEEN (SELECT MIN(DATE('$date_start')) FROM register) AND 
+			   (SELECT MAX(DATE('$date_end')) FROM register WHERE status ='0'))
+			   GROUP BY DATE";
+
+        $result=$this->_DB->fetchTable($query, true, "");
+
+        if($result==FALSE){
+            $this->errMsg = $this->_DB->errMsg;
+            return array();
+        }
+        return $result;
+    }
+
+    function getTotalCalls($date_start,$date_end)
+    {
+	 $query 	= "SELECT calendar.datefield AS DATE, 
+			   IFNULL(sum(total_call),0) AS Total_Calls
+			   FROM register RIGHT JOIN calendar ON (DATE(date_co) = calendar.datefield)
 			   WHERE (calendar.datefield BETWEEN (SELECT MIN(DATE('$date_start')) FROM register) AND 
 			   (SELECT MAX(DATE('$date_end')) FROM register WHERE status ='0'))
 			   GROUP BY DATE";
