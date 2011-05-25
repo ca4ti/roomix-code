@@ -112,7 +112,7 @@ function viewFormCheckIn($smarty, $module_name, $local_templates_dir, &$pDB, &$p
     $smarty->assign("IMG", "images/list.png");
 
 
-    $htmlForm = $oForm->fetchForm("$local_templates_dir/form1.tpl",$arrLang["Check In"], $_DATA);
+    $htmlForm = $oForm->fetchForm("$local_templates_dir/form.tpl",$arrLang["Check In"], $_DATA);
     $content = "<form  method='POST' style='margin-bottom:0;' action='?menu=$module_name'>".$htmlForm."</form>";
 
     return $content;
@@ -165,28 +165,33 @@ function saveNewCheckIn($smarty, $module_name, $local_templates_dir, &$pDB, &$pD
 			// Catch the guest_id
 			//----------------------
 
-	 		$arrGuestID = $pCheckIn->get_ID_Gest($conditions);
-        		$GuestID = $arrGuestID[0];
-	 		$news_guest = "Guest already exist, ";
+	 		$arrGuestID 	= $pCheckIn->get_ID_Gest($conditions);
+        		$GuestID 	= $arrGuestID[0];
+	 		$news_guest 	= "Guest already exist, ";
 
 	 if (!isset($GuestID)){
 		// New Guest
 		//------------------
 
-        	$arrGuest   = $pCheckIn->insertQuery('guest',$value_guest);
-	 	$arrGuestID = $pCheckIn->get_ID_Gest($conditions);
-        	$GuestID    = $arrGuestID[0];
-		$news_guest = $arrLang["New guest"];
+        	$arrGuest   		= $pCheckIn->insertQuery('guest',$value_guest);
+	 	$arrGuestID 		= $pCheckIn->get_ID_Gest($conditions);
+        	$GuestID    		= $arrGuestID[0];
+		$news_guest 		= $arrLang["New guest"];
 
 	 }
-
+	 $Booking = "0";
+	 if ($_DATA['booking'] == "on")
+		$Booking = "1";
         // Save all Datas into the table register. 
         //---------------------------------------------
-        $value_register['room_id'] = "'".$_DATA['room']."'";
-        $value_register['guest_id']= "'".$GuestID['id']."'";
-        $value_register['date_ci'] = "'".$_DATA['date']."'";
-        $value_register['status']  = "'1'";
-        $arrRegister 		= $pCheckIn->insertQuery('register',$value_register);
+        $value_register['room_id']   = "'".$_DATA['room']."'";
+        $value_register['guest_id']  = "'".$GuestID['id']."'";
+        $value_register['date_ci']   = "'".$_DATA['date']."'";
+        $value_register['date_co']   = "'".$_DATA['date_co']."'";
+        $value_register['booking']   = "'".$Booking."'";
+        $value_register['num_guest'] = "'".$_DATA['num_guest']."'";
+        $value_register['status']    = "'1'";
+        $arrRegister 		  = $pCheckIn->insertQuery('register',$value_register);
 
         // Update the room status (Free -> Busy)
 	 // Put the guest name into the room.
@@ -242,13 +247,17 @@ function createFieldForm($arrLang, &$pDB)
 {
     $pRoom= new paloSantoCheckIn($pDB);
 
+    // Test if the room must be clean before CheckIn
+    //-----------------------------------------------
     $arrConf=$pRoom->getCheckIn('config',"");
     $arrRmbc=$arrConf[0];
     $rmbc=$arrRmbc['rmbc'];
 
-    $where = "WHERE free = '1'";
+    // Displaying Rooms
+    //------------------
+    $where = "WHERE free = '1' ORDER BY `extension` ASC";
     if ($rmbc == "1")
-    	$where = "WHERE free = '1' and clean = '1'";
+    	$where = "WHERE free = '1' and clean = '1' ORDER BY `extension` ASC";
 
     $arrRoom=$pRoom->getCheckIn('rooms',$where);
 
@@ -273,6 +282,28 @@ function createFieldForm($arrLang, &$pDB)
                                             "INPUT_EXTRA_PARAM"      => array("TIME" => true, "FORMAT" => "%Y-%m-%d %H:%M:%S","TIMEFORMAT" => "24"),
                                             "VALIDATION_TYPE"        => "text",
                                             "EDITABLE"               => "si",
+                                            "VALIDATION_EXTRA_PARAM" => ""
+                                            ),
+            "date_co" => array(      "LABEL"                  => $arrLang["Date Checkout"],
+                                            "REQUIRED"               => "yes",
+                                            "INPUT_TYPE"             => "DATE",
+                                            "INPUT_EXTRA_PARAM"      => array("TIME" => true, "FORMAT" => "%Y-%m-%d %H:%M:%S","TIMEFORMAT" => "24"),
+                                            "VALIDATION_TYPE"        => "text",
+                                            "EDITABLE"               => "si",
+                                            "VALIDATION_EXTRA_PARAM" => ""
+                                            ),
+            "num_guest"=> array(     "LABEL"                  => $arrLang["Number of personne"],
+                                            "REQUIRED"               => "yes",
+                                            "INPUT_TYPE"             => "TEXT",
+                                            "INPUT_EXTRA_PARAM"      => "",
+                                            "VALIDATION_TYPE"        => "text",
+                                            "VALIDATION_EXTRA_PARAM" => ""
+                                            ),
+            "booking"   => array(    "LABEL"         => $arrLang["Booking"],
+                                            "REQUIRED"               => "no",
+                                            "INPUT_TYPE"             => "CHECKBOX",
+                                            "INPUT_EXTRA_PARAM"      => "",
+                                            "VALIDATION_TYPE"        => "text",
                                             "VALIDATION_EXTRA_PARAM" => ""
                                             ),
             "first_name"   => array(      "LABEL"                  => $arrLang["First Name"],
