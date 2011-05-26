@@ -125,6 +125,42 @@ class paloSantoCompanyReport{
         return $result;
     }
 
+    function getTotalBar($date_start,$date_end)
+    {
+	 $query 	= "SELECT calendar.datefield AS DATE, 
+			   IFNULL(sum(total_bar),0) AS Total_Bar
+			   FROM register RIGHT JOIN calendar ON (DATE(date_co) = calendar.datefield)
+			   WHERE (calendar.datefield BETWEEN (SELECT MIN(DATE('$date_start')) FROM register) AND 
+			   (SELECT MAX(DATE('$date_end')) FROM register WHERE status ='0'))
+			   GROUP BY DATE";
+
+        $result=$this->_DB->fetchTable($query, true, "");
+
+        if($result==FALSE){
+            $this->errMsg = $this->_DB->errMsg;
+            return array();
+        }
+        return $result;
+    }
+
+    function getTotalBilling($date_start,$date_end)
+    {
+	 $query 	= "SELECT calendar.datefield AS DATE, 
+			   IFNULL(sum(total_billing),0) AS Total_Billing
+			   FROM register RIGHT JOIN calendar ON (DATE(date_co) = calendar.datefield)
+			   WHERE (calendar.datefield BETWEEN (SELECT MIN(DATE('$date_start')) FROM register) AND 
+			   (SELECT MAX(DATE('$date_end')) FROM register WHERE status ='0'))
+			   GROUP BY DATE";
+
+        $result=$this->_DB->fetchTable($query, true, "");
+
+        if($result==FALSE){
+            $this->errMsg = $this->_DB->errMsg;
+            return array();
+        }
+        return $result;
+    }
+
     function getCheckOutCompanyReport($date_start,$date_end)
     {
         $query	= "SELECT calendar.datefield AS DATE,

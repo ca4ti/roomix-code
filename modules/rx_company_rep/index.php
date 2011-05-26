@@ -182,12 +182,12 @@ function saveNewCompanyReport($smarty, $module_name, $local_templates_dir, &$pDB
 			}	
 		}
 
-		CreateTwinGraph($data_x_ci,$data_y_ci,$data_x_co,$data_y_co,"modules/$module_name/images/Graph.png","CheckIn - CheckOut Graph","","","Checkin","Checkout");
+		CreateTwinGraph($data_x_ci,$data_y_ci,$data_x_co,$data_y_co,"modules/$module_name/images/Graph.png","CheckIn / Out by Day","","","Checkin","Checkout");
 		$smarty->assign("CheckInOutGraph","modules/$module_name/images/Graph.png");
 
 		break;
 
-	case 'Total Rooms' :
+	case 'Sum Rooms' :
 
 		$arrTotalRooms = $pCompanyReport->getTotalRooms($date_start,$date_end);
 
@@ -205,11 +205,11 @@ function saveNewCompanyReport($smarty, $module_name, $local_templates_dir, &$pDB
 			}	
 		}
 
-		CreateCkeckGraph($data_x,$data_y,"modules/$module_name/images/Graph.png", "Total By Rooms", "", "");
+		CreateCkeckGraph($data_x,$data_y,"modules/$module_name/images/Graph.png", "Sum of Rooms  by Day", "", "");
 		$smarty->assign("CheckInOutGraph","modules/$module_name/images/Graph.png");
 		break; 
 
-	case 'Total Calls' :
+	case 'Sum Calls' :
 
 		$arrTotalRooms = $pCompanyReport->getTotalCalls($date_start,$date_end);
 
@@ -227,9 +227,54 @@ function saveNewCompanyReport($smarty, $module_name, $local_templates_dir, &$pDB
 			}	
 		}
 
-		CreateCkeckGraph($data_x,$data_y,"modules/$module_name/images/Graph.png", "Total Calls", "", "");
+		CreateCkeckGraph($data_x,$data_y,"modules/$module_name/images/Graph.png", "Sum of Calls by Day", "", "");
 		$smarty->assign("CheckInOutGraph","modules/$module_name/images/Graph.png");
 		break; 
+
+	case 'Sum Bar' :
+
+		$arrTotalRooms = $pCompanyReport->getTotalBar($date_start,$date_end);
+
+		foreach ($arrTotalRooms as $day => $value) {
+			foreach($value as $key => $val) {
+			switch ($key) {
+				case "Total_Bar" :
+					$data_y[$day] = $val;
+					break;
+				case "DATE" :
+					$data_x[$day] = $val;	
+					break;
+				}
+
+			}	
+		}
+
+		CreateCkeckGraph($data_x,$data_y,"modules/$module_name/images/Graph.png", "Sum of Bar by Day", "", "");
+		$smarty->assign("CheckInOutGraph","modules/$module_name/images/Graph.png");
+		break; 
+
+	case 'Sum Billing' :
+
+		$arrTotalRooms = $pCompanyReport->getTotalBilling($date_start,$date_end);
+
+		foreach ($arrTotalRooms as $day => $value) {
+			foreach($value as $key => $val) {
+			switch ($key) {
+				case "Total_Billing" :
+					$data_y[$day] = $val;
+					break;
+				case "DATE" :
+					$data_x[$day] = $val;	
+					break;
+				}
+
+			}	
+		}
+
+		CreateCkeckGraph($data_x,$data_y,"modules/$module_name/images/Graph.png", "Sum Billing by Day", "", "");
+		$smarty->assign("CheckInOutGraph","modules/$module_name/images/Graph.png");
+		break; 
+
     	default:
        	$where = "";
     }
@@ -341,10 +386,10 @@ function CreateTwinGraph($data1x,$data1y,$data2x,$data2y,$files_graph, $title, $
 function createFieldForm()
 {
     $arrOptions = array('Checkin Checkout' => 'Checkin Checkout', 
-			   'Total Rooms' 	 => 'Total Rooms', 
-			   'Total Calls' 	 => 'Total Calls', 
-			   'Total Bar' 	 => 'Total Bar', 
-			   'Total Billings' 	 => 'Total Billings', 
+			   'Sum Rooms' 	 => 'Sum Rooms', 
+			   'Sum Calls' 	 => 'Sum Calls', 
+			   'Sum Bar' 	 	 => 'Sum Bar', 
+			   'Sum Billing' 	 => 'Sum Billing', 
 			   );
 
     $arrFields = array(
