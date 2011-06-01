@@ -140,6 +140,74 @@ class paloSantoCheckIn {
 	return $result;
     }
 
+    function Free()
+    {
+        $query   = "SELECT count(free) AS Free FROM rooms WHERE free=1";
+
+        $result=$this->_DB->fetchTable($query, true, "");
+
+        if($result==FALSE){
+            $this->errMsg = $this->_DB->errMsg;
+            return array();
+        }
+        return $result[0]['Free'];
+    }
+
+    function Busy()
+    {
+        $query   = "SELECT count(free) AS Busy FROM rooms WHERE free=0";
+
+        $result=$this->_DB->fetchTable($query, true, "");
+
+        if($result==FALSE){
+            $this->errMsg = $this->_DB->errMsg;
+            return array();
+        }
+        return $result[0]['Busy'];
+    }
+
+    function getBookingStatus()
+    {
+       $query    = "SELECT count(status) AS booking FROM register WHERE status = 2 AND DATE(date_format(`date_ci`,'%Y-%m-%d')) = current_date();";
+
+        $result=$this->_DB->fetchTable($query, true, "");
+
+        if($result==FALSE){
+            $this->errMsg = $this->_DB->errMsg;
+            return array();
+        }
+        return $result[0]['booking'];
+    }
+
+    function ToDay()
+    {
+        $query   = "SELECT date( current_date( ) ) AS ToDay";
+
+        $result=$this->_DB->fetchTable($query, true, "");
+
+        if($result==FALSE){
+            $this->errMsg = $this->_DB->errMsg;
+            return array();
+        }
+        return $result[0]['ToDay'];
+    }
+
+    function UpdateStatus($value)
+    {
+	 $free		= $value['free'];
+	 $busy		= $value['busy'];
+	 $booking	= $value['booking'];
+        $query   	= "INSERT INTO status (date) VALUES (current_date()) ON DUPLICATE KEY UPDATE free=$free, busy=$busy, booking=$booking";
+
+        $result=$this->_DB->fetchTable($query, true, "");
+
+        if($result==FALSE){
+            $this->errMsg = $this->_DB->errMsg;
+            return array();
+        }
+        return;
+    }
+
     function getCheckInById($tables, $id)
     {
         $query = "SELECT * FROM $tables WHERE id=$id";

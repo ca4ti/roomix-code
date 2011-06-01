@@ -191,7 +191,7 @@ function saveNewCheckIn($smarty, $module_name, $local_templates_dir, &$pDB, &$pD
 	 if ($_DATA['booking'] == "on")
 	    $value_register['status'] = "'2'";
         $arrRegister 		  = $pCheckIn->insertQuery('register',$value_register);
-
+	 
         // Update the room status (Free -> Busy)
 	 // Put the guest name into the room.
         //---------------------------------------------
@@ -202,6 +202,19 @@ function saveNewCheckIn($smarty, $module_name, $local_templates_dir, &$pDB, &$pD
         	$where 			= "id = '".$_DATA['room']."'";
         	$arrRegister 			= $pCheckIn->updateQuery('rooms',$value_rooms, $where);
 	 }
+
+	 // Update status table.
+	 //---------------------
+	 $free				= $pCheckIn->Free();				// Take all free rooms
+	 $busy				= $pCheckIn->Busy();				// Take all busy rooms
+	 $booking			= $pCheckIn->getBookingStatus();		// Take all booking of the day. 
+
+        $value_status['free']  	= strval($free);
+        $value_status['busy']   	= strval($busy);
+        $value_status['booking']   = strval($booking);
+	  
+	 $arrStatus	 		= $pCheckIn->UpdateStatus($value_status);	// At first, creating the day if not exist
+	 $arrStatus	 		= $pCheckIn->UpdateStatus($value_status);	// Next, re-sending request to update free, busy, and booking
 
 	 // Take the rooms extension from id 
         //---------------------------------------------

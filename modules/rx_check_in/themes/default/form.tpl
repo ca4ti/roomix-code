@@ -40,7 +40,7 @@
         <td align="left">{$last_name.INPUT} <span  class="required">*</span></td>
         <td align="right"><b>{$num_guest.LABEL}: </b></td>
         <td align="left">{$num_guest.INPUT} <span  class="required">*</span></td>
-        <td align="right"> </td>
+        <td align="right">{$BOOKING}</td>
         <td align="left"> </td>
     </tr>
 </table>
