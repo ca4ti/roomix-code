@@ -106,5 +106,31 @@ class paloSantoHome {
         }
         return $result;
     }
+
+    function getBookingStatus()
+    {
+       $query    = "SELECT count(status) AS booking FROM register WHERE status = 2 AND DATE(date_format(`date_ci`,'%Y-%m-%d')) = current_date();";
+
+        $result=$this->_DB->fetchTable($query, true, "");
+
+        if($result==FALSE){
+            $this->errMsg = $this->_DB->errMsg;
+            return array();
+        }
+        return $result[0]['booking'];
+    }
+
+    function Clean_booking()
+    {
+        $query   = "DELETE FROM register WHERE status=2 and date_ci < current_date()";
+
+        $result=$this->_DB->fetchTable($query, true, "");
+
+        if($result==FALSE){
+            $this->errMsg = $this->_DB->errMsg;
+            return array();
+        }
+        return;
+    }
 }
 ?>

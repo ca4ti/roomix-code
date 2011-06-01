@@ -58,8 +58,6 @@ function _moduleContent(&$smarty, $module_name)
 
     //conexion resource
     $pDB = new paloDB($arrConf['dsn_conn_database']);
-    //$pDB = "";
-
 
     //actions
     $action = getAction();
@@ -88,6 +86,8 @@ function viewFormHome($smarty, $module_name, $local_templates_dir, &$pDB, $arrCo
     //------------------------------------
     $context	= "modules/rx_general/extensions_roomx.conf";
     if (file_exists($context)){
+	    // Replacing the default password. 
+           //--------------------------------
 	    $cmd = "sed -i 's|eLaStIx.2oo7|".obtenerClaveConocidaMySQL('root')."|' modules/rx_general/extensions_roomx.conf";
 	    exec($cmd);
         $cmd="mv /var/www/html/".$context." /etc/asterisk/";
@@ -103,6 +103,7 @@ function viewFormHome($smarty, $module_name, $local_templates_dir, &$pDB, $arrCo
     $smarty->assign("ID", $id); 		//persistence id with input hidden in tpl
     $smarty->assign("Rooms_Free", $arrLang["Rooms Free"]);
     $smarty->assign("Rooms_Busy", $arrLang["Room Busy"]);
+    $smarty->assign("Booking_Today", $arrLang["Booking Today"]);
     $smarty->assign("Number_Rooms", $arrLang["Number of Rooms"]);
 
     if($action=="view")
@@ -121,6 +122,11 @@ function viewFormHome($smarty, $module_name, $local_templates_dir, &$pDB, $arrCo
         }
     }
 
+    // Clean every old booking.
+    //-------------------------
+    $Cb	= $pHome->Clean_booking();
+
+    $booking  = $pHome->getBookingStatus();
     $free	= $pHome->getNumHome("free","1");
     $total	= $pHome->getNumHome("","");
     $busy	= $total-$free;
@@ -136,7 +142,14 @@ function viewFormHome($smarty, $module_name, $local_templates_dir, &$pDB, $arrCo
     $smarty->assign("Roomx_intro", $intro);
     $smarty->assign("FREE",$free[0]);  
     $smarty->assign("BUSY",$busy); 
+    $smarty->assign("BOOKING",$booking);
     $smarty->assign("TOTAL",$total[0]);
+
+    $Warning 	= $busy + $booking;
+    if ($Warning == $total[0])
+    	$smarty->assign("mb_message", $arrLang["Potentially full"] );
+    if ($busy == $total[0])
+	$smarty->assign("mb_message", $arrLang["Full"] );
 
     $htmlForm = $oForm->fetchForm("$local_templates_dir/form.tpl",$arrLang["Home"], $_DATA);
     $content = "<form  method='POST' style='margin-bottom:0;' action='?menu=$module_name'>".$htmlForm."</form>";

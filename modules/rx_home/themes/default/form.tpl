@@ -14,6 +14,8 @@
         <td align="left">{$FREE}</td>
         <td align="right"><b>{$Rooms_Busy} : </b></td>
         <td align="left">{$BUSY}</td>
+        <td align="right"><b>{$Booking_Today} : </b></td>
+        <td align="left">{$BOOKING}</td>
         <td align="right"><b>{$Number_Rooms} : </b></td>
         <td align="left">{$TOTAL}</td>
     </tr>
