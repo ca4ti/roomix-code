@@ -110,7 +110,7 @@ function viewFormCheckIn($smarty, $module_name, $local_templates_dir, &$pDB, &$p
     $smarty->assign("CANCEL", $arrLang["Cancel"]);
     $smarty->assign("REQUIRED_FIELD", $arrLang["Required field"]);
     $smarty->assign("IMG", "images/list.png");
-
+    $smarty->assign("BOOKING","<a style='text-decoration: none;' href='./index.php?menu=rx_booking_status'><button type='button'>".$arrLang['View']."</button></a>");
 
     $htmlForm = $oForm->fetchForm("$local_templates_dir/form.tpl",$arrLang["Check In"], $_DATA);
     $content = "<form  method='POST' style='margin-bottom:0;' action='?menu=$module_name'>".$htmlForm."</form>";
@@ -179,28 +179,29 @@ function saveNewCheckIn($smarty, $module_name, $local_templates_dir, &$pDB, &$pD
 		$news_guest 		= $arrLang["New guest"];
 
 	 }
-	 $Booking = "0";
-	 if ($_DATA['booking'] == "on")
-		$Booking = "1";
+
         // Save all Datas into the table register. 
         //---------------------------------------------
         $value_register['room_id']   = "'".$_DATA['room']."'";
         $value_register['guest_id']  = "'".$GuestID['id']."'";
         $value_register['date_ci']   = "'".$_DATA['date']."'";
         $value_register['date_co']   = "'".$_DATA['date_co']."'";
-        $value_register['booking']   = "'".$Booking."'";
         $value_register['num_guest'] = "'".$_DATA['num_guest']."'";
         $value_register['status']    = "'1'";
+	 if ($_DATA['booking'] == "on")
+	    $value_register['status'] = "'2'";
         $arrRegister 		  = $pCheckIn->insertQuery('register',$value_register);
 
         // Update the room status (Free -> Busy)
 	 // Put the guest name into the room.
         //---------------------------------------------
-	 $guest_name 			= str_replace("'","",$value_guest['first_name']." ".$value_guest['last_name']);
-        $value_rooms['free'] 	= '0'; 
-        $value_rooms['guest_name'] = "'".$guest_name."'";
-        $where 			= "id = '".$_DATA['room']."'";
-        $arrRegister 		= $pCheckIn->updateQuery('rooms',$value_rooms, $where);
+	 if ($_DATA['booking'] == "off"){
+	 	$guest_name 			= str_replace("'","",$value_guest['first_name']." ".$value_guest['last_name']);
+       	$value_rooms['free'] 	= '0'; 
+        	$value_rooms['guest_name']  = "'".$guest_name."'";
+        	$where 			= "id = '".$_DATA['room']."'";
+        	$arrRegister 			= $pCheckIn->updateQuery('rooms',$value_rooms, $where);
+	 }
 
 	 // Take the rooms extension from id 
         //---------------------------------------------
@@ -210,33 +211,40 @@ function saveNewCheckIn($smarty, $module_name, $local_templates_dir, &$pDB, &$pD
 
         // Modify the account code extension into Freepbx data
         //---------------------------------------------
-        $value_rl['value']  	= "'true'";
-        $where              	= "variable = 'need_reload';";
-        $arrReload          	= $pCheckIn_Ast->updateQuery('admin',$value_rl, $where);
+	 if ($_DATA['booking'] == "off"){
+        	$value_rl['value']  	= "'true'";
+        	$where              	= "variable = 'need_reload';";
+        	$arrReload          	= $pCheckIn_Ast->updateQuery('admin',$value_rl, $where);
 
-        $value_ac['data']   	= "'".$GuestID['id']."'";
-        $where              	= "id = '".$Rooms['extension']."' and keyword = 'accountcode';";
-        $arrAccount         	= $pCheckIn_Ast->updateQuery('sip',$value_ac, $where);
+        	$value_ac['data']   	= "'".$GuestID['id']."'";
+        	$where              	= "id = '".$Rooms['extension']."' and keyword = 'accountcode';";
+        	$arrAccount         	= $pCheckIn_Ast->updateQuery('sip',$value_ac, $where);
 
-        $cmd="/var/lib/asterisk/bin/module_admin reload";
-        exec($cmd);
+        	$cmd			="/var/lib/asterisk/bin/module_admin reload";
+        	exec($cmd);
+	 }
 
         // Unlock the extension 
         //---------------------------------------------
-	 $cmd 				= "/usr/sbin/asterisk -rx 'database put LOCKED ".$Rooms['extension']." 0'";
-
-        exec($cmd);
+	 if ($_DATA['booking'] == "off"){
+	 	$cmd 			= "/usr/sbin/asterisk -rx 'database put LOCKED ".$Rooms['extension']." 0'";
+		exec($cmd);
+	 }
 
         // Call Between rooms enabled or not.
         //---------------------------------------------
-        $where 			= "";
-        $arrConfig 			= $pCheckIn->getCheckIn('config',$where);
-        $arrAstDB 			= $arrConfig['0'];
+        $strMsg 			= $news_guest." ".$arrLang["Booking Done"];
+	 if ($_DATA['booking'] == "off"){
+        	$where 		= "";
+        	$arrConfig 		= $pCheckIn->getCheckIn('config',$where);
+        	$arrAstDB 		= $arrConfig['0'];
 
-        $cmd				= "/usr/sbin/asterisk -rx 'database put CBR ".$Rooms['extension']." ".$arrAstDB['cbr']."'";
-        exec($cmd);
+        	$cmd			= "/usr/sbin/asterisk -rx 'database put CBR ".$Rooms['extension']." ".$arrAstDB['cbr']."'";
+        	exec($cmd);
 
-        $strMsg 			= $news_guest." ".$arrLang["Checkin Done"];
+        	$strMsg 		= $news_guest." ".$arrLang["Checkin Done"];
+	 }
+	 
         $smarty->assign("mb_message", $strMsg);
         $content 			= viewFormCheckIn($smarty, $module_name, $local_templates_dir, $pDB,$dDP_Ast, $arrConf, $arrLang);
     }
