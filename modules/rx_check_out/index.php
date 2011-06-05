@@ -197,15 +197,6 @@ function saveNewCheckOut($smarty, $module_name, $local_templates_dir, &$pDB, &$p
         $cmd 		 	= "/usr/sbin/asterisk -rx 'database del DND ".$arrExt['extension']."'";
         exec($cmd);
 
-        // Put a checkout date and a paid flag
-        //------------------------------------
-        $value_re['date_co']= "'".date('Y-m-d H:i:s')."'";
-        $value_re['paid']   = "'0'";
-        if ($_DATA['paid'] == "on")
-          $value_re['paid'] = "'1'";
-        $where 		= "room_id = '".$arrExt['id']."' and status = '1'";
-        $arrUpdateRoom 	= $pRoom->updateQuery('register', $value_re, $where);
-
         // Delete the account code extension into Freepbx data
         //----------------------------------------------------
         $value_rl['value']  = "'true'";
@@ -289,7 +280,7 @@ function saveNewCheckOut($smarty, $module_name, $local_templates_dir, &$pDB, &$p
 	 $Model        = $arrModel[0];
         $puht         = strval($Model['room_price']);
 	 if ($num_guest > 1)
-	 	$puht   = strval($Model['room_price'])+($num_guest * strval($Model['room_persone'])); 
+	 	$puht   = strval($Model['room_price'])+($num_guest * strval($Model['room_guest'])); 
         $patc         = ($puht*$Night)*(1+(strval($Model['room_vat'])/100));
 	 $vat          = $patc - ($puht*$Night) ;
 	 $vat_Nights   = $vat;
@@ -386,9 +377,6 @@ function saveNewCheckOut($smarty, $module_name, $local_templates_dir, &$pDB, &$p
 	 	}
 		else
 		{
-			//$Total_Call_VAT=0;
-			//$Total_Calls=0;
-
         		$key=0;
              	 	$Total_Calls = 0; 
 	 		foreach($arrCDR as $key => $value)
@@ -428,6 +416,7 @@ function saveNewCheckOut($smarty, $module_name, $local_templates_dir, &$pDB, &$p
 
 	 // We want to send the billing by mail? 
 	 //-------------------------------------
+
 	 if($_DATA['sending_by_mail'] == 'on' && isset($For['mail']) )
 		{
      	 	$headers = "From: ".$For['mail']."\n"
@@ -450,11 +439,14 @@ function saveNewCheckOut($smarty, $module_name, $local_templates_dir, &$pDB, &$p
      			} 
 		 }
 
-        // Put the register with the status 0 (So ).
-        //------------------------------------------
-	 $value_re['status']		= "'0'";
-	 if ($_DATA['paid'] == 'on')
-	 	$value_re['status']	= "'1'";
+        // Put the register with the status 0.
+        //------------------------------------
+	 //
+
+        $value_re['date_co']	= "'".date('Y-m-d H:i:s')."'"; // Put a checkout date 
+        $value_re['paid']   	= "'0'";		          // and a paid flag
+        if ($_DATA['paid'] == "on")		         	   //--------------------
+          $value_re['paid'] 	= "'1'";
         $value_re['status'] 	= "'0'";
         $value_re['billing_file']  = "'".$name."'";
         $value_re['total_room']    = "'".$patc."'";
