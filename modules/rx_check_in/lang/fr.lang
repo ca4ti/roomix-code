@@ -30,9 +30,9 @@ global $arrLangModule;
 $arrLangModule=array(
 "Check In" 		=> "Arrivée",
 "Room" 		=> "Chambre",
-"Date" 		=> "Date",
-"First Name" 		=> "Nom",
-"Last Name" 		=> "Prénom",
+"Date" 		=> "Arrivée",
+"Last Name" 		=> "Nom",
+"First Name" 		=> "Prénom",
 "Address" 		=> "Adresse",
 "CP"			=> "Code Postal",
 "City" 		=> "Ville",
@@ -43,9 +43,11 @@ $arrLangModule=array(
 "No Room!"		=> "Aucune Chambre!",
 "New guest"   	=> "Nouveau Client,",
 "Checkin Done"	=> "Arrivée effectuée",
-"Date Checkout" 	=> "Date de départ",
+"Date Checkout" 	=> "Départ prévu",
 "Booking" 		=> "Réservation",
 "Number of personne" => "Nombre de personnes",
 "Show"			=> "Consulter",
+"Booking Done"	=> "Réservation Faite",
+"Already Booked"	=> "Déja Réservée",
 );
 ?>

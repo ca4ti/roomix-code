@@ -28,12 +28,17 @@
   $Id: en.lang,v 1.1 2011-05-26 06:05:07 Franck Danard franckd@agmp.org Exp $ */
 global $arrLangModule;
 $arrLangModule=array(
-"Booking List" => "Booking List",
-"Checkin" => "Checkin",
-"Canceled" => "Canceled",
-"Rooms" => "Rooms",
-"Guest" => "Guest",
-"Date Checkin" => "Date Checkin",
-"Date Checkout" => "Date Checkout",
+"Booking List" 	=> "Booking List",
+"Checkin" 		=> "Checkin",
+"Canceled" 		=> "Canceled",
+"Rooms" 		=> "Rooms",
+"Guest" 		=> "Guest",
+"Date Checkin" 	=> "Date Checkin",
+"Date Checkout" 	=> "Date Checkout",
+"First Name"		=> "First Name",
+"Last Name"		=> "Last Name",
+"Search"		=> "Search",
+"Show"			=> "Show",
+"Number Guest"	=> "Number Guest",
 );
 ?>

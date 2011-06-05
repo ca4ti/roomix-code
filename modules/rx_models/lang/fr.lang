@@ -34,5 +34,6 @@ $arrLangModule=array(
 "V.A.T"  => "TVA",
 "Search" => "Recherche",
 "Show"   => "Filtrer",
+"Guest"  => "Personne sup.",
 );
 ?>

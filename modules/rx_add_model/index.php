@@ -147,9 +147,10 @@ function saveNewAddModel($smarty, $module_name, $local_templates_dir, &$pDB, $ar
 		$n++;
 	 }
 	
-        $arrValores['room_model'] = "'".$_DATA['model']."'";
-        $arrValores['room_price'] = "'".$_DATA['price']."'";
-        $arrValores['room_vat']   = "'".$_DATA['vat']."'";
+        $arrValores['room_model'] 	 = "'".$_DATA['model']."'";
+        $arrValores['room_price']   = "'".$_DATA['price']."'";
+        $arrValores['room_guest']   = "'".$_DATA['guest']."'";
+        $arrValores['room_vat']     = "'".$_DATA['vat']."'";
 
         //genQuery($query, $param = NULL)
 
@@ -175,6 +176,13 @@ function createFieldForm($arrLang,&$pDB)
                                             "VALIDATION_EXTRA_PARAM" => ""
                                             ),
             "price"   => array(      "LABEL"                  => $arrLang["Price"],
+                                            "REQUIRED"               => "yes",
+                                            "INPUT_TYPE"             => "TEXT",
+                                            "INPUT_EXTRA_PARAM"      => "",
+                                            "VALIDATION_TYPE"        => "text",
+                                            "VALIDATION_EXTRA_PARAM" => ""
+                                            ),
+            "guest"   => array(      "LABEL"                  => $arrLang["Guest"],
                                             "REQUIRED"               => "yes",
                                             "INPUT_TYPE"             => "TEXT",
                                             "INPUT_EXTRA_PARAM"      => "",

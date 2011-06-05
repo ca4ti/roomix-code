@@ -57,9 +57,7 @@ function _moduleContent(&$smarty, $module_name)
     $local_templates_dir="$base_dir/modules/$module_name/".$templates_dir.'/'.$arrConf['theme'];
 
     //conexion resource
-    //$pDB = new paloDB($arrConf['dsn_conn_database']);
-    $pDB = "";
-
+    $pDB = new paloDB($arrConf['dsn_conn_database']);
 
     //actions
     $action = getAction();
@@ -93,7 +91,7 @@ function reportBookingList($smarty, $module_name, $local_templates_dir, &$pDB, $
         "filter_value" =>  $filter_value);
     $oGrid->setURL($url);
 
-    $arrColumns = array(_tr("Checkin"),_tr("Canceled"),_tr("Rooms"),_tr("Guest"),_tr("Date Checkin"),_tr("Date Checkout"),);
+    $arrColumns = array(_tr("Checkin"),_tr("Canceled"),_tr("Rooms"),_tr("First Name"),_tr("Last Name"),_tr("Number Guest"),_tr("Date Checkin"),_tr("Date Checkout"),);
     $oGrid->setColumns($arrColumns);
 
     $total   = $pBookingList->getNumBookingList($filter_field, $filter_value);
@@ -113,13 +111,15 @@ function reportBookingList($smarty, $module_name, $local_templates_dir, &$pDB, $
 
     if(is_array($arrResult) && $total>0){
         foreach($arrResult as $key => $value){ 
-	    $arrTmp[0] = $value['checkin'];
-	    $arrTmp[1] = $value['canceled'];
-	    $arrTmp[2] = $value['rooms'];
-	    $arrTmp[3] = $value['guest'];
-	    $arrTmp[4] = $value['date_checkin'];
-	    $arrTmp[5] = $value['date_checkout'];
-            $arrData[] = $arrTmp;
+	    $arrTmp[0] = ""; //$value['checkin'];
+	    $arrTmp[1] = ""; //$value['canceled'];
+	    $arrTmp[2] = $value['room_name'];
+	    $arrTmp[3] = $value['first_name'];
+	    $arrTmp[4] = $value['last_name'];
+	    $arrTmp[5] = $value['num_guest'];	
+	    $arrTmp[6] = $value['date_ci'];
+	    $arrTmp[7] = $value['date_co'];
+           $arrData[] = $arrTmp;
         }
     }
     $oGrid->setData($arrData);
@@ -140,10 +140,12 @@ function reportBookingList($smarty, $module_name, $local_templates_dir, &$pDB, $
 
 function createFieldFilter(){
     $arrFilter = array(
-	    "rooms" => _tr("Rooms"),
-	    "guest" => _tr("Guest"),
-	    "date_checkin" => _tr("Date Checkin"),
-	    "date_checkout" => _tr("Date Checkout"),
+	    "room_name"    => _tr("Rooms"),
+	    "first_name"   => _tr("First Name"),
+	    "last_name"    => _tr("Last Name"),
+	    "num_guest"    => _tr("Number Guest"),
+	    "date_ci"      => _tr("Date Checkin"),
+	    "date_co"      => _tr("Date Checkout"),
                     );
 
     $arrFormElements = array(

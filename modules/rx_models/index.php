@@ -133,7 +133,8 @@ function reportModels($smarty, $module_name, $local_templates_dir, &$pDB, $arrCo
 	    $arrTmp[0] = "<input type='checkbox' name='model' value='$value_check'>";
 	    $arrTmp[1] = $value['room_model'];
 	    $arrTmp[2] = $value['room_price'];
-	    $arrTmp[3] = $value['room_vat'];
+	    $arrTmp[3] = $value['room_guest'];
+	    $arrTmp[4] = $value['room_vat']." %";
            $arrData[] = $arrTmp;
         }
     }
@@ -153,7 +154,9 @@ function reportModels($smarty, $module_name, $local_templates_dir, &$pDB, $arrCo
                                    "property1" => ""),
 			2 => array("name"      => $arrLang["Prices"],
                                    "property1" => ""),
-			3 => array("name"      => $arrLang["V.A.T"],
+			3 => array("name"      => $arrLang["Guest"],
+                                   "property1" => ""),
+			4 => array("name"      => $arrLang["V.A.T"],
                                    "property1" => ""),
                                         )
                     );
@@ -190,6 +193,7 @@ function createFieldFilter($arrLang){
     $arrFilter = array(
 	    "room_model" => $arrLang["Models"],
 	    "room_price" => $arrLang["Prices"],
+	    "room_guest" => $arrLang["Guest"],
 	    "room_vat"   => $arrLang["V.A.T"],
                     );
 

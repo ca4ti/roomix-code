@@ -47,5 +47,7 @@ $arrLangModule=array(
 "Booking" 		=> "Booking",
 "Number of personne" => "Number of personne",
 "Show"			=> "Check",
+"Booking Done"	=> "Booking Done",
+"Already Booked"	=> "Already Booked",
 );
 ?>

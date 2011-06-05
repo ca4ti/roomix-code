@@ -168,7 +168,7 @@ class paloSantoCheckIn {
 
     function getBookingStatus()
     {
-       $query    = "SELECT count(status) AS booking FROM register WHERE status = 2 AND DATE(date_format(`date_ci`,'%Y-%m-%d')) = current_date();";
+       $query    = "SELECT count(date_ci) AS booking FROM booking WHERE DATE(date_format(`date_ci`,'%Y-%m-%d')) = current_date();";
 
         $result=$this->_DB->fetchTable($query, true, "");
 
@@ -190,6 +190,25 @@ class paloSantoCheckIn {
             return array();
         }
         return $result[0]['ToDay'];
+    }
+
+    function Check_Booking($room,$date_ci,$date_co)
+    {
+       $query    = "SELECT count(room_name) AS booking FROM booking 
+		      RIGHT JOIN `rooms` ON room_id  = rooms.id
+		      RIGHT JOIN `guest` ON guest_id = guest.id
+		      WHERE 
+		      room_id = '$room' AND
+		      DATE(date_format(`date_ci`,'%Y-%m-%d')) >= '$date_ci' OR
+		      DATE(date_format(`date_co`,'%Y-%m-%d')) <= '$date_co';";
+	 //echo $query;
+        $result=$this->_DB->fetchTable($query, true, "");
+
+        if($result==FALSE){
+            $this->errMsg = $this->_DB->errMsg;
+            return array();
+        }
+        return $result[0]['booking'];
     }
 
     function UpdateStatus($value)

@@ -115,8 +115,11 @@ function viewFormBookingStatus($smarty, $module_name, $local_templates_dir, &$pD
     $arrBookingRooms = $pBookingStatus->getBookingStatus_Once();
     $today 		= $pBookingStatus->ToDay();
 
-    Booking_Cal("","",$arrBookingRooms,"modules/$module_name/images/Booking.png","Booking Rooms Calendar",$today);
-    $smarty->assign("BOOKING","modules/$module_name/images/Booking.png");
+    $smarty->assign("BOOKING","modules/$module_name/images/no_data.png");
+    if (isset($arrBookingRooms[0])){
+    	Booking_Cal("","",$arrBookingRooms,"modules/$module_name/images/Booking.png","Booking Rooms Calendar",$today);
+    	$smarty->assign("BOOKING","modules/$module_name/images/Booking.png");
+    }
 
     $htmlForm = $oForm->fetchForm("$local_templates_dir/form.tpl",_tr("Booking Status"), $_DATA);
     $content = "<form  method='POST' style='margin-bottom:0;' action='?menu=$module_name'>".$htmlForm."</form>";
@@ -156,8 +159,11 @@ function saveNewBookingStatus($smarty, $module_name, $local_templates_dir, &$pDB
     	 $arrBookingRooms = $pBookingStatus->getBookingStatus($date_start,$date_end);
     	 $today 	    = $pBookingStatus->ToDay();
 
-    	 Booking_Cal($date_start,$date_end,$arrBookingRooms,"modules/$module_name/images/Booking.png","Booking Rooms Calendar",$today);
-    	 $smarty->assign("BOOKING","modules/$module_name/images/Booking.png");
+        $smarty->assign("BOOKING","modules/$module_name/images/no_data.png");
+    	 if (isset($arrBookingRooms[0])){
+    	 	Booking_Cal($date_start,$date_end,$arrBookingRooms,"modules/$module_name/images/Booking.png","Booking Rooms Calendar",$today);
+    	 	$smarty->assign("BOOKING","modules/$module_name/images/Booking.png");
+	 }
 
     	 $htmlForm        = $oForm->fetchForm("$local_templates_dir/form.tpl",_tr("Booking Status"), $_DATA);
     	 $content         = "<form  method='POST' style='margin-bottom:0;' action='?menu=$module_name'>".$htmlForm."</form>";
@@ -221,21 +227,13 @@ function Booking_Cal($date_start, $date_end, $booking_rooms, $files_graph, $Titl
 	$graph->Add($vline);
 
     	foreach($booking_rooms as $key => $value){
-		$data[$key] = array($key,$value['room_name'],$value['date_ci'],$value['date_co'],$value['status']);
+		$data[$key] = array($key,$value['room_name'],$value['date_ci'],$value['date_co']);
     	}
 
 	for($i=0; $i<count($data); ++$i) {
-		if( $data[$i][4] == 2){
     		$bar = new GanttBar($data[$i][0],$data[$i][1],$data[$i][2],$data[$i][3],"",10);
     		$bar->SetPattern(BAND_RDIAG,"yellow");
     		$bar->SetFillColor("red");
-		}
-    		if( $data[$i][4] == 1){
-    			$bar = new GanttBar($data[$i][0],$data[$i][1],$data[$i][2],$data[$i][3],"Busy",10);
-        		//$bar->title->SetFont(FF_FONT1,FS_BOLD,10);
-    			$bar->SetPattern(BAND_RDIAG,"red");
-    			$bar->SetFillColor("red");
-			}
     		$graph->Add($bar);
 		}
 	$graph->Stroke($files_graph);

@@ -53,16 +53,16 @@ class paloSantoBookingList{
 
     function getNumBookingList($filter_field, $filter_value)
     {
-        $where    = "";
+        $where    = "WHERE date_ci is not null";
         $arrParam = null;
         if(isset($filter_field) & $filter_field !=""){
-            $where    = "where $filter_field like ?";
-            $arrParam = array("$filter_value%");
+            $where    = "where $filter_field like '%$filter_value%' and date_ci is not null ";
+            //$arrParam = array("$filter_value%");
         }
 
-        $query   = "SELECT COUNT(*) FROM table $where";
-
-        $result=$this->_DB->getFirstRowQuery($query, false, $arrParam);
+        $query   = "SELECT COUNT(*) FROM booking RIGHT JOIN `rooms` ON room_id  = rooms.id RIGHT JOIN `guest` ON guest_id = guest.id $where";
+	 // echo $query;
+        $result=$this->_DB->getFirstRowQuery($query, false, "");
 
         if($result==FALSE){
             $this->errMsg = $this->_DB->errMsg;
@@ -73,16 +73,21 @@ class paloSantoBookingList{
 
     function getBookingList($limit, $offset, $filter_field, $filter_value)
     {
-        $where    = "";
+        $where    = "WHERE date_ci is not null";
         $arrParam = null;
         if(isset($filter_field) & $filter_field !=""){
-            $where    = "where $filter_field like ?";
-            $arrParam = array("$filter_value%");
+            $where    = "where $filter_field like '%$filter_value%' and date_ci is not null";
+            //$arrParam = array("$filter_value%");
         }
 
-        $query   = "SELECT * FROM table $where LIMIT $limit OFFSET $offset";
+        $query   = "SELECT `room_name`, `first_name`, `last_name`, `num_guest`,
+                    DATE(date_format(`date_ci`,'%Y-%m-%d'))  AS date_ci , 
+		      DATE(date_format(`date_co`,'%Y-%m-%d')) AS date_co  
+		      FROM `booking` 
+		      RIGHT JOIN `rooms` ON room_id  = rooms.id
+		      RIGHT JOIN `guest` ON guest_id = guest.id $where LIMIT $limit OFFSET $offset";
 
-        $result=$this->_DB->fetchTable($query, true, $arrParam);
+        $result=$this->_DB->fetchTable($query, true, "");
 
         if($result==FALSE){
             $this->errMsg = $this->_DB->errMsg;
@@ -93,7 +98,7 @@ class paloSantoBookingList{
 
     function getBookingListById($id)
     {
-        $query = "SELECT * FROM table WHERE id=?";
+        $query = "SELECT * FROM booking WHERE date_ci is not null";
 
         $result=$this->_DB->getFirstRowQuery($query, true, array("$id"));
 

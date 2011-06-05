@@ -60,7 +60,7 @@ class paloSantoBookingStatus{
             $arrParam = array("$filter_value%");
         }
 
-        $query   = "SELECT COUNT(*) FROM table $where";
+        $query   = "SELECT COUNT(*) FROM booking $where";
 
         $result=$this->_DB->getFirstRowQuery($query, false, $arrParam);
 
@@ -74,12 +74,11 @@ class paloSantoBookingStatus{
     function getBookingStatus_Once()
     {
         $query   = "SELECT `room_name` , DATE(date_format(`date_ci`,'%Y-%m-%d'))  AS date_ci , 
-			DATE(date_format(`date_co`,'%Y-%m-%d'))  AS date_co , `status`
-			FROM `register` 
-			RIGHT JOIN `rooms` ON room_id = rooms.id WHERE `status` >0 ";
+		      DATE(date_format(`date_co`,'%Y-%m-%d'))  AS date_co
+		      FROM `booking` RIGHT JOIN `rooms` ON room_id = rooms.id WHERE date_ci IS NOT NULL";
 			//AND DATE_FORMAT( date_ci, '%Y-%m-%d' ) BETWEEN curdate( ) AND curdate( ) 
 			//OR DATE_FORMAT( date_co, '%Y-%m-%d' ) BETWEEN curdate( ) AND curdate( )";
-	//echo $query;
+	 //echo $query;
         $result=$this->_DB->fetchTable($query, true, "");
 
         if($result==FALSE){
@@ -104,7 +103,7 @@ class paloSantoBookingStatus{
 
     function Clean_booking()
     {
-        $query   = "DELETE FROM register WHERE status=2 and date_ci < current_date()";
+        $query   = "DELETE FROM booking WHERE date_ci < current_date()";
 
         $result=$this->_DB->fetchTable($query, true, "");
 
@@ -118,10 +117,9 @@ class paloSantoBookingStatus{
     function getBookingStatus($date_start, $date_end)
     {
         $query   = "SELECT `room_name` , DATE(date_format(`date_ci`,'%Y-%m-%d'))  AS date_ci , 
-		      DATE(date_format(`date_co`,'%Y-%m-%d'))  AS date_co , `status`
-		      FROM `register` 
-		      RIGHT JOIN `rooms` ON room_id = rooms.id WHERE `status` > 0 
-		      AND DATE_FORMAT( date_ci, '%Y-%m-%d' ) BETWEEN '$date_start' AND '$date_end' 
+		      DATE(date_format(`date_co`,'%Y-%m-%d'))  AS date_co 
+		      FROM `booking` 
+		      RIGHT JOIN `rooms` ON room_id = rooms.id WHERE DATE_FORMAT( date_ci, '%Y-%m-%d' ) BETWEEN '$date_start' AND '$date_end' 
 		      OR  DATE_FORMAT( date_co, '%Y-%m-%d' ) BETWEEN '$date_start' AND '$date_end'";
 	 //echo $query;
         $result=$this->_DB->fetchTable($query, true, "");

@@ -26,12 +26,14 @@
   | The Initial Developer of the Original Code is PaloSanto Solutions    |
   +----------------------------------------------------------------------+
   $Id: default.conf.php,v 1.1 2011-05-26 06:05:07 Franck Danard franckd@agmp.org Exp $ */
+  $DocumentRoot = (isset($_SERVER['argv'][1]))?$_SERVER['argv'][1]:"/var/www/html";
+  require_once("$DocumentRoot/libs/misc.lib.php");
     global $arrConf;
     global $arrConfModule;
 
-    $arrConfModule['module_name']       = 'rx_booking_list';
+    $arrConfModule['module_name']       = 'rx_checkout';
     $arrConfModule['templates_dir']     = 'themes';
     //ex1: $arrConfModule['dsn_conn_database'] = "sqlite3:///$arrConf[elastix_dbdir]/base_name.db";
-    //ex2: $arrConfModule['dsn_conn_database'] = "mysql://user:password@ip_host_sever_mysql/base_name";
-    $arrConfModule['dsn_conn_database'] = '';
+    $arrConfModule['dsn_conn_database'] = "mysql://root:".obtenerClaveConocidaMySQL('root')."@localhost/roomx";
+    //$arrConfModule['dsn_conn_database'] = '';
 ?>

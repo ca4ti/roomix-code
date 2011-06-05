@@ -24,13 +24,13 @@
 <table class="tabForm" style="font-size: 16px;" width="100%" >
     <tr class="letra12">
         <td align="right"><b>{$room.LABEL}: </td>
-        <td align="left">{$room.INPUT} <span  class="required">*</span></b></td>
+        <td align="left">{$room.INPUT} </b></td>
         <td align="right"><b>{$date.LABEL}: </b></td>
         <td align="left">{$date.INPUT} <span  class="required">*</span></b></td>
         <td align="right"><b>{$date_co.LABEL}: </b></td>
         <td align="left">{$date_co.INPUT} <span  class="required">*</span></b></td>
         <td align="right"><b>{$booking.LABEL}: </b></td>
-        <td align="left">{$booking.INPUT} <span  class="required">*</span></b></td>
+        <td align="left">{$booking.INPUT}</b></td>
     </tr>
 
     <tr class="letra12">
@@ -39,7 +39,7 @@
         <td align="right"><b>{$last_name.LABEL}: </b></td>
         <td align="left">{$last_name.INPUT} <span  class="required">*</span></td>
         <td align="right"><b>{$num_guest.LABEL}: </b></td>
-        <td align="left">{$num_guest.INPUT} <span  class="required">*</span></td>
+        <td align="left">{$num_guest.INPUT}</td>
         <td align="right">{$BOOKING}</td>
         <td align="left"> </td>
     </tr>

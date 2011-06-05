@@ -89,6 +89,8 @@ function viewFormCheckIn($smarty, $module_name, $local_templates_dir, &$pDB, &$p
     $id     = getParameter("id");
     $smarty->assign("ID", $id); //persistence id with input hidden in tpl
 
+    $_DATA['num_guest'] = 1;
+
     if($action=="view")
         $oForm->setViewMode();
     else if($action=="view_edit" || getParameter("save_edit"))
@@ -110,7 +112,7 @@ function viewFormCheckIn($smarty, $module_name, $local_templates_dir, &$pDB, &$p
     $smarty->assign("CANCEL", $arrLang["Cancel"]);
     $smarty->assign("REQUIRED_FIELD", $arrLang["Required field"]);
     $smarty->assign("IMG", "images/list.png");
-    $smarty->assign("BOOKING","<a style='text-decoration: none;' href='./index.php?menu=rx_booking_status'><button type='button'>".$arrLang['View']."</button></a>");
+    $smarty->assign("BOOKING","<a style='text-decoration: none;' href='./index.php?menu=rx_booking_status'><button type='button'>".$arrLang['Show']."</button></a>");
 
     $htmlForm = $oForm->fetchForm("$local_templates_dir/form.tpl",$arrLang["Check In"], $_DATA);
     $content = "<form  method='POST' style='margin-bottom:0;' action='?menu=$module_name'>".$htmlForm."</form>";
@@ -125,6 +127,10 @@ function saveNewCheckIn($smarty, $module_name, $local_templates_dir, &$pDB, &$pD
     $arrFormCheckIn = createFieldForm($arrLang, $pDB);
     $oForm = new paloForm($smarty,$arrFormCheckIn);
     $_DATA = $_POST;
+
+    $arrCheckBooking	= $pCheckIn->Check_Booking($_DATA['room'],$_DATA['date'],$_DATA['date_co']); 
+
+    if ($arrCheckBooking == 0){
 
     if(!$oForm->validateForm($_POST)){
         // Validation basic, not empty and VALIDATION_TYPE 
@@ -187,10 +193,14 @@ function saveNewCheckIn($smarty, $module_name, $local_templates_dir, &$pDB, &$pD
         $value_register['date_ci']   = "'".$_DATA['date']."'";
         $value_register['date_co']   = "'".$_DATA['date_co']."'";
         $value_register['num_guest'] = "'".$_DATA['num_guest']."'";
-        $value_register['status']    = "'1'";
-	 if ($_DATA['booking'] == "on")
-	    $value_register['status'] = "'2'";
-        $arrRegister 		  = $pCheckIn->insertQuery('register',$value_register);
+	 if ($_DATA['booking'] == "off"){
+        	$value_register['status']    = "'1'";
+        	$arrRegister 		  = $pCheckIn->insertQuery('register',$value_register);
+	 	}
+	 else
+	 	{
+		$arrRegister 		  = $pCheckIn->insertQuery('booking',$value_register);
+	 	}
 	 
         // Update the room status (Free -> Busy)
 	 // Put the guest name into the room.
@@ -259,8 +269,13 @@ function saveNewCheckIn($smarty, $module_name, $local_templates_dir, &$pDB, &$pD
 	 }
 	 
         $smarty->assign("mb_message", $strMsg);
-        $content 			= viewFormCheckIn($smarty, $module_name, $local_templates_dir, $pDB,$dDP_Ast, $arrConf, $arrLang);
     }
+    }
+    else
+    {
+    	$smarty->assign("mb_message", $arrLang["Already Booked"]);
+    }
+    $content 			= viewFormCheckIn($smarty, $module_name, $local_templates_dir, $pDB,$dDP_Ast, $arrConf, $arrLang);
     return $content;
 }
 
@@ -314,7 +329,7 @@ function createFieldForm($arrLang, &$pDB)
                                             "VALIDATION_EXTRA_PARAM" => ""
                                             ),
             "num_guest"=> array(     "LABEL"                  => $arrLang["Number of personne"],
-                                            "REQUIRED"               => "yes",
+                                            "REQUIRED"               => "no",
                                             "INPUT_TYPE"             => "TEXT",
                                             "INPUT_EXTRA_PARAM"      => "",
                                             "VALIDATION_TYPE"        => "text",

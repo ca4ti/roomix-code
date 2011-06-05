@@ -28,8 +28,11 @@
         <td align="left">{$model.INPUT} <span  class="required">*</span></td>
         <td align="right"><b>{$price.LABEL}: </b></td>
         <td align="left">{$price.INPUT} <span  class="required">*</span></td>
+        <td align="right"><b>{$guest.LABEL}: </b></td>
+        <td align="left">{$guest.INPUT} <span  class="required">*</span></td>
         <td align="right"><b>{$vat.LABEL}: </b></td>
         <td align="left">{$vat.INPUT} <span  class="required">*</span></td>
     </tr>
 </table>
+
 <input class="button" type="hidden" name="id" value="{$ID}" />
