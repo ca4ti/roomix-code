@@ -28,8 +28,8 @@
   $Id: en.lang,v 1.1 2011-05-26 06:05:26 Franck Danard franckd@agmp.org Exp $ */
 global $arrLangModule;
 $arrLangModule=array(
-"Booking Status" 	=> "Booking Status",
-"Date Start" 		=> "Date Start",
-"Date End" 		=> "Date End",
+"Booking Status" 	=> "Situação de reserva",
+"Date Start" 		=> "Data de Início",
+"Date End" 		=> "Data de Fim",
 );
 ?>

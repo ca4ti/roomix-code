@@ -52,6 +52,12 @@ function _moduleContent(&$smarty, $module_name)
     $arrConf = array_merge($arrConf,$arrConfModule);
     $arrLang = array_merge($arrLang,$arrLangModule);
 
+    $smarty->assign("SAVE", $arrLang["Save"]);
+    $smarty->assign("EDIT", $arrLang["Edit"]);
+    $smarty->assign("CANCEL", $arrLang["Cancel"]);
+    $smarty->assign("REQUIRED_FIELD", $arrLang["Required field"]);
+    $smarty->assign("IMG", "images/list.png");
+
     //folder path for custom templates
     $templates_dir=(isset($arrConf['templates_dir']))?$arrConf['templates_dir']:'themes';
     $local_templates_dir="$base_dir/modules/$module_name/".$templates_dir.'/'.$arrConf['theme'];
@@ -64,6 +70,9 @@ function _moduleContent(&$smarty, $module_name)
     $content = "";
 
     switch($action){
+        case "save_new":
+            $content = ActionBookingList($smarty, $module_name, $local_templates_dir, $pDB, $arrConf);
+            break;
         default:
             $content = reportBookingList($smarty, $module_name, $local_templates_dir, $pDB, $arrConf);
             break;
@@ -107,12 +116,100 @@ function reportBookingList($smarty, $module_name, $local_templates_dir, &$pDB, $
         $offset = $oGrid->calculateOffset();
     }
 
-    $arrResult =$pBookingList->getBookingList($limit, $offset, $filter_field, $filter_value);
-
+    $arrResult = $pBookingList->getBookingList($limit, $offset, $filter_field, $filter_value);
+    
     if(is_array($arrResult) && $total>0){
         foreach($arrResult as $key => $value){ 
-	    $arrTmp[0] = ""; //$value['checkin'];
-	    $arrTmp[1] = ""; //$value['canceled'];
+	    $arrTmp[0] = "<input type='checkbox' name='checkin[".$key."]' value='".$value['id']."'>";
+	    $arrTmp[1] = "<input type='checkbox' name='canceled[".$key."]' value='".$value['id']."'>";
+	    $arrTmp[2] = $value['room_name'];
+	    $arrTmp[3] = $value['first_name'];
+	    $arrTmp[4] = $value['last_name'];
+	    $arrTmp[5] = $value['num_guest'];	
+	    $arrTmp[6] = $value['date_ci'];
+	    $arrTmp[7] = $value['date_co'];
+           $arrData[] = $arrTmp;
+        }
+    }
+    $oGrid->setData($arrData);
+
+    //begin section filter
+    $oFilterForm = new paloForm($smarty, createFieldFilter());
+    $smarty->assign("SHOW", _tr("Show"));
+    $htmlFilter  = $oFilterForm->fetchForm("$local_templates_dir/filter.tpl","",$_POST);
+    //end section filter
+
+    $oGrid->showFilter(trim($htmlFilter));
+    $content = $oGrid->fetchGrid();
+    //end grid parameters
+
+    return $content;
+}
+
+function ActionBookingList($smarty, $module_name, $local_templates_dir, &$pDB, $arrConf)
+{
+    $_DATA = $_POST;
+
+    // There's some checkin to do?
+    //-------------------------------
+    if(array_key_exists('checkin',$_DATA)){
+    	foreach($_DATA['checkin'] as $key => $value)
+    	{
+      		// Making CheckIn Room.
+		//---------------------
+    	}
+    }
+    
+    // There's some booking canceled?
+    //-------------------------------
+    if(array_key_exists('canceled',$_DATA)){
+    	foreach($_DATA['canceled'] as $key => $value)
+    	{
+      		// Deleting the booked Room.
+		//--------------------------
+    	}
+    }
+
+    $pBookingList = new paloSantoBookingList($pDB);
+    $filter_field = getParameter("filter_field");
+    $filter_value = getParameter("filter_value");
+
+    //begin grid parameters
+    $oGrid  = new paloSantoGrid($smarty);
+    $oGrid->setTitle(_tr("Booking List"));
+    $oGrid->pagingShow(true); // show paging section.
+
+    $oGrid->enableExport();   // enable export.
+    $oGrid->setNameFile_Export(_tr("Booking List"));
+
+    $url = array(
+        "menu"         =>  $module_name,
+        "filter_field" =>  $filter_field,
+        "filter_value" =>  $filter_value);
+    $oGrid->setURL($url);
+
+    $arrColumns = array(_tr("Checkin"),_tr("Canceled"),_tr("Rooms"),_tr("First Name"),_tr("Last Name"),_tr("Number Guest"),_tr("Date Checkin"),_tr("Date Checkout"),);
+    $oGrid->setColumns($arrColumns);
+
+    $total   = $pBookingList->getNumBookingList($filter_field, $filter_value);
+    $arrData = null;
+    if($oGrid->isExportAction()){
+        $limit  = $total; // max number of rows.
+        $offset = 0;      // since the start.
+    }
+    else{
+        $limit  = 20;
+        $oGrid->setLimit($limit);
+        $oGrid->setTotal($total);
+        $offset = $oGrid->calculateOffset();
+    }
+
+    $arrResult = $pBookingList->getBookingList($limit, $offset, $filter_field, $filter_value);
+    
+    if(is_array($arrResult) && $total>0){
+        foreach($arrResult as $key => $value){ 
+	    $arrTmp[0] = "<input type='checkbox' name='checkin[".$key."]' value='".$value['id']."'>";
+	    $arrTmp[1] = "<input type='checkbox' name='canceled[".$key."]' value='".$value['id']."'>";
 	    $arrTmp[2] = $value['room_name'];
 	    $arrTmp[3] = $value['first_name'];
 	    $arrTmp[4] = $value['last_name'];

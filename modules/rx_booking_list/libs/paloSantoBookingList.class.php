@@ -80,13 +80,13 @@ class paloSantoBookingList{
             //$arrParam = array("$filter_value%");
         }
 
-        $query   = "SELECT `room_name`, `first_name`, `last_name`, `num_guest`,
+        $query   = "SELECT booking.id, `room_name`, `first_name`, `last_name`, `num_guest`,
                     DATE(date_format(`date_ci`,'%Y-%m-%d'))  AS date_ci , 
 		      DATE(date_format(`date_co`,'%Y-%m-%d')) AS date_co  
 		      FROM `booking` 
 		      RIGHT JOIN `rooms` ON room_id  = rooms.id
 		      RIGHT JOIN `guest` ON guest_id = guest.id $where LIMIT $limit OFFSET $offset";
-
+	 //echo $query;
         $result=$this->_DB->fetchTable($query, true, "");
 
         if($result==FALSE){

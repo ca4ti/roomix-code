@@ -33,6 +33,9 @@ $arrLangModule=array(
 "Rooms Free"		=> "Aptos Livres",
 "Room Busy"		=> "Aptos Ocupados",
 "Number of Rooms"	=> "Número de Aptos",
+"Booking Today"	=> "Reservas Hoje",
+"Potentially full"   => "Potencialmente completo",
+"Full"   		=> "Completo",
 "Intro"		=> "<big><big><big><big>RoomX</big></big></big></big><br>The Elastix module Hotel - Hospital. <br>Version : ",
 );
 ?>

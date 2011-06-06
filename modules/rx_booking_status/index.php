@@ -199,8 +199,9 @@ function createFieldForm()
 
 function Booking_Cal($date_start, $date_end, $booking_rooms, $files_graph, $Title, $today) {
 
-	$graph = new GanttGraph();
+	$graph = new GanttGraph(0,0,"auto");
 	$graph->SetMarginColor('blue:1.7');
+
 	$graph->SetColor('white');
 
 	$graph->SetBackgroundGradient('navy','white',GRAD_HOR,BGRAD_MARGIN);
@@ -218,7 +219,6 @@ function Booking_Cal($date_start, $date_end, $booking_rooms, $files_graph, $Titl
 	$graph->scale->week->SetStyle(WEEKSTYLE_FIRSTDAY);
 	$graph->scale->week->SetFont(FF_FONT1);
 	$graph->scale->hour->SetIntervall(4);
-
 	$graph->scale->hour->SetStyle(HOURSTYLE_HM24);
 	$graph->scale->day->SetStyle(DAYSTYLE_SHORTDATE3);
 
@@ -236,6 +236,7 @@ function Booking_Cal($date_start, $date_end, $booking_rooms, $files_graph, $Titl
     		$bar->SetFillColor("red");
     		$graph->Add($bar);
 		}
+       //$graph->SetDateRange($date_start,$date_end);
 	$graph->Stroke($files_graph);
 }
 

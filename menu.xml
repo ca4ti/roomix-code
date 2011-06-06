@@ -6,7 +6,7 @@
     <menuitem menuid="rx_check_in"    desc="Check In"    parent="roomx"    module="yes" link="" order="2"></menuitem>
     <menuitem menuid="rx_check_out"   desc="Check Out"   parent="roomx"    module="yes" link="" order="3"></menuitem>
     <menuitem menuid="rx_room_list"   desc="Room List"   parent="roomx"    module="yes" link="" order="4"></menuitem>
-	<menuitem menuid="rx_groupe_list" desc="Group List"  parent="roomx"    module="yes" link="" order="5"></menuitem>
+    <menuitem menuid="rx_groupe_list" desc="Group List"  parent="roomx"    module="yes" link="" order="5"></menuitem>
     <menuitem menuid="rx_config"      desc="Config"      parent="roomx"    module="no"  link="" order="6"></menuitem>
     <menuitem menuid="rx_general"     desc="General"     parent="rx_config" module="yes" link="" order="61"></menuitem>
     <menuitem menuid="rx_add_room"    desc="Add Room"    parent="rx_config" module="yes" link="" order="62"></menuitem>
@@ -14,9 +14,9 @@
     <menuitem menuid="rx_add_model"   desc="Add Model"   parent="rx_config" module="yes" link="" order="64"></menuitem>
     <menuitem menuid="rx_minibar"     desc="Mini Bar"    parent="rx_config" module="yes" link="" order="66"></menuitem>
     <menuitem menuid="rx_billing_rep" desc="Billing Report" parent="roomx"  module="yes" link="" order="7"></menuitem>
-	<menuitem menuid="rx_company_rep" desc="Company Report" parent="roomx"  module="yes" link="" order="8"></menuitem>
-	<menuitem menuid="rx_Booking"     desc="Booking"     parent="roomx"     module="no"  link="" order="9"></menuitem>
-	<menuitem menuid="rx_booking_status" desc="Booking"  parent="rx_Booking" module="yes" link="" order="91"></menuitem>
-	<menuitem menuid="rx_booking_list" desc="Booking"    parent="rx_Booking" module="yes" link="" order="92"></menuitem>
+    <menuitem menuid="rx_company_rep" desc="Company Report" parent="roomx"  module="yes" link="" order="8"></menuitem>
+    <menuitem menuid="rx_Booking"     desc="Booking"     parent="roomx"     module="no"  link="" order="9"></menuitem>
+    <menuitem menuid="rx_booking_status" desc="Booking"  parent="rx_Booking" module="yes" link="" order="91"></menuitem>
+    <menuitem menuid="rx_booking_list" desc="Booking"    parent="rx_Booking" module="yes" link="" order="92"></menuitem>
   </menulist>
 </module>
