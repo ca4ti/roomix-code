@@ -16,7 +16,7 @@
     <menuitem menuid="rx_billing_rep" desc="Billing Report" parent="roomx"  module="yes" link="" order="7"></menuitem>
     <menuitem menuid="rx_company_rep" desc="Company Report" parent="roomx"  module="yes" link="" order="8"></menuitem>
     <menuitem menuid="rx_Booking"     desc="Booking"     parent="roomx"     module="no"  link="" order="9"></menuitem>
-    <menuitem menuid="rx_booking_status" desc="Booking"  parent="rx_Booking" module="yes" link="" order="91"></menuitem>
-    <menuitem menuid="rx_booking_list" desc="Booking"    parent="rx_Booking" module="yes" link="" order="92"></menuitem>
+    <menuitem menuid="rx_booking_status" desc="Booking Status"  parent="rx_Booking" module="yes" link="" order="91"></menuitem>
+    <menuitem menuid="rx_booking_list" desc="Booking List"    parent="rx_Booking" module="yes" link="" order="92"></menuitem>
   </menulist>
 </module>
