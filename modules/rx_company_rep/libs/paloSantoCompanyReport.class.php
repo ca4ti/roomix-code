@@ -73,6 +73,13 @@ class paloSantoCompanyReport{
 
     function getCheckInCompanyReport($date_start,$date_end)
     {
+        $query	= "TRUNCATE TABLE `calendar`";
+
+        $result=$this->_DB->fetchTable($query, true, "");
+
+        $query	= "CALL fill_calendar('$date_start', '$date_end')";
+
+        $result=$this->_DB->fetchTable($query, true, "");
 
         $query	= "SELECT calendar.datefield AS DATE,
        		   IFNULL(count(date_ci),0) AS Num_ci
@@ -91,6 +98,14 @@ class paloSantoCompanyReport{
 
     function getTotalRooms($date_start,$date_end)
     {
+        $query	= "TRUNCATE TABLE `calendar`";
+
+        $result=$this->_DB->fetchTable($query, true, "");
+
+        $query	= "CALL fill_calendar('$date_start', '$date_end')";
+
+        $result=$this->_DB->fetchTable($query, true, "");
+
 	 $query 	= "SELECT calendar.datefield AS DATE, 
 			   IFNULL(sum(total_room),0) AS Total_Room
 			   FROM register RIGHT JOIN calendar ON (DATE(date_co) = calendar.datefield)
@@ -109,6 +124,14 @@ class paloSantoCompanyReport{
 
     function getTotalCalls($date_start,$date_end)
     {
+        $query	= "TRUNCATE TABLE `calendar`";
+
+        $result=$this->_DB->fetchTable($query, true, "");
+
+        $query	= "CALL fill_calendar('$date_start', '$date_end')";
+
+        $result=$this->_DB->fetchTable($query, true, "");
+
 	 $query 	= "SELECT calendar.datefield AS DATE, 
 			   IFNULL(sum(total_call),0) AS Total_Calls
 			   FROM register RIGHT JOIN calendar ON (DATE(date_co) = calendar.datefield)
@@ -127,6 +150,15 @@ class paloSantoCompanyReport{
 
     function getTotalBar($date_start,$date_end)
     {
+
+        $query	= "TRUNCATE TABLE `calendar`";
+
+        $result=$this->_DB->fetchTable($query, true, "");
+
+        $query	= "CALL fill_calendar('$date_start', '$date_end')";
+
+        $result=$this->_DB->fetchTable($query, true, "");
+
 	 $query 	= "SELECT calendar.datefield AS DATE, 
 			   IFNULL(sum(total_bar),0) AS Total_Bar
 			   FROM register RIGHT JOIN calendar ON (DATE(date_co) = calendar.datefield)
@@ -145,6 +177,14 @@ class paloSantoCompanyReport{
 
     function getTotalBilling($date_start,$date_end)
     {
+        $query	= "TRUNCATE TABLE `calendar`";
+
+        $result=$this->_DB->fetchTable($query, true, "");
+
+        $query	= "CALL fill_calendar('$date_start', '$date_end')";
+
+        $result=$this->_DB->fetchTable($query, true, "");
+
 	 $query 	= "SELECT calendar.datefield AS DATE, 
 			   IFNULL(sum(total_billing),0) AS Total_Billing
 			   FROM register RIGHT JOIN calendar ON (DATE(date_co) = calendar.datefield)
@@ -163,6 +203,14 @@ class paloSantoCompanyReport{
 
     function getCheckOutCompanyReport($date_start,$date_end)
     {
+        $query	= "TRUNCATE TABLE `calendar`";
+
+        $result=$this->_DB->fetchTable($query, true, "");
+
+        $query	= "CALL fill_calendar('$date_start', '$date_end')";
+
+        $result=$this->_DB->fetchTable($query, true, "");
+
         $query	= "SELECT calendar.datefield AS DATE,
        		   IFNULL(count(date_co),0) AS Num_co
 			   FROM register RIGHT JOIN calendar ON (DATE(date_co) = calendar.datefield)

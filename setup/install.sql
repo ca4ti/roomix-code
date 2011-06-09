@@ -17,8 +17,6 @@ BEGIN
 END$$
 DELIMITER ;
 
-CALL fill_calendar('2011-05-01', '2013-12-31');
-
 CREATE TABLE IF NOT EXISTS `booking` (
   `id` int(10) NOT NULL auto_increment,
   `room_id` varchar(20) NOT NULL,
