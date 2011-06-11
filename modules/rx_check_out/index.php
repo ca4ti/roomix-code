@@ -274,13 +274,11 @@ function saveNewCheckOut($smarty, $module_name, $local_templates_dir, &$pDB, &$p
 
 	 // Line with the number of Nights
 	 //-------------------------------
-	 $num_guest	 = strval($arrGuest['num_guest']);
+
         $where        = "where room_model = '".$arrExt['model']."'";
         $arrModel     = $pCheckOut->getCheckOut('models', $where);
 	 $Model        = $arrModel[0];
         $puht         = strval($Model['room_price']);
-	 if ($num_guest > 1)
-	 	$puht   = strval($Model['room_price'])+($num_guest * strval($Model['room_guest'])); 
         $patc         = ($puht*$Night)*(1+(strval($Model['room_vat'])/100));
 	 $vat          = $patc - ($puht*$Night) ;
 	 $vat_Nights   = $vat;

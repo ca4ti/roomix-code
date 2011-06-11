@@ -96,6 +96,19 @@ class paloSantoBookingList{
         return $result;
     }
 
+    function Delete($id)
+    {
+        $query   = "DELETE FROM `booking` WHERE `id` = $id";
+
+        $result=$this->_DB->fetchTable($query, true, "");
+
+        if($result==FALSE){
+            $this->errMsg = $this->_DB->errMsg;
+            return array();
+        }
+        return $result;
+    }
+
     function getBookingListById($id)
     {
         $query = "SELECT * FROM booking WHERE date_ci is not null";
@@ -108,5 +121,181 @@ class paloSantoBookingList{
         }
         return $result;
     }
+    function getNumCheckIn($table, $filter_field, $filter_value)
+    {
+        $where = "";
+        if(isset($filter_field) & $filter_field !="")
+            $where = "where $filter_field like '$filter_value%'";
+
+        $query   = "SELECT COUNT(*) FROM $tables $where";
+
+        $result=$this->_DB->getFirstRowQuery($query);
+
+        if($result==FALSE){
+            $this->errMsg = $this->_DB->errMsg;
+            return 0;
+        }
+        return $result[0];
+    }
+
+    function getCheckIn($tables, $where)
+    {
+        $query   = "SELECT * FROM $tables $where";
+
+        $result=$this->_DB->fetchTable($query, true);
+
+        if($result==FALSE){
+            $this->errMsg = $this->_DB->errMsg;
+            return array();
+        }
+
+        return $result;
+    }
+
+    function get_ID_Gest($conditions)
+    {
+
+        $query   = "SELECT id FROM guest $conditions";
+
+        $result=$this->_DB->fetchTable($query, true);
+
+        if($result==FALSE){
+            $this->errMsg = $this->_DB->errMsg;
+            return array();
+        }
+
+        return $result;
+    }
+
+    function insertQuery($sTabla, $arrValores){
+	// call function construirInsert
+	$query = $this->_DB->construirInsert($sTabla, $arrValores) ;
+
+	// now execute the query with genQuery(fucntion of the paloSantoDB.class)
+	$result = $this->_DB->genQuery($query);
+
+	// catch the error
+	if($result==FALSE)
+         return false;
+         return true; 
+    }
+
+    function updateQuery($sTabla, $arrValores, $where){
+	// call function construirInsert
+	$query = $this->_DB->construirUpdate($sTabla, $arrValores, $where);
+
+	// now execute the query with genQuery(fucntion of the paloSantoDB.class)
+	$result = $this->_DB->genQuery($query);
+
+	// catch the error
+	if($result==FALSE)
+         return false;
+         return true; 
+    }
+
+
+    function getAllCheckIn($tables)
+    {
+	$query = "select * from $tables;";
+
+	$result=$this->_DB->fetchTable($query,true);
+
+	$arrRoom = array();
+
+	if($result==FALSE){
+		$this->errMsg = $this->_DB->errMsg;
+		return 0;
+	}
+
+	return $result;
+    }
+
+    function Free()
+    {
+        $query   = "SELECT count(free) AS Free FROM rooms WHERE free=1";
+
+        $result=$this->_DB->fetchTable($query, true, "");
+
+        if($result==FALSE){
+            $this->errMsg = $this->_DB->errMsg;
+            return array();
+        }
+        return $result[0]['Free'];
+    }
+
+    function Busy()
+    {
+        $query   = "SELECT count(free) AS Busy FROM rooms WHERE free=0";
+
+        $result=$this->_DB->fetchTable($query, true, "");
+
+        if($result==FALSE){
+            $this->errMsg = $this->_DB->errMsg;
+            return array();
+        }
+        return $result[0]['Busy'];
+    }
+
+    function getBookingStatus()
+    {
+       $query    = "SELECT count(date_ci) AS booking FROM booking WHERE DATE(date_format(`date_ci`,'%Y-%m-%d')) = current_date();";
+
+        $result=$this->_DB->fetchTable($query, true, "");
+
+        if($result==FALSE){
+            $this->errMsg = $this->_DB->errMsg;
+            return array();
+        }
+        return $result[0]['booking'];
+    }
+
+    function ToDay()
+    {
+        $query   = "SELECT date( current_date( ) ) AS ToDay";
+
+        $result=$this->_DB->fetchTable($query, true, "");
+
+        if($result==FALSE){
+            $this->errMsg = $this->_DB->errMsg;
+            return array();
+        }
+        return $result[0]['ToDay'];
+    }
+
+    function Check_Booking($room,$date_ci,$date_co)
+    {
+       $query    = "SELECT count(room_name) AS booking FROM booking 
+		      RIGHT JOIN `rooms` ON room_id  = rooms.id
+		      RIGHT JOIN `guest` ON guest_id = guest.id
+		      WHERE 
+		      room_id = '$room' AND
+		      DATE(date_format(`date_ci`,'%Y-%m-%d')) >= '$date_ci' OR
+		      DATE(date_format(`date_co`,'%Y-%m-%d')) <= '$date_co';";
+	 //echo $query;
+        $result=$this->_DB->fetchTable($query, true, "");
+
+        if($result==FALSE){
+            $this->errMsg = $this->_DB->errMsg;
+            return array();
+        }
+        return $result[0]['booking'];
+    }
+
+    function UpdateStatus($value)
+    {
+	 $free		= $value['free'];
+	 $busy		= $value['busy'];
+	 $booking	= $value['booking'];
+        $query   	= "INSERT INTO status (date) VALUES (current_date()) ON DUPLICATE KEY UPDATE free=$free, busy=$busy, booking=$booking";
+
+        $result=$this->_DB->fetchTable($query, true, "");
+
+        if($result==FALSE){
+            $this->errMsg = $this->_DB->errMsg;
+            return array();
+        }
+        return;
+    }
+
 }
 ?>

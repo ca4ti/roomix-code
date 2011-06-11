@@ -35,6 +35,8 @@ function _moduleContent(&$smarty, $module_name)
     //include module files
     include_once "modules/$module_name/configs/default.conf.php";
     include_once "modules/$module_name/libs/paloSantoBookingList.class.php";
+    $DocumentRoot = (isset($_SERVER['argv'][1]))?$_SERVER['argv'][1]:"/var/www/html";
+    require_once("$DocumentRoot/libs/misc.lib.php");
 
     //include file language agree to elastix configuration
     //if file language not exists, then include language by default (en)
@@ -63,15 +65,16 @@ function _moduleContent(&$smarty, $module_name)
     $local_templates_dir="$base_dir/modules/$module_name/".$templates_dir.'/'.$arrConf['theme'];
 
     //conexion resource
-    $pDB = new paloDB($arrConf['dsn_conn_database']);
+    $pDB     = new paloDB($arrConf['dsn_conn_database']);
+    $pDB_Ast = new paloDB("mysql://root:".obtenerClaveConocidaMySQL('root')."@localhost/asterisk");
 
     //actions
-    $action = getAction();
+    $action  = getAction();
     $content = "";
 
     switch($action){
         case "save_new":
-            $content = ActionBookingList($smarty, $module_name, $local_templates_dir, $pDB, $arrConf);
+            $content = ActionBookingList($smarty, $module_name, $local_templates_dir, $pDB, $pDB_Ast, $arrConf);
             break;
         default:
             $content = reportBookingList($smarty, $module_name, $local_templates_dir, $pDB, $arrConf);
@@ -131,6 +134,7 @@ function reportBookingList($smarty, $module_name, $local_templates_dir, &$pDB, $
            $arrData[] = $arrTmp;
         }
     }
+
     $oGrid->setData($arrData);
 
     //begin section filter
@@ -146,8 +150,11 @@ function reportBookingList($smarty, $module_name, $local_templates_dir, &$pDB, $
     return $content;
 }
 
-function ActionBookingList($smarty, $module_name, $local_templates_dir, &$pDB, $arrConf)
+function ActionBookingList($smarty, $module_name, $local_templates_dir, &$pDB, &$pDB_Ast, $arrConf)
 {
+    $pBookingList     = new paloSantoBookingList($pDB);
+    $pBookingList_Ast = new paloSantoBookingList($pDB_Ast); 
+    
     $_DATA = $_POST;
 
     // There's some checkin to do?
@@ -157,7 +164,80 @@ function ActionBookingList($smarty, $module_name, $local_templates_dir, &$pDB, $
     	{
       		// Making CheckIn Room.
 		//---------------------
-    	}
+
+		$arrBooking 			= $pBookingList->getCheckIn('booking',"WHERE id = $value");
+
+              // Save all Datas into the table register. 
+        	//---------------------------------------------
+        	$value_register['room_id']  = "'".$arrBooking['0']['room_id']."'";
+        	$value_register['guest_id'] = "'".$arrBooking['0']['guest_id']."'";
+        	$value_register['date_ci']  = "'".$arrBooking['0']['date_ci']."'";
+        	$value_register['date_co']  = "'".$arrBooking['0']['date_co']."'";
+        	$value_register['num_guest']= "'".$arrBooking['0']['num_guest']."'";
+        	$value_register['status']   = "'1'";
+        	$arrRegister 		  	= $pBookingList->insertQuery('register',$value_register);
+
+        	// Update the room status (Free -> Busy)
+	 	// Put the guest name into the room.
+        	//---------------------------------------------
+
+		$guest_id			= $value_register['guest_id'];
+		$arrGuest	 		= $pBookingList->getCheckIn("guest","WHERE id = $guest_id");
+	 	$guest_name 			= str_replace("'","",$arrGuest['0']['first_name']." ".$arrGuest['0']['last_name']);
+       	$value_rooms['free'] 	= '0'; 
+        	$value_rooms['guest_name']  = "'".$guest_name."'";
+        	$where 			= "id = ".$value_register['room_id'];
+        	$arrRegister 			= $pBookingList->updateQuery('rooms',$value_rooms, $where);
+
+	 	// Update status table.
+	 	//---------------------
+	 	$free				= $pBookingList->Free();				// Take all free rooms
+	 	$busy				= $pBookingList->Busy();				// Take all busy rooms
+	 	$booking			= $pBookingList->getBookingStatus();		// Take all booking of the day. 
+
+        	$value_status['free']  	= strval($free);
+        	$value_status['busy']   	= strval($busy);
+        	$value_status['booking']    = strval($booking);
+	  
+	 	$arrStatus	 		= $pBookingList->UpdateStatus($value_status);	// At first, creating the day if not exist
+	 	$arrStatus	 		= $pBookingList->UpdateStatus($value_status);	// Next, re-sending request to update free, busy, and booking
+
+	 	// Take the rooms extension from id 
+        	//---------------------------------------------
+        	$where 			= "WHERE id = ".$value_register['room_id'];
+        	$arrRooms 			= $pBookingList->getCheckIn('rooms',$where);
+        	$Rooms 			= $arrRooms['0'];
+
+        	// Modify the account code extension into Freepbx data
+        	//---------------------------------------------
+        	$value_rl['value']  		= "'true'";
+        	$where              		= "variable = 'need_reload';";
+        	$arrReload          		= $pBookingList_Ast->updateQuery('admin',$value_rl, $where);
+
+        	$value_ac['data']   		= "'".$value_register['guest_id']."'";
+        	$where              		= "id = '".$Rooms['extension']."' and keyword = 'accountcode';";
+        	$arrAccount         		= $pBookingList_Ast->updateQuery('sip',$value_ac, $where);
+
+        	$cmd				= "/var/lib/asterisk/bin/module_admin reload";
+        	exec($cmd);
+
+        	// Unlock the extension 
+        	//---------------------------------------------
+	 	$cmd 				= "/usr/sbin/asterisk -rx 'database put LOCKED ".$Rooms['extension']." 0'";
+		exec($cmd);
+
+        	// Call Between rooms enabled or not.
+        	//---------------------------------------------
+        	$arrConfig 			= $pBookingList->getCheckIn('config',"");
+        	$arrAstDB 			= $arrConfig['0'];
+
+        	$cmd				= "/usr/sbin/asterisk -rx 'database put CBR ".$Rooms['extension']." ".$arrAstDB['cbr']."'";
+        	exec($cmd);
+		
+	}
+      	// Deleting booked Room.
+	//----------------------
+	$Result = $pBookingList->Delete($value);  
     }
     
     // There's some booking canceled?
@@ -165,8 +245,9 @@ function ActionBookingList($smarty, $module_name, $local_templates_dir, &$pDB, $
     if(array_key_exists('canceled',$_DATA)){
     	foreach($_DATA['canceled'] as $key => $value)
     	{
-      		// Deleting the booked Room.
-		//--------------------------
+      		// Deleting booked Room.
+		//----------------------
+		$Result = $pBookingList->Delete($value);         
     	}
     }
 
