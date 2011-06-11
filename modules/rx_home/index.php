@@ -103,7 +103,6 @@ function viewFormHome($smarty, $module_name, $local_templates_dir, &$pDB, $arrCo
     $smarty->assign("ID", $id); 		//persistence id with input hidden in tpl
     $smarty->assign("Rooms_Free", $arrLang["Rooms Free"]);
     $smarty->assign("Rooms_Busy", $arrLang["Room Busy"]);
-    $smarty->assign("Booking_Today", $arrLang["Booking Today"]);
     $smarty->assign("Number_Rooms", $arrLang["Number of Rooms"]);
 
     if($action=="view")
@@ -131,6 +130,7 @@ function viewFormHome($smarty, $module_name, $local_templates_dir, &$pDB, $arrCo
     $total	= $pHome->getNumHome("","");
     $busy	= $total-$free;
     $version	= $pHome->getVersion();
+    $today	= $pHome->ToDay();
     $intro	= $arrLang['Intro'].$version['version'].".";
 
     $smarty->assign("SAVE", $arrLang["Save"]);
@@ -142,7 +142,11 @@ function viewFormHome($smarty, $module_name, $local_templates_dir, &$pDB, $arrCo
     $smarty->assign("Roomx_intro", $intro);
     $smarty->assign("FREE",$free[0]);  
     $smarty->assign("BUSY",$busy); 
-    $smarty->assign("BOOKING",$booking);
+    $smarty->assign("Booking_Today", $arrLang["No Booking Today"]);
+    if ($booking > 0){
+    	$smarty->assign("BOOKING","<a style='text-decoration: none;' href='index.php?menu=rx_booking_list&filter_field=date_ci&filter_value=$today'><button type='button'>".$booking." ".$arrLang["Booking Today"]."</button></a>");   
+    	$smarty->assign("Booking_Today","");
+    }
     $smarty->assign("TOTAL",$total[0]);
 
     $Warning 	= $busy + $booking;
