@@ -214,13 +214,13 @@ function Booking_Cal($date_start, $date_end, $booking_rooms, $files_graph, $Titl
 	$graph->title->SetColor('white');
 	//$graph->title->SetFont(FF_FONT1,FS_BOLD,14);
 
-	$graph->ShowHeaders(GANTT_HDAY | GANTT_HMONTH);
+	$graph->ShowHeaders(GANTT_HHOUR| GANTT_HDAY );
 
 	$graph->scale->week->SetStyle(WEEKSTYLE_FIRSTDAY);
 	$graph->scale->week->SetFont(FF_FONT1);
-	$graph->scale->hour->SetIntervall(4);
+	$graph->scale->hour->SetIntervall(12);
 	$graph->scale->hour->SetStyle(HOURSTYLE_HM24);
-	$graph->scale->day->SetStyle(DAYSTYLE_SHORTDATE3);
+	$graph->scale->day->SetStyle(DAYSTYLE_LONGDAYDATE1);
 
 	$vline = new GanttVLine($today);
 	$vline->SetDayOffset(0.5);

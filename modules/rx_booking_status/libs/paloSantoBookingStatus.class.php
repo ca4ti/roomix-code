@@ -73,11 +73,15 @@ class paloSantoBookingStatus{
 
     function getBookingStatus_Once()
     {
-        $query   = "SELECT `room_name` , DATE(date_format(`date_ci`,'%Y-%m-%d'))  AS date_ci , 
-		      DATE(date_format(`date_co`,'%Y-%m-%d'))  AS date_co
-		      FROM `booking` RIGHT JOIN `rooms` ON room_id = rooms.id WHERE date_ci IS NOT NULL";
-			//AND DATE_FORMAT( date_ci, '%Y-%m-%d' ) BETWEEN curdate( ) AND curdate( ) 
-			//OR DATE_FORMAT( date_co, '%Y-%m-%d' ) BETWEEN curdate( ) AND curdate( )";
+
+	 $query   = "TRUNCATE TABLE `calendar`";
+        $result=$this->_DB->fetchTable($query, true, "");
+
+	 $query   = "CALL fill_calendar(current_date(), ADDDATE(curdate(), INTERVAL 1 DAY))";
+        $result=$this->_DB->fetchTable($query, true, "");
+
+        $query   = "SELECT `room_name` , `date_ci` , `date_co` FROM `booking` RIGHT JOIN `rooms` ON room_id = rooms.id WHERE date_ci IS NOT NULL";
+ 
 	 //echo $query;
         $result=$this->_DB->fetchTable($query, true, "");
 
@@ -116,11 +120,16 @@ class paloSantoBookingStatus{
 
     function getBookingStatus($date_start, $date_end)
     {
-        $query   = "SELECT `room_name` , DATE(date_format(`date_ci`,'%Y-%m-%d'))  AS date_ci , 
-		      DATE(date_format(`date_co`,'%Y-%m-%d'))  AS date_co 
-		      FROM `booking` 
-		      RIGHT JOIN `rooms` ON room_id = rooms.id WHERE DATE_FORMAT( date_ci, '%Y-%m-%d' ) BETWEEN '$date_start' AND '$date_end' 
-		      OR  DATE_FORMAT( date_co, '%Y-%m-%d' ) BETWEEN '$date_start' AND '$date_end'";
+
+	 $query   = "TRUNCATE TABLE `calendar`";
+        $result=$this->_DB->fetchTable($query, true, "");
+
+	 $query   = "CALL fill_calendar('$date_start', ADDDATE('$date_end', INTERVAL 1 DAY))";
+        $result=$this->_DB->fetchTable($query, true, "");
+
+        $query   = "SELECT `room_name` , `date_ci` , `date_co` FROM `booking` 
+		      RIGHT JOIN `rooms` ON room_id = rooms.id WHERE date_ci BETWEEN '$date_start' AND '$date_end' 
+		      OR date_co BETWEEN '$date_start' AND '$date_end'";
 	 //echo $query;
         $result=$this->_DB->fetchTable($query, true, "");
 
