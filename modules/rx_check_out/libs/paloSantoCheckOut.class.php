@@ -112,6 +112,7 @@ class paloSantoCheckOut {
     {
 
         $query   = "SELECT * FROM $table $where";
+
         $result=$this->_DB->fetchTable($query, true);
         if($result==FALSE){
             $this->errMsg = $this->_DB->errMsg;

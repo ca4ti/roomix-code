@@ -164,9 +164,25 @@ function saveNewCheckOut($smarty, $module_name, $local_templates_dir, &$pDB, &$p
         $content = viewFormCheckOut($smarty, $module_name, $local_templates_dir, $pDB, $pDB_Ast, $pDB_CDR, $pDB_Set, $pDB_Rat, $arrConf, $arrLang);
     }
     else{
+        $arrGroup		= $pCheckOut->getGroupCheckOut();
+	 $CheckOutGuest[0]	= $_DATA['room'];
+	 if ($_DATA['group'] != 0){
+	 	$Group		= $arrGroup[$_DATA['group']-1]['groupe'];
+        	$where        = "where groupe = '".$Group."'";
+        	$arrGroup     = $pCheckOut->getCheckOut('rooms', $where);
+		foreach($arrGroup as $key => $value_G){
+			$CheckOutGuest[$key] = $value_G['id'];
+		}
+	 }
+
+        foreach($CheckOutGuest as $key_romm => $room_index)
+	 {
+        $_DATA['room']	= $room_index;
+
         $pRoom = new paloSantoCheckOut($pDB); // <------------- inutile  $pRoom = $pCheckOut !!!
         $where = "where id = '".$_DATA['room']."'";
         $arrRoom = $pRoom->getCheckOut('rooms', $where);
+
         $arrExt = $arrRoom['0'];
 	 
         // Capturer les données du minibar pour la facturation! 
@@ -174,8 +190,8 @@ function saveNewCheckOut($smarty, $module_name, $local_templates_dir, &$pDB, &$p
         // Update room : The room was busy and now it's free and not clean.
 	 // In same time, deleting the guest name and group.
         //---------------------------------------------
-        $value['free'] 	= '1';
-        $value['clean'] 	= '0';
+        $value['free'] 	= "'1'";
+        $value['clean'] 	= "'0'";
 	 $value['groupe'] 	= null;
 	 $value['guest_name']= null;
         $value['mini_bar'] 	= null;
@@ -453,8 +469,8 @@ function saveNewCheckOut($smarty, $module_name, $local_templates_dir, &$pDB, &$p
         $value_re['total_billing'] = "'".$total_bill."'";
         $where 			= "room_id = '".$arrExt['id']."' and status = '1'";
         $arrUpdateRoom 		= $pRoom->updateQuery('register', $value_re, $where);
-
-        $smarty->assign("mb_message", $strMsg);
+	}
+        $smarty->assign("mb_message", "");
         $smarty->assign("call_number", $i);
         $smarty->assign("total", sprintf("%01.2f",$total_bill)." ".$curr);
         $smarty->assign("bil", "1");
