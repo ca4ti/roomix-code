@@ -73,12 +73,10 @@ class paloSantoCompanyReport{
 
     function getCheckInCompanyReport($date_start,$date_end)
     {
-        $query	= "TRUNCATE TABLE `calendar`";
-
+	 $query   = "TRUNCATE TABLE `calendar`";
         $result=$this->_DB->fetchTable($query, true, "");
 
-        $query	= "CALL fill_calendar('$date_start', '$date_end')";
-
+	 $query   = "CALL fill_calendar('$date_start', ADDDATE('$date_end', INTERVAL 1 DAY))";
         $result=$this->_DB->fetchTable($query, true, "");
 
         $query	= "SELECT calendar.datefield AS DATE,
@@ -98,12 +96,10 @@ class paloSantoCompanyReport{
 
     function getTotalRooms($date_start,$date_end)
     {
-        $query	= "TRUNCATE TABLE `calendar`";
-
+	 $query   = "TRUNCATE TABLE `calendar`";
         $result=$this->_DB->fetchTable($query, true, "");
 
-        $query	= "CALL fill_calendar('$date_start', '$date_end')";
-
+	 $query   = "CALL fill_calendar('$date_start', ADDDATE('$date_end', INTERVAL 1 DAY))";
         $result=$this->_DB->fetchTable($query, true, "");
 
 	 $query 	= "SELECT calendar.datefield AS DATE, 
@@ -124,12 +120,10 @@ class paloSantoCompanyReport{
 
     function getTotalCalls($date_start,$date_end)
     {
-        $query	= "TRUNCATE TABLE `calendar`";
-
+	 $query   = "TRUNCATE TABLE `calendar`";
         $result=$this->_DB->fetchTable($query, true, "");
 
-        $query	= "CALL fill_calendar('$date_start', '$date_end')";
-
+	 $query   = "CALL fill_calendar('$date_start', ADDDATE('$date_end', INTERVAL 1 DAY))";
         $result=$this->_DB->fetchTable($query, true, "");
 
 	 $query 	= "SELECT calendar.datefield AS DATE, 
@@ -151,12 +145,10 @@ class paloSantoCompanyReport{
     function getTotalBar($date_start,$date_end)
     {
 
-        $query	= "TRUNCATE TABLE `calendar`";
-
+	 $query   = "TRUNCATE TABLE `calendar`";
         $result=$this->_DB->fetchTable($query, true, "");
 
-        $query	= "CALL fill_calendar('$date_start', '$date_end')";
-
+	 $query   = "CALL fill_calendar('$date_start', ADDDATE('$date_end', INTERVAL 1 DAY))";
         $result=$this->_DB->fetchTable($query, true, "");
 
 	 $query 	= "SELECT calendar.datefield AS DATE, 
@@ -177,12 +169,10 @@ class paloSantoCompanyReport{
 
     function getTotalBilling($date_start,$date_end)
     {
-        $query	= "TRUNCATE TABLE `calendar`";
-
+	 $query   = "TRUNCATE TABLE `calendar`";
         $result=$this->_DB->fetchTable($query, true, "");
 
-        $query	= "CALL fill_calendar('$date_start', '$date_end')";
-
+	 $query   = "CALL fill_calendar('$date_start', ADDDATE('$date_end', INTERVAL 1 DAY))";
         $result=$this->_DB->fetchTable($query, true, "");
 
 	 $query 	= "SELECT calendar.datefield AS DATE, 
@@ -203,12 +193,10 @@ class paloSantoCompanyReport{
 
     function getCheckOutCompanyReport($date_start,$date_end)
     {
-        $query	= "TRUNCATE TABLE `calendar`";
-
+	 $query   = "TRUNCATE TABLE `calendar`";
         $result=$this->_DB->fetchTable($query, true, "");
 
-        $query	= "CALL fill_calendar('$date_start', '$date_end')";
-
+	 $query   = "CALL fill_calendar('$date_start', ADDDATE('$date_end', INTERVAL 1 DAY))";
         $result=$this->_DB->fetchTable($query, true, "");
 
         $query	= "SELECT calendar.datefield AS DATE,
