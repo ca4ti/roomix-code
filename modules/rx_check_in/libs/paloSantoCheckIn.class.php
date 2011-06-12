@@ -199,9 +199,9 @@ class paloSantoCheckIn {
 		      RIGHT JOIN `guest` ON guest_id = guest.id
 		      WHERE 
 		      room_id = '$room' AND
-		      DATE(date_format(`date_ci`,'%Y-%m-%d')) >= '$date_ci' OR
-		      DATE(date_format(`date_co`,'%Y-%m-%d')) <= '$date_co';";
-	 //echo $query;
+		      date_ci <= '$date_co' AND
+		      date_co >= '$date_ci';";
+
         $result=$this->_DB->fetchTable($query, true, "");
 
         if($result==FALSE){
