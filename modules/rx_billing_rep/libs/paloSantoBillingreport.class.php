@@ -88,7 +88,7 @@ class paloSantoBillingreport {
         if(isset($filter_field) & $filter_field !="")
             $where = "where status = '0' and $filter_field like '$filter_value%'";
 
-        $query   = "SELECT * FROM register $where LIMIT $limit OFFSET $offset";
+        $query   = "SELECT * FROM register $where ORDER BY `date_co` ASC LIMIT $limit OFFSET $offset";
 
         $result=$this->_DB->fetchTable($query, true);
 
@@ -118,7 +118,7 @@ class paloSantoBillingreport {
 
     function getRegister($where)
     {
-        $query   = "SELECT * FROM register $where";
+        $query   = "SELECT * FROM register $where ORDER BY `date_co` ASC";
 
         $result=$this->_DB->fetchTable($query, true);
 
@@ -135,7 +135,7 @@ class paloSantoBillingreport {
         if(isset($filter_field) & $filter_field !="")
             $where = "where $filter_field like '$filter_value%'";
 
-        $query   = "SELECT * FROM guest $where";
+        $query   = "SELECT * FROM guest $where ";
 
         $result=$this->_DB->fetchTable($query, true);
 
@@ -148,7 +148,7 @@ class paloSantoBillingreport {
 
     function getBillingreportById($id)
     {
-        $query = "SELECT * FROM register WHERE id=$id and status = '0'";
+        $query = "SELECT * FROM register WHERE id=$id and status = '0' ORDER BY `date_co` ASC";
 
         $result=$this->_DB->getFirstRowQuery($query,true);
 
