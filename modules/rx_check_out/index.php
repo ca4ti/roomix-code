@@ -165,28 +165,28 @@ function saveNewCheckOut($smarty, $module_name, $local_templates_dir, &$pDB, &$p
     }
     else{
         $arrGroup		= $pCheckOut->getGroupCheckOut();
+
+	 // It's a group or one room?
+	 //---------------------------
 	 $CheckOutGuest[0]	= $_DATA['room'];
 	 if ($_DATA['group'] != 0){
 	 	$Group		= $arrGroup[$_DATA['group']-1]['groupe'];
         	$where        = "where groupe = '".$Group."'";
         	$arrGroup     = $pCheckOut->getCheckOut('rooms', $where);
-		foreach($arrGroup as $key => $value_G){
-			$CheckOutGuest[$key] = $value_G['id'];
+		foreach($arrGroup as $key_Group => $value_Group){
+			$CheckOutGuest[$key_Group] = $value_Group['id'];
 		}
 	 }
 
-        foreach($CheckOutGuest as $key_romm => $room_index)
+        foreach($CheckOutGuest as $key_room => $room_index)
 	 {
-        $_DATA['room']	= $room_index;
+        $_DATA['room']= $room_index;
 
-        $pRoom = new paloSantoCheckOut($pDB); // <------------- inutile  $pRoom = $pCheckOut !!!
-        $where = "where id = '".$_DATA['room']."'";
-        $arrRoom = $pRoom->getCheckOut('rooms', $where);
-
-        $arrExt = $arrRoom['0'];
+        $pRoom 	= new paloSantoCheckOut($pDB); // <------------- inutile  $pRoom = $pCheckOut !!!
+        $where 	= "where id = '".$_DATA['room']."'";
+        $arrRoom 	= $pRoom->getCheckOut('rooms', $where);
+        $arrExt 	= $arrRoom['0'];
 	 
-        // Capturer les données du minibar pour la facturation! 
-
         // Update room : The room was busy and now it's free and not clean.
 	 // In same time, deleting the guest name and group.
         //---------------------------------------------
@@ -234,8 +234,7 @@ function saveNewCheckOut($smarty, $module_name, $local_templates_dir, &$pDB, &$p
 	 $arrGuest      = $arrConf_Guest['0'];
 
     	 foreach($arrRate as $idx_prefix => $Rate_parameters)
-		//{
-        	//}
+		// Extracting rate parameters
 
 	 $where         = "WHERE channel LIKE 'SIP/".$arrExt['extension']."%' and billsec > '0' and calldate > '".$arrGuest['date_ci']."'".
  			    " and calldate < '".$arrGuest['date_co']."' and disposition = 'ANSWERED' and accountcode ='".$arrGuest['guest_id']."'".
@@ -245,10 +244,10 @@ function saveNewCheckOut($smarty, $module_name, $local_templates_dir, &$pDB, &$p
 
         $i=0;
 	 if($arrCDR){
-	       foreach($arrCDR as $key => $value){
-	 		$calldate[$key] = $value['calldate'];
-              	$dst[$key]	  = $value['dst'];
-			$billsec[$key]  = TimeCall($value['billsec']);
+	       foreach($arrCDR as $key_cdr => $value_cdr){
+	 		$calldate[$key_cdr] = $value_cdr['calldate'];
+              	$dst[$key_cdr]      = $value_cdr['dst'];
+			$billsec[$key_cdr]  = TimeCall($value_cdr['billsec']);
               	$i++;		
 	 	}
 	 }
@@ -281,8 +280,8 @@ function saveNewCheckOut($smarty, $module_name, $local_templates_dir, &$pDB, &$p
 
 	 // How many nights ?
         $arrNight = $pCheckOut->getNightNumber($arrGuest['date_ci'], $arrGuest['date_co'], $arrGuest['id']);
-	 foreach($arrNight as $key => $value)
-	 	$Night = $value;
+	 foreach($arrNight as $key => $value_night)
+	 	$Night = $value_night;
 
         if( $Night == '0')
 	 	$Night = "1";  // A night should be calculated, even if there's no night. 
@@ -333,19 +332,19 @@ function saveNewCheckOut($smarty, $module_name, $local_templates_dir, &$pDB, &$p
 	  	if($_DATA['details'] == 'off')
 			{
 			$Total_Calls = 0;
-	 		foreach($arrCDR as $key => $value)
+	 		foreach($arrCDR as $key => $value_cdr)
 				{
 				for ($Scan_Rate = 1; $Scan_Rate < count($arrRate); $Scan_Rate++)
 					{
-					if (!substr_compare($value['dst'],$arrRate[$Scan_Rate]['prefix'], 0, strlen($arrRate[$Scan_Rate]['prefix']))) 
+					if (!substr_compare($value_cdr['dst'],$arrRate[$Scan_Rate]['prefix'], 0, strlen($arrRate[$Scan_Rate]['prefix']))) 
 						{
-						$price_rate = ($value['billsec'] * ($arrRate[$Scan_Rate]['rate'] / 60)) + $arrRate[$Scan_Rate]['rate_offset'];
+						$price_rate = ($value_cdr['billsec'] * ($arrRate[$Scan_Rate]['rate'] / 60)) + $arrRate[$Scan_Rate]['rate_offset'];
 						$price_rate = intval($price_rate*100)/100;
 						$idx_rate   = $Scan_Rate;
 						}
 					if (!isset($price_rate))
 						{
-						$price_rate = ($value['billsec'] * ($arrRate[0]['rate'] / 60)) + $arrRate[0]['rate_offset'];
+						$price_rate = ($value_cdr['billsec'] * ($arrRate[0]['rate'] / 60)) + $arrRate[0]['rate_offset'];
 						$price_rate = intval($price_rate*100)/100;
 						$idx_rate   = 0;
 						}
@@ -365,19 +364,19 @@ function saveNewCheckOut($smarty, $module_name, $local_templates_dir, &$pDB, &$p
         		$key=0;
              	 	$Total_Calls = 0; 
 			$Billing_page = $Billing_page.Detail_table_Title();
-	 		foreach($arrCDR as $key => $value)
+	 		foreach($arrCDR as $key => $value_cdr)
 			{
 				for ($Scan_Rate = 1; $Scan_Rate < count($arrRate); $Scan_Rate++)
 				{
-					if (!substr_compare($value['dst'],$arrRate[$Scan_Rate]['prefix'], 0, strlen($arrRate[$Scan_Rate]['prefix']))) 
+					if (!substr_compare($value_cdr['dst'],$arrRate[$Scan_Rate]['prefix'], 0, strlen($arrRate[$Scan_Rate]['prefix']))) 
 						{
-						$price_rate = ($value['billsec'] * ($arrRate[$Scan_Rate]['rate'] / 60)) + $arrRate[$Scan_Rate]['rate_offset'];
+						$price_rate = ($value_cdr['billsec'] * ($arrRate[$Scan_Rate]['rate'] / 60)) + $arrRate[$Scan_Rate]['rate_offset'];
 						$price_rate = intval($price_rate*100)/100;
 						$idx_rate   = $Scan_Rate;
 						}
 					if (!isset($price_rate))
 						{
-						$price_rate = ($value['billsec'] * ($arrRate[0]['rate'] / 60)) + $arrRate[0]['rate_offset'];
+						$price_rate = ($value_cdr['billsec'] * ($arrRate[0]['rate'] / 60)) + $arrRate[0]['rate_offset'];
 						$price_rate = intval($price_rate*100)/100;
 						$idx_rate   = 0;
 						}
@@ -393,19 +392,19 @@ function saveNewCheckOut($smarty, $module_name, $local_templates_dir, &$pDB, &$p
 		{
         		$key=0;
              	 	$Total_Calls = 0; 
-	 		foreach($arrCDR as $key => $value)
+	 		foreach($arrCDR as $key => $value_cdr)
 			{
 				for ($Scan_Rate = 1; $Scan_Rate < count($arrRate); $Scan_Rate++)
 				{
-					if (!substr_compare($value['dst'],$arrRate[$Scan_Rate]['prefix'], 0, strlen($arrRate[$Scan_Rate]['prefix']))) 
+					if (!substr_compare($value_cdr['dst'],$arrRate[$Scan_Rate]['prefix'], 0, strlen($arrRate[$Scan_Rate]['prefix']))) 
 						{
-						$price_rate = ($value['billsec'] * ($arrRate[$Scan_Rate]['rate'] / 60)) + $arrRate[$Scan_Rate]['rate_offset'];
+						$price_rate = ($value_cdr['billsec'] * ($arrRate[$Scan_Rate]['rate'] / 60)) + $arrRate[$Scan_Rate]['rate_offset'];
 						$price_rate = intval($price_rate*100)/100;
 						$idx_rate   = $Scan_Rate;
 						}
 					if (!isset($price_rate))
 						{
-						$price_rate = ($value['billsec'] * ($arrRate[0]['rate'] / 60)) + $arrRate[0]['rate_offset'];
+						$price_rate = ($value_cdr['billsec'] * ($arrRate[0]['rate'] / 60)) + $arrRate[0]['rate_offset'];
 						$price_rate = intval($price_rate*100)/100;
 						$idx_rate   = 0;
 						}
@@ -421,8 +420,8 @@ function saveNewCheckOut($smarty, $module_name, $local_templates_dir, &$pDB, &$p
 	 
 	 $Billing_page = $Billing_page.Total_Billing(sprintf("%01.2f", $total_bill - $ht), sprintf("%01.2f", $ht), sprintf("%01.2f", $total_bill), $curr);
 
-        $name	     = $Bnumber.".html";
-	 $name_path = "/var/www/html/roomx_billing/".$name;
+        $name	     	 = $Bnumber.".html";
+	 $name_path 	 = "/var/www/html/roomx_billing/".$name;
 
 	 $Billing_file = fopen($name_path, 'w+');
 	 fwrite($Billing_file,$Billing_page);
@@ -464,12 +463,14 @@ function saveNewCheckOut($smarty, $module_name, $local_templates_dir, &$pDB, &$p
         $value_re['status'] 	= "'0'";
         $value_re['billing_file']  = "'".$name."'";
         $value_re['total_room']    = "'".$patc."'";
-        $value_re['total_bar']     = "'".$mb_price."'";
-        $value_re['total_call']    = "'".$Total_Calls."'";
+	 if($mb_price != 0)
+        	$value_re['total_bar']     = "'".$mb_price."'";
+	 if($$Total_Calls != 0)
+       	$value_re['total_call']    = "'".$Total_Calls."'";
         $value_re['total_billing'] = "'".$total_bill."'";
         $where 			= "room_id = '".$arrExt['id']."' and status = '1'";
         $arrUpdateRoom 		= $pRoom->updateQuery('register', $value_re, $where);
-	}
+       }	
         $smarty->assign("mb_message", "");
         $smarty->assign("call_number", $i);
         $smarty->assign("total", sprintf("%01.2f",$total_bill)." ".$curr);
