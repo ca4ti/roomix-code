@@ -159,7 +159,8 @@ function ActionBookingList($smarty, $module_name, $local_templates_dir, &$pDB, &
 
     // There's some checkin to do?
     //-------------------------------
-    if(array_key_exists('checkin',$_DATA)){
+    if(array_key_exists('checkin',$_DATA))
+    {
     	foreach($_DATA['checkin'] as $key => $value)
     	{
       		// Making CheckIn Room.
@@ -233,11 +234,11 @@ function ActionBookingList($smarty, $module_name, $local_templates_dir, &$pDB, &
 
         	$cmd				= "/usr/sbin/asterisk -rx 'database put CBR ".$Rooms['extension']." ".$arrAstDB['cbr']."'";
         	exec($cmd);
-		
+
+      		// Deleting booked Room.
+		//----------------------
+		$Result = $pBookingList->Delete($value);  
 	}
-      	// Deleting booked Room.
-	//----------------------
-	$Result = $pBookingList->Delete($value);  
     }
     
     // There's some booking canceled?
