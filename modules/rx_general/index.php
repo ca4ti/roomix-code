@@ -227,16 +227,13 @@ function saveNewGeneral($smarty, $module_name, $local_templates_dir, &$pDB, $arr
         //---------------------------------------------------------------------
         $get_config = $pGeneral->getGeneral(); 
 	 if ($get_config['clean'] != $clean){
-        	$cmd	="sed -i 's|".$get_config['clean'].",|".$clean.",|' /etc/asterisk/extensions_roomx.conf";
-        	exec($cmd);
+	 	word_replace($get_config['clean'], $clean, '/etc/asterisk/extensions_roomx.conf');
 	 }
 	 if ($get_config['minibar'] != $minibar){
-        	$cmd	="sed -i 's|".$get_config['minibar'].",|".$minibar.",|' /etc/asterisk/extensions_roomx.conf";
-       	 exec($cmd);
+	 	word_replace($get_config['minibar'], $minibar, '/etc/asterisk/extensions_roomx.conf');
 	 }
 	 if ($get_config['reception'] != $reception){
-        	$cmd	="sed -i 's|".$get_config['reception'].",|".$reception.",|' /etc/asterisk/extensions_roomx.conf";
-        	exec($cmd);
+	 	word_replace($get_config['reception'], $reception, '/etc/asterisk/extensions_roomx.conf');
         }
 	 exec("asterisk -rx 'dialplan reload'");
 	
@@ -378,6 +375,17 @@ function createFieldForm($arrLang, &$pDB)
 						  )
             );
     return $arrFields;
+}
+
+function word_replace($word, $replace, $file){
+	$text		=fopen($file,'r');
+	$content	=file_get_contents($file);
+	$contentMod	=str_replace($word, $replace, $content);
+	fclose($text);
+
+	$text_mod	=fopen($file,'w+');
+	fwrite($text_mod,$contentMod);
+	fclose($text_mod); 
 }
 
 function getAction()

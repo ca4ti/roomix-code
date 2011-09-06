@@ -12,15 +12,22 @@
 		<br>
 		1 - <span style="font-weight: bold;">The RoomX version</span><br>
 		<img style="width: 387px; height: 225px;" alt="" src="../modules/{$node_id}/images/version.png"><br>
-		2 - <span style="font-weight: bold;">Number of free room:</span><br>
+		2 - <span style="font-weight: bold;">Number of rooms available:</span><br>
 		<br>
 		<img style="width: 132px; height: 37px;" alt="" src="../modules/{$node_id}/images/room_free.png"><br>
 		<br>
-		3 - <span style="font-weight: bold;">Number of busy room:</span><br>
+		3 - <span style="font-weight: bold;">Number of occupied rooms:</span><br>
 		<br>
 		<img style="width: 120px; height: 37px;" alt=""  src="../modules/{$node_id}/images/room_busy.png"><br>
 		<br>
-		4 - <span style="font-weight: bold;">Total of rooms:</span><br>
+		4 - <span style="font-weight: bold;">Number of booked rooms:</span><br>
+		<br>
+		<img style="width: 120px; height: 37px;" alt=""  src="../modules/{$node_id}/images/booking_off.png"><br>
+		<br>Or, if there's at least one booked room today:
+		<img style="width: 120px; height: 37px;" alt=""  src="../modules/{$node_id}/images/booking_on.png"><br>
+		<br>
+		In this case, you may click on this link and going to the booking list today.<br>
+		5 - <span style="font-weight: bold;">Total of rooms:</span><br>
 		<br>
 		<img style="width: 159px; height: 37px;" alt="" src="../modules/{$node_id}/images/room_total.png"><br>
 		<br>
