@@ -38,6 +38,6 @@ $arrLangModule=array(
 "Add" 			=> "Ajdd",
 "Edit" 		=> "Edit",
 "Search" 		=> "Search",
-"Show" 		=> "Shwo",
+"Show" 		=> "Show",
 );
 ?>

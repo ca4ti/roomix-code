@@ -33,7 +33,7 @@ $arrLangModule=array(
 "Models" => "Models",
 "Prices" => "Prices",
 "V.A.T"  => "V.A.T",
-"Search" => "Recherche",
+"Search" => "Search",
 "Guest"  => "Additional Guest",
 "Show"   => "Show",
 );

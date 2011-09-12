@@ -197,7 +197,7 @@ function reportAddRoom($smarty, $module_name, $local_templates_dir, &$pDB, &$pDB
     $total  = $totalAddRoom;
     $oGrid->setLimit($limit);
     $oGrid->setTotal($total);
-    $oGrid->enableExport();   // enable csv export.
+    //$oGrid->enableExport();   // enable csv export.
     $oGrid->pagingShow(true); // show paging section.
 
     $oGrid->calculatePagination($action,$start);

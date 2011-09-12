@@ -39,6 +39,6 @@ $arrLangModule=array(
 "Last Name"		=> "Nom",
 "Search"		=> "Recherche",
 "Show"			=> "Filtrer",
-"Number Guest"	=> "Nbr de pers.",
+"Additional Guest"	=> "Personne supp.",
 );
 ?>

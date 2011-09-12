@@ -70,6 +70,9 @@ function _moduleContent(&$smarty, $module_name)
         case "save_new":
             $content = saveNewCheckIn($smarty, $module_name, $local_templates_dir, $pDB, $pDB_Ast, $arrConf, $arrLang);
             break;
+        case "save_edit":
+            $content = viewFormCheckIn($smarty, $module_name, $local_templates_dir, $pDB, $pDB_Ast, $arrConf, $arrLang);
+            break;
         default: // view_form
             $content = viewFormCheckIn($smarty, $module_name, $local_templates_dir, $pDB, $pDB_Ast, $arrConf, $arrLang);
             break;
@@ -188,11 +191,14 @@ function saveNewCheckIn($smarty, $module_name, $local_templates_dir, &$pDB, &$pD
 
         // Save all Datas into the table register. 
         //---------------------------------------------
+        $add_guest			  = 0;
+	 if ( $_DATA['num_guest'] == "on")
+        	$add_guest		  = 1;
         $value_register['room_id']   = "'".$_DATA['room']."'";
         $value_register['guest_id']  = "'".$GuestID['id']."'";
         $value_register['date_ci']   = "'".$_DATA['date']."'";
         $value_register['date_co']   = "'".$_DATA['date_co']."'";
-        $value_register['num_guest'] = "'".$_DATA['num_guest']."'";
+        $value_register['num_guest'] = "'".$add_guest."'";
 	 if ($_DATA['booking'] == "off"){
         	$value_register['status']    = "'1'";
         	$arrRegister 		  = $pCheckIn->insertQuery('register',$value_register);
@@ -291,9 +297,14 @@ function createFieldForm($arrLang, &$pDB)
 
     // Displaying Rooms
     //------------------
+    $action = getAction();
+
+    $where = "ORDER BY `extension` ASC";
+    if ($action != "save_edit"){
     $where = "WHERE free = '1' ORDER BY `extension` ASC";
     if ($rmbc == "1")
     	$where = "WHERE free = '1' and clean = '1' ORDER BY `extension` ASC";
+    }
 
     $arrRoom=$pRoom->getCheckIn('rooms',$where);
 
@@ -328,14 +339,14 @@ function createFieldForm($arrLang, &$pDB)
                                             "EDITABLE"               => "si",
                                             "VALIDATION_EXTRA_PARAM" => ""
                                             ),
-            "num_guest"=> array(     "LABEL"                  => $arrLang["Number of personne"],
+            "num_guest"   => array(    "LABEL"         	      => $arrLang["Additional guest"],
                                             "REQUIRED"               => "no",
-                                            "INPUT_TYPE"             => "TEXT",
+                                            "INPUT_TYPE"             => "CHECKBOX",
                                             "INPUT_EXTRA_PARAM"      => "",
                                             "VALIDATION_TYPE"        => "text",
                                             "VALIDATION_EXTRA_PARAM" => ""
                                             ),
-            "booking"   => array(    "LABEL"         => $arrLang["Booking"],
+            "booking"   => array(    "LABEL"         	      => $arrLang["Booking"],
                                             "REQUIRED"               => "no",
                                             "INPUT_TYPE"             => "CHECKBOX",
                                             "INPUT_EXTRA_PARAM"      => "",

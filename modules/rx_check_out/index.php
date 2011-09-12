@@ -253,7 +253,8 @@ function saveNewCheckOut($smarty, $module_name, $local_templates_dir, &$pDB, &$p
 	 }
 
         $strMsg = $arrLang["Checkout Done"];
-	 $cmd="asterisk -rx 'sip show peer ".$arrExt['extension']."' | grep Status | grep OK";
+	 $cmd="/usr/sbin/asterisk -rx 'sip show peer ".$arrExt['extension']."' | grep Status | grep OK";
+
         if (!exec($cmd))
 		$strMsg .= "<br><img src='modules/".$module_name."/images/warning.png'><br>".$arrLang['Warning'];
 	 // Write the billing into the html file. 
@@ -289,11 +290,13 @@ function saveNewCheckOut($smarty, $module_name, $local_templates_dir, &$pDB, &$p
 
 	 // Line with the number of Nights
 	 //-------------------------------
-
+        $add_guest 	 = 0;	 
+        if ( strval($arrConf_Guest['num_guest'] == "0")
+           $add_guest = strval($Model['room_guest']);
         $where        = "where room_model = '".$arrExt['model']."'";
         $arrModel     = $pCheckOut->getCheckOut('models', $where);
 	 $Model        = $arrModel[0];
-        $puht         = strval($Model['room_price']);
+        $puht         = strval($Model['room_price']) + $add_guest;
         $patc         = ($puht*$Night)*(1+(strval($Model['room_vat'])/100));
 	 $vat          = $patc - ($puht*$Night) ;
 	 $vat_Nights   = $vat;
@@ -471,7 +474,7 @@ function saveNewCheckOut($smarty, $module_name, $local_templates_dir, &$pDB, &$p
         $where 			= "room_id = '".$arrExt['id']."' and status = '1'";
         $arrUpdateRoom 		= $pRoom->updateQuery('register', $value_re, $where);
        }	
-        $smarty->assign("mb_message", "");
+        $smarty->assign("mb_message", $strMsg);
         $smarty->assign("call_number", $i);
         $smarty->assign("total", sprintf("%01.2f",$total_bill)." ".$curr);
         $smarty->assign("bil", "1");

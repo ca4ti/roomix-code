@@ -103,7 +103,7 @@ function reportBookingList($smarty, $module_name, $local_templates_dir, &$pDB, $
         "filter_value" =>  $filter_value);
     $oGrid->setURL($url);
 
-    $arrColumns = array(_tr("Checkin"),_tr("Canceled"),_tr("Rooms"),_tr("First Name"),_tr("Last Name"),_tr("Number Guest"),_tr("Date Checkin"),_tr("Date Checkout"),);
+    $arrColumns = array(_tr("Checkin"),_tr("Canceled"),_tr("Rooms"),_tr("First Name"),_tr("Last Name"),_tr("Additional Guest"),_tr("Date Checkin"),_tr("Date Checkout"),);
     $oGrid->setColumns($arrColumns);
 
     $total   = $pBookingList->getNumBookingList($filter_field, $filter_value);
@@ -120,6 +120,10 @@ function reportBookingList($smarty, $module_name, $local_templates_dir, &$pDB, $
     }
 
     $arrResult = $pBookingList->getBookingList($limit, $offset, $filter_field, $filter_value);
+    $enable  = "<img src='modules/".$module_name."/images/1.png'>";
+    $disable = "<img src='modules/".$module_name."/images/0.png'>";
+
+    $ok  = array("0" => $disable, "1" => $enable);
     
     if(is_array($arrResult) && $total>0){
         foreach($arrResult as $key => $value){ 
@@ -128,7 +132,7 @@ function reportBookingList($smarty, $module_name, $local_templates_dir, &$pDB, $
 	    $arrTmp[2] = $value['room_name'];
 	    $arrTmp[3] = $value['first_name'];
 	    $arrTmp[4] = $value['last_name'];
-	    $arrTmp[5] = $value['num_guest'];	
+	    $arrTmp[5] = $ok[$value['num_guest']];	
 	    $arrTmp[6] = $value['date_ci'];
 	    $arrTmp[7] = $value['date_co'];
            $arrData[] = $arrTmp;
@@ -287,15 +291,19 @@ function ActionBookingList($smarty, $module_name, $local_templates_dir, &$pDB, &
     }
 
     $arrResult = $pBookingList->getBookingList($limit, $offset, $filter_field, $filter_value);
+    $enable  = "<img src='modules/".$module_name."/images/1.png'>";
+    $disable = "<img src='modules/".$module_name."/images/0.png'>";
+
+    $ok  = array("0" => $disable, "1" => $enable);
     
     if(is_array($arrResult) && $total>0){
-        foreach($arrResult as $key => $value){ 
+        foreach($arrResult as $key => $value){
 	    $arrTmp[0] = "<input type='checkbox' name='checkin[".$key."]' value='".$value['id']."'>";
 	    $arrTmp[1] = "<input type='checkbox' name='canceled[".$key."]' value='".$value['id']."'>";
 	    $arrTmp[2] = $value['room_name'];
 	    $arrTmp[3] = $value['first_name'];
 	    $arrTmp[4] = $value['last_name'];
-	    $arrTmp[5] = $value['num_guest'];	
+	    $arrTmp[5] = $ok[$value['num_guest']];	
 	    $arrTmp[6] = $value['date_ci'];
 	    $arrTmp[7] = $value['date_co'];
            $arrData[] = $arrTmp;
@@ -322,7 +330,7 @@ function createFieldFilter(){
 	    "room_name"    => _tr("Rooms"),
 	    "first_name"   => _tr("First Name"),
 	    "last_name"    => _tr("Last Name"),
-	    "num_guest"    => _tr("Number Guest"),
+	    "num_guest"    => _tr("Additional Guest"),
 	    "date_ci"      => _tr("Date Checkin"),
 	    "date_co"      => _tr("Date Checkout"),
                     );

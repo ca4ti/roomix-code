@@ -6,7 +6,8 @@
         {if $mode eq 'input'}
         <td align="left">
             <input class="button" type="submit" name="save_new" value="{$SAVE}">&nbsp;&nbsp;
-            <input class="button" type="submit" name="cancel" value="{$CANCEL}">
+            <input class="button" type="submit" name="cancel" value="{$CANCEL}">&nbsp;&nbsp;
+            <input class="button" type="submit" name="save_edit" value="{$EDIT}">
         </td>
         {elseif $mode eq 'view'}
         <td align="left">
@@ -14,7 +15,7 @@
         </td>
         {elseif $mode eq 'edit'}
         <td align="left">
-            <input class="button" type="submit" name="save_edit" value="{$EDIT}">&nbsp;&nbsp;
+            <input class="button" type="submit" name="save_new" value="{$SAVE}">&nbsp;&nbsp;
             <input class="button" type="submit" name="cancel" value="{$CANCEL}">
         </td>
         {/if}

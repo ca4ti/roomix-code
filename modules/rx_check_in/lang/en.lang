@@ -45,9 +45,10 @@ $arrLangModule=array(
 "Checkin Done"	=> "Checkin Done",
 "Date Checkout" 	=> "Date Checkout",
 "Booking" 		=> "Booking",
-"Number of personne" => "Number of personne",
+"Additional guest"   => "Additional guest",
 "Show"			=> "Check",
 "Booking Done"	=> "Booking Done",
 "Already Booked"	=> "Already Booked",
+"Edit"			=> "All rooms",
 );
 ?>

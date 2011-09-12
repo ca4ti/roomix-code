@@ -45,9 +45,10 @@ $arrLangModule=array(
 "Checkin Done"	=> "Arrivée effectuée",
 "Date Checkout" 	=> "Départ prévu",
 "Booking" 		=> "Réservation",
-"Number of personne" => "Nombre de personnes",
+"Additional guest"   => "Personne supplémentaire",
 "Show"			=> "Consulter",
 "Booking Done"	=> "Réservation Faite",
 "Already Booked"	=> "Déja Réservée",
+"Edit"			=> "Toutes les chambres",
 );
 ?>
