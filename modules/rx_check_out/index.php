@@ -291,7 +291,7 @@ function saveNewCheckOut($smarty, $module_name, $local_templates_dir, &$pDB, &$p
 	 // Line with the number of Nights
 	 //-------------------------------
         $add_guest 	 = 0;	 
-        if ( strval($arrConf_Guest['num_guest'] == "0")
+        if ( strval($arrConf_Guest['num_guest']) == "0")
            $add_guest = strval($Model['room_guest']);
         $where        = "where room_model = '".$arrExt['model']."'";
         $arrModel     = $pCheckOut->getCheckOut('models', $where);
