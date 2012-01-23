@@ -135,6 +135,10 @@ function viewFormGeneral($smarty, $module_name, $local_templates_dir, &$pDB, $ar
     if ($get_config['rmbc'] == "1")
 	$_DATA["rmbc"] = 'on';
 
+    $_DATA["rounded"] = 'off';
+    if ($get_config['rounded'] == "1")
+	$_DATA["rounded"] = 'on';
+
     $_DATA["company"]   = $get_config['company'];
     $_DATA["clean"]     = $get_config['clean'];
     $_DATA["minibar"]   = $get_config['minibar'];
@@ -142,6 +146,7 @@ function viewFormGeneral($smarty, $module_name, $local_templates_dir, &$pDB, $ar
     $_DATA["mail"]      = $get_config['mail'];
     $_DATA["vat_1"]     = $get_config['vat_1'];
     $_DATA["vat_2"]     = $get_config['vat_2'];
+    $_DATA["rounded"]   = $get_config['rounded'];
     
     $smarty->assign("LOGO", $get_config['logo']);
 
@@ -187,23 +192,27 @@ function saveNewGeneral($smarty, $module_name, $local_templates_dir, &$pDB, $arr
         $content = viewFormGeneral($smarty, $module_name, $local_templates_dir, $pDB, $arrConf, $arrLang);
     }
     else{
-        $pSG = new paloSantoGeneral($pDB);
+        $pSG		= new paloSantoGeneral($pDB);
 
-	 $o_m="Hospital";
+	 $o_m		= "Hospital";
         if ($_DATA["operating_mode"] == "0") 
 	 	$o_m	="Hotel";
 
-	 $locked="0";
+	 $locked	= "0";
         if ($_DATA["locked_when_check_out"] == "on")
-	 	$locked="1";
+	 	$locked= "1";
 
-	 $cbr="0";
+	 $cbr		= "0";
         if ($_DATA["calling_between_rooms"] == "on")
-	 	$cbr	="1";
+	 	$cbr	= "1";
 
-	 $rmbc="0";
+	 $rmbc		= "0";
         if ($_DATA["rmbc"] == "on")
 	 	$rmbc	="1";
+
+	 $rounded 	= "0";
+        if ($_DATA["rounded"] == "on")
+	 	$rounded ="1";
 
         $reception 	= $_DATA['reception'];
         $clean     	= $_DATA['clean'];
@@ -212,8 +221,9 @@ function saveNewGeneral($smarty, $module_name, $local_templates_dir, &$pDB, $arr
         $vat_1     	= $_DATA['vat_1'];
         $vat_2     	= $_DATA['vat_2'];
 
-	 $search 	= array('é', 'è', 'à', 'ê', 'ô');
-	 $replace 	= array('&eacute;', '&egrave;', '&agrave;', '&ecirc;', '&ocirc;');
+
+	 $search 	= array('é', 'è', 'à', 'ê', 'ô' ,'\'' );
+	 $replace 	= array('&eacute;', '&egrave;', '&agrave;', '&ecirc;', '&ocirc;' , '\\\'');
 	 $company = stro_replace ($search, $replace, $_DATA['company']);
         
 	 if(is_uploaded_file($_FILES['file_record']['tmp_name'])) {
@@ -251,6 +261,7 @@ function saveNewGeneral($smarty, $module_name, $local_templates_dir, &$pDB, $arr
 	 $arrValores['mail']      = "'".$mail."'";
 	 $arrValores['vat_1']     = "'".$vat_1."'";
 	 $arrValores['vat_2']     = "'".$vat_2."'";
+	 $arrValores['rounded']   = "'".$rounded."'";
 	 if (isset($route_archive)){
 	 	$arrValores['logo']= "'".$route_archive."'";
 		if (preg_match("/.png/i",$route_archive))
@@ -372,7 +383,14 @@ function createFieldForm($arrLang, &$pDB)
                                             "VALIDATION_TYPE"        => "text",
                                             "VALIDATION_EXTRA_PARAM" => "",
                                             "EDITABLE"               => "si"
-						  )
+						  ),
+            "rounded"        => array(      "LABEL"                  => $arrLang["Rounded"],
+                                            "REQUIRED"               => "no",
+                                            "INPUT_TYPE"             => "CHECKBOX",
+                                            "INPUT_EXTRA_PARAM"      => "",
+                                            "VALIDATION_TYPE"        => "text",
+                                            "VALIDATION_EXTRA_PARAM" => ""
+                                            ),
             );
     return $arrFields;
 }

@@ -189,5 +189,18 @@ class paloSantoCheckOut {
         return $result;
     }
 
+    function loadtrunk()
+    {
+        $query = "select * from trunk_bill";
+        $result = $this->_DB->fetchTable($query, true);
+
+        if($result==FALSE){
+            $this->errMsg = $this->_DB->errMsg;
+            return false;
+        }
+
+        return $result;
+    }
+
 }
 ?>

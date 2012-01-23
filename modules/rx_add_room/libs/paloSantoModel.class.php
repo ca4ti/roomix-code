@@ -92,17 +92,34 @@ class paloSantoModel {
         return $result[0];
     }
 
-    function updateQuery($sTabla, $arrValores ){
+    function updateQuery($sTabla, $arrValores, $where ){
 	// call function construirUpdate
-	$query = $this->_DB->construirUpdate($sTabla, $arrValores, $where = NULL);
+	$query = $this->_DB->construirUpdate($sTabla, $arrValores, $where);
 
 	// now execute the query with genQuery(fucntion of the paloSantoDB.class)
 	$result = $this->_DB->genQuery($query);
 
 	// catch the error
 	if($result==FALSE)
-       return;
+       	return;
        return; 
+    }
+
+    function DeleteRoom($filter_field, $filter_value)
+    {
+        $where = "";
+        if(isset($filter_field) & $filter_field !="")
+            $where = "where $filter_field = '$filter_value'";
+
+        $query   = "DELETE FROM rooms $where";
+
+        $result=$this->_DB->genQuery($query);
+
+        if($result==FALSE){
+            $this->errMsg = $this->_DB->errMsg;
+            return 0;
+        }
+        return $result[0];
     }
 
 

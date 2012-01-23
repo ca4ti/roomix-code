@@ -29,6 +29,8 @@
 //include elastix framework
 include_once "libs/paloSantoGrid.class.php";
 include_once "libs/paloSantoForm.class.php";
+include_once "libs/paloSantoJSON.class.php";
+include_once "libs/paloSantoConfig.class.php";
 
 function _moduleContent(&$smarty, $module_name)
 {
@@ -51,6 +53,7 @@ function _moduleContent(&$smarty, $module_name)
     global $arrConfModule;
     global $arrLang;
     global $arrLangModule;
+    global $guest_ID;
     $arrConf = array_merge($arrConf,$arrConfModule);
     $arrLang = array_merge($arrLang,$arrLangModule);
 
@@ -63,7 +66,10 @@ function _moduleContent(&$smarty, $module_name)
     $pDB_Ast = new paloDB("mysql://root:".obtenerClaveConocidaMySQL('root')."@localhost/asterisk");
 
     //actions
-    $action = getAction();
+    $action   = getAction();
+    $who      = getParameter("who");
+    $guest_ID = getParameter("guest_ID");
+
     $content = "";
 
     switch($action){
@@ -73,26 +79,65 @@ function _moduleContent(&$smarty, $module_name)
         case "save_edit":
             $content = viewFormCheckIn($smarty, $module_name, $local_templates_dir, $pDB, $pDB_Ast, $arrConf, $arrLang);
             break;
-        default: // view_form
+        case "guest_id":
+            $content = SendingDataGuest($module_name, $pDB, $arrConf, $guest_ID);
+            break;
+        case "find_guest":
+            $content = getInfoGuest($module_name, $pDB, $arrConf, $who);
+            break;
+        case "report": 	// Cancel
+	     $_POST = "";
+            $content = viewFormCheckIn($smarty, $module_name, $local_templates_dir, $pDB, $pDB_Ast, $arrConf, $arrLang);
+            break;
+        default: 		// view_form
             $content = viewFormCheckIn($smarty, $module_name, $local_templates_dir, $pDB, $pDB_Ast, $arrConf, $arrLang);
             break;
     }
     return $content;
 }
 
+function getInfoGuest($module_name, &$pDB, $arrConf, $findguest)
+{
+    $jsonObject      = new PaloSantoJSON();
+    $pCheckIn        = new paloSantoCheckIn($pDB);
+    $conditions      = "WHERE last_name LIKE '".$findguest."%'";
+    $result_query    = $pCheckIn->getCheckIn("guest",$conditions);
+    $msgResponse     = "";
+    foreach($result_query as $key => $value){
+	$msgResponse = $msgResponse." <ol onClick=\"fill('".$value['id']."')\";> ".$value['last_name']." ".$value['first_name']." </ol> ";
+    } 
+
+    $jsonObject->set_message($msgResponse);
+    return $jsonObject->createJSON();
+}
+
+function SendingDataGuest($module_name, &$pDB, $arrConf, $guest_ID)
+{
+    $jsonObject      = new PaloSantoJSON();
+    $pCheckIn        = new paloSantoCheckIn($pDB);
+    $Response     	= "";
+    if (isset($guest_ID)){
+    	$conditions   	= "WHERE id = $guest_ID";
+    	$result_id    	= $pCheckIn->getCheckIn("guest",$conditions); 
+    } 
+
+    $jsonObject->set_message($result_id[0]);
+    return $jsonObject->createJSON();
+}
+
 function viewFormCheckIn($smarty, $module_name, $local_templates_dir, &$pDB, &$pDB_Ast, $arrConf, $arrLang)
 {
-    $pCheckIn = new paloSantoCheckIn($pDB);
-    $arrFormCheckIn = createFieldForm($arrLang, $pDB);
-    $oForm = new paloForm($smarty,$arrFormCheckIn);
+    $pCheckIn 	= new paloSantoCheckIn($pDB);
+    $arrFormCheckIn 	= createFieldForm($arrLang, $pDB);
+    $oForm 		= new paloForm($smarty,$arrFormCheckIn);
 
     //begin, Form data persistence to errors and other events.
-    $_DATA  = $_POST;
-    $action = getParameter("action");
-    $id     = getParameter("id");
+    $_DATA  		= $_POST;
+    $action 		= getParameter("action");
+    $id     		= getParameter("id");
     $smarty->assign("ID", $id); //persistence id with input hidden in tpl
 
-    $_DATA['num_guest'] = 1;
+    $_DATA['num_guest']  = 1;
 
     if($action=="view")
         $oForm->setViewMode();
@@ -109,12 +154,16 @@ function viewFormCheckIn($smarty, $module_name, $local_templates_dir, &$pDB, &$p
             $smarty->assign("mb_message", $pCheckIn->errMsg);
         }
     }
+    $_DATA['date'] = date("Y-m-d H:i:s");
+
     $smarty->caching = 0;
     $smarty->assign("SAVE", $arrLang["Save"]);
     $smarty->assign("EDIT", $arrLang["Edit"]);
     $smarty->assign("CANCEL", $arrLang["Cancel"]);
     $smarty->assign("REQUIRED_FIELD", $arrLang["Required field"]);
     $smarty->assign("IMG", "images/list.png");
+    $smarty->assign("SRCIMG", "modules/".$module_name."/images");
+    
     $smarty->assign("BOOKING","<a style='text-decoration: none;' href='./index.php?menu=rx_booking_status'><button type='button'>".$arrLang['Show']."</button></a>");
 
     $htmlForm = $oForm->fetchForm("$local_templates_dir/form.tpl",$arrLang["Check In"], $_DATA);
@@ -331,7 +380,7 @@ function createFieldForm($arrLang, &$pDB)
                                             "EDITABLE"               => "si",
                                             "VALIDATION_EXTRA_PARAM" => ""
                                             ),
-            "date_co" => array(      "LABEL"                  => $arrLang["Date Checkout"],
+            "date_co" => array(             "LABEL"                  => $arrLang["Date Checkout"],
                                             "REQUIRED"               => "yes",
                                             "INPUT_TYPE"             => "DATE",
                                             "INPUT_EXTRA_PARAM"      => array("TIME" => true, "FORMAT" => "%Y-%m-%d %H:%M:%S","TIMEFORMAT" => "24"),
@@ -339,38 +388,38 @@ function createFieldForm($arrLang, &$pDB)
                                             "EDITABLE"               => "si",
                                             "VALIDATION_EXTRA_PARAM" => ""
                                             ),
-            "num_guest"   => array(    "LABEL"         	      => $arrLang["Additional guest"],
+            "num_guest"   => array(         "LABEL"         	      => $arrLang["Additional guest"],
                                             "REQUIRED"               => "no",
                                             "INPUT_TYPE"             => "CHECKBOX",
                                             "INPUT_EXTRA_PARAM"      => "",
                                             "VALIDATION_TYPE"        => "text",
                                             "VALIDATION_EXTRA_PARAM" => ""
                                             ),
-            "booking"   => array(    "LABEL"         	      => $arrLang["Booking"],
+            "booking"   => array(           "LABEL"         	      => $arrLang["Booking"],
                                             "REQUIRED"               => "no",
                                             "INPUT_TYPE"             => "CHECKBOX",
                                             "INPUT_EXTRA_PARAM"      => "",
                                             "VALIDATION_TYPE"        => "text",
                                             "VALIDATION_EXTRA_PARAM" => ""
                                             ),
-            "first_name"   => array(      "LABEL"                  => $arrLang["First Name"],
+            "last_name"   => array(        "LABEL"                  => $arrLang["Last Name"],
                                             "REQUIRED"               => "yes",
                                             "INPUT_TYPE"             => "TEXT",
-                                            "INPUT_EXTRA_PARAM"      => "",
+                                            "INPUT_EXTRA_PARAM"      => array("id" => "last_name", "onkeyup" => "FindGuest(this.value);", "onblur" => "fill();"),
                                             "VALIDATION_TYPE"        => "text",
                                             "VALIDATION_EXTRA_PARAM" => ""
                                             ),
-            "last_name"   => array(      "LABEL"                  => $arrLang["Last Name"],
+            "first_name"   => array(         "LABEL"                  => $arrLang["First Name"],
                                             "REQUIRED"               => "yes",
                                             "INPUT_TYPE"             => "TEXT",
-                                            "INPUT_EXTRA_PARAM"      => "",
+                                            "INPUT_EXTRA_PARAM"      => array("id" => "first_name"),
                                             "VALIDATION_TYPE"        => "text",
                                             "VALIDATION_EXTRA_PARAM" => ""
                                             ),
-            "address"   => array(      "LABEL"                  => $arrLang["Address"],
+            "address"   => array(           "LABEL"                  => $arrLang["Address"],
                                             "REQUIRED"               => "no",
                                             "INPUT_TYPE"             => "TEXTAREA",
-                                            "INPUT_EXTRA_PARAM"      => "",
+                                            "INPUT_EXTRA_PARAM"      => array("id" => "address"),
                                             "VALIDATION_TYPE"        => "text",
                                             "EDITABLE"               => "si",
                                             "COLS"                   => "50",
@@ -380,42 +429,42 @@ function createFieldForm($arrLang, &$pDB)
             "cp"   => array(      "LABEL"                  => $arrLang["CP"],
                                             "REQUIRED"               => "no",
                                             "INPUT_TYPE"             => "TEXT",
-                                            "INPUT_EXTRA_PARAM"      => "",
+                                            "INPUT_EXTRA_PARAM"      => array("id" => "cp"),
                                             "VALIDATION_TYPE"        => "text",
                                             "VALIDATION_EXTRA_PARAM" => ""
                                             ),
             "city"   => array(      "LABEL"                  => $arrLang["City"],
                                             "REQUIRED"               => "no",
                                             "INPUT_TYPE"             => "TEXT",
-                                            "INPUT_EXTRA_PARAM"      => "",
+                                            "INPUT_EXTRA_PARAM"      => array("id" => "city"),
                                             "VALIDATION_TYPE"        => "text",
                                             "VALIDATION_EXTRA_PARAM" => ""
                                             ),
             "phone"   => array(      "LABEL"                  => $arrLang["Phone"],
                                             "REQUIRED"               => "no",
                                             "INPUT_TYPE"             => "TEXT",
-                                            "INPUT_EXTRA_PARAM"      => "",
+                                            "INPUT_EXTRA_PARAM"      => array("id" => "phone"),
                                             "VALIDATION_TYPE"        => "text",
                                             "VALIDATION_EXTRA_PARAM" => ""
                                             ),
             "mobile"   => array(      "LABEL"                  => $arrLang["Mobile"],
                                             "REQUIRED"               => "no",
                                             "INPUT_TYPE"             => "TEXT",
-                                            "INPUT_EXTRA_PARAM"      => "",
+                                            "INPUT_EXTRA_PARAM"      => array("id" => "mobile"),
                                             "VALIDATION_TYPE"        => "text",
                                             "VALIDATION_EXTRA_PARAM" => ""
                                             ),
             "mail"   => array(      "LABEL"                  => $arrLang["Mail"],
                                             "REQUIRED"               => "no",
                                             "INPUT_TYPE"             => "TEXT",
-                                            "INPUT_EXTRA_PARAM"      => "",
+                                            "INPUT_EXTRA_PARAM"      => array("id" => "mail"),
                                             "VALIDATION_TYPE"        => "text",
                                             "VALIDATION_EXTRA_PARAM" => ""
                                             ),
             "fax"   => array(      "LABEL"                  => $arrLang["Fax"],
                                             "REQUIRED"               => "no",
                                             "INPUT_TYPE"             => "TEXT",
-                                            "INPUT_EXTRA_PARAM"      => "",
+                                            "INPUT_EXTRA_PARAM"      => array("id" => "fax"),
                                             "VALIDATION_TYPE"        => "text",
                                             "VALIDATION_EXTRA_PARAM" => ""
                                             ),
@@ -432,6 +481,10 @@ function getAction()
         return "save_edit";
     else if(getParameter("delete")) 
         return "delete";
+    else if(getParameter("action")=="find_guest")
+        return "find_guest";
+    else if(getParameter("action")=="guest_id")
+        return "guest_id";
     else if(getParameter("new_open")) 
         return "view_form";
     else if(getParameter("action")=="view")      //Get parameter by GET (command pattern, links)

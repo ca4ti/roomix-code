@@ -64,6 +64,7 @@ function _moduleContent(&$smarty, $module_name)
     $pDB_CDR = new paloDB("mysql://root:".obtenerClaveConocidaMySQL('root')."@localhost/asteriskcdrdb");
     $pDB_Set = new paloDB("sqlite3:///$arrConf[elastix_dbdir]/settings.db");
     $pDB_Rat = new paloDB("sqlite3:///$arrConf[elastix_dbdir]/rate.db");
+    $pDB_Trk = new paloDB("sqlite3:///$arrConf[elastix_dbdir]/trunk.db");
 
     //actions
     $action = getAction();
@@ -71,20 +72,24 @@ function _moduleContent(&$smarty, $module_name)
 
     switch($action){
         case "save_new":
-            $content = saveNewCheckOut($smarty, $module_name, $local_templates_dir, $pDB, $pDB_Ast, $pDB_CDR, $pDB_Set, $pDB_Rat, $arrConf, $arrLang);
+            $content = saveNewCheckOut($smarty, $module_name, $local_templates_dir, $pDB, $pDB_Ast, $pDB_CDR, $pDB_Set, $pDB_Rat, $pDB_Trk, $arrConf, $arrLang);
             break;
         default: // view_form
-            $content = viewFormCheckOut($smarty, $module_name, $local_templates_dir, $pDB, $pDB_Ast, $pDB_CDR, $pDB_Set, $pDB_Rat, $arrConf, $arrLang);
+            $content = viewFormCheckOut($smarty, $module_name, $local_templates_dir, $pDB, $pDB_Ast, $pDB_CDR, $pDB_Set, $pDB_Rat, $pDB_Trk, $arrConf, $arrLang);
             break;
     }
     return $content;
 }
 
-function viewFormCheckOut($smarty, $module_name, $local_templates_dir, &$pDB, &$pDB_Ast, &$pDB_CDR, &$pDB_Set, &$pDB_Rat, $arrConf, $arrLang)
+function viewFormCheckOut($smarty, $module_name, $local_templates_dir, &$pDB, &$pDB_Ast, &$pDB_CDR, &$pDB_Set, &$pDB_Rat, &$pDB_Trk, $arrConf, $arrLang)
 {
+    $pSQLite = new paloSantoCheckOut($pDB_Rat);
+    $arrRate = $pSQLite->loadRates();
+
     $pCheckOut = new paloSantoCheckOut($pDB);
     $arrFormCheckOut = createFieldForm($arrLang, $pDB);
     $oForm = new paloForm($smarty,$arrFormCheckOut);
+    $pRat  = new paloSantoCheckOut($pDB_Rat);
 
     //begin, Form data persistence to errors and other events.
     $_DATA  = $_POST;
@@ -108,6 +113,8 @@ function viewFormCheckOut($smarty, $module_name, $local_templates_dir, &$pDB, &$
         }
     }
 
+    $_DATA['date'] = date("Y-m-d H:i:s");
+
     $smarty->assign("SAVE", $arrLang["Save"]);
     $smarty->assign("EDIT", $arrLang["Edit"]);
     $smarty->assign("CANCEL", $arrLang["Cancel"]);
@@ -126,18 +133,21 @@ function TimeCall($second)
 	$time[0] = ( $second - $temp ) / 3600 ;
 	$time[2] = $temp % 60 ;
 	$time[1] = ( $temp - $time[2] ) / 60;
-
-	$result = $time[0]." h ".$time[1]."' ".$time[2]."\"";
+	$result = $time[0]." h ".$time[1]." m ".$time[2]." s";
+	if ($time[0] == 0)
+		$result = $time[1]." m ".$time[2]." s";
        return $result;
 }
 
-function saveNewCheckOut($smarty, $module_name, $local_templates_dir, &$pDB, &$pDB_Ast, &$pDB_CDR, &$pDB_Set, &$pDB_Rat, $arrConf, $arrLang)
+function saveNewCheckOut($smarty, $module_name, $local_templates_dir, &$pDB, &$pDB_Ast, &$pDB_CDR, &$pDB_Set, &$pDB_Rat, &$pDB_Trk, $arrConf, $arrLang)
 {
     include "modules/$module_name/libs/billing_lib.php";
     $pCur    = new paloSantoCheckOut($pDB_Set);
     $pSQLite = new paloSantoCheckOut($pDB_Rat);
+    $pTrunk  = new paloSantoCheckOut($pDB_Trk);
     $curr    = $pCur->loadCurrency();
     $arrRate = $pSQLite->loadRates();
+    $arrTrk  = $pTrunk->loadTrunk();
 
     $smarty->assign("Call", $arrLang['Call']);
     $smarty->assign("Display", $arrLang['Display']);
@@ -161,7 +171,7 @@ function saveNewCheckOut($smarty, $module_name, $local_templates_dir, &$pDB, &$p
                 $strErrorMsg .= "$k, ";
         }
         $smarty->assign("mb_message", $strErrorMsg);
-        $content = viewFormCheckOut($smarty, $module_name, $local_templates_dir, $pDB, $pDB_Ast, $pDB_CDR, $pDB_Set, $pDB_Rat, $arrConf, $arrLang);
+        $content = viewFormCheckOut($smarty, $module_name, $local_templates_dir, $pDB, $pDB_Ast, $pDB_CDR, $pDB_Set, $pDB_Rat, $pDB_Trk, $arrConf, $arrLang);
     }
     else{
         $arrGroup		= $pCheckOut->getGroupCheckOut();
@@ -186,7 +196,7 @@ function saveNewCheckOut($smarty, $module_name, $local_templates_dir, &$pDB, &$p
         $where 	= "where id = '".$_DATA['room']."'";
         $arrRoom 	= $pRoom->getCheckOut('rooms', $where);
         $arrExt 	= $arrRoom['0'];
-	 
+
         // Update room : The room was busy and now it's free and not clean.
 	 // In same time, deleting the guest name and group.
         //---------------------------------------------
@@ -197,6 +207,20 @@ function saveNewCheckOut($smarty, $module_name, $local_templates_dir, &$pDB, &$p
         $value['mini_bar'] 	= null;
         $where 		= "id = '".$_DATA['room']."'";
         $arrUpdateRoom 	= $pRoom->updateQuery('rooms', $value, $where);
+
+        // Modify the checkout date following 'when' selection.
+        //----------------------------------------------------
+
+        if ($_DATA['When'] == '0')
+        	$date_co 	= date("Y-m-d H:i:s");	// Today
+        if ($_DATA['When'] == '2')
+		$date_co 	= $_DATA['date'];		// Other Day
+        if ($_DATA['When'] != '1')
+	 {
+        	$value_co['date_co'] = "'".$date_co."'";    
+        	$where 		= "room_id = '".$_DATA['room']."' and status = '1'";
+	 	$arrUpdateGuest 	= $pCheckOut->updateQuery('register', $value_co, $where);
+	 }
 
         // Lock the extension after checkout or not.
         //---------------------------------------------
@@ -234,11 +258,11 @@ function saveNewCheckOut($smarty, $module_name, $local_templates_dir, &$pDB, &$p
 	 $arrGuest      = $arrConf_Guest['0'];
 
     	 foreach($arrRate as $idx_prefix => $Rate_parameters)
-		// Extracting rate parameters
+	 	// Extracting rate parameters
 
 	 $where         = "WHERE channel LIKE 'SIP/".$arrExt['extension']."%' and billsec > '0' and calldate > '".$arrGuest['date_ci']."'".
  			    " and calldate < '".$arrGuest['date_co']."' and disposition = 'ANSWERED' and accountcode ='".$arrGuest['guest_id']."'".
-			    " and dstchannel LIKE '".$Rate_parameters['trunk']."%' and dst <> '100'";
+			    " and dstchannel LIKE '".$Rate_parameters['trunk']."%'";
 
         $arrCDR = $pCheckOut_CDR->getCDR($where);
 
@@ -290,12 +314,13 @@ function saveNewCheckOut($smarty, $module_name, $local_templates_dir, &$pDB, &$p
 
 	 // Line with the number of Nights
 	 //-------------------------------
-        $add_guest 	 = 0;	 
-        if ( strval($arrConf_Guest['num_guest']) == "0")
-           $add_guest = strval($Model['room_guest']);
+
         $where        = "where room_model = '".$arrExt['model']."'";
         $arrModel     = $pCheckOut->getCheckOut('models', $where);
 	 $Model        = $arrModel[0];
+        $add_guest 	 = 0;	 
+        if ( $For['num_guest'] == '1')
+           $add_guest = strval($Model['room_guest']);
         $puht         = strval($Model['room_price']) + $add_guest;
         $patc         = ($puht*$Night)*(1+(strval($Model['room_vat'])/100));
 	 $vat          = $patc - ($puht*$Night) ;
@@ -341,13 +366,13 @@ function saveNewCheckOut($smarty, $module_name, $local_templates_dir, &$pDB, &$p
 					{
 					if (!substr_compare($value_cdr['dst'],$arrRate[$Scan_Rate]['prefix'], 0, strlen($arrRate[$Scan_Rate]['prefix']))) 
 						{
-						$price_rate = ($value_cdr['billsec'] * ($arrRate[$Scan_Rate]['rate'] / 60)) + $arrRate[$Scan_Rate]['rate_offset'];
+						$price_rate = (($value_cdr['billsec'] / 60) * $arrRate[$Scan_Rate]['rate']) + $arrRate[$Scan_Rate]['rate_offset'];
 						$price_rate = intval($price_rate*100)/100;
 						$idx_rate   = $Scan_Rate;
 						}
 					if (!isset($price_rate))
 						{
-						$price_rate = ($value_cdr['billsec'] * ($arrRate[0]['rate'] / 60)) + $arrRate[0]['rate_offset'];
+						$price_rate = (($value_cdr['billsec'] /60) * $arrRate[0]['rate'] ) + $arrRate[0]['rate_offset'];
 						$price_rate = intval($price_rate*100)/100;
 						$idx_rate   = 0;
 						}
@@ -369,17 +394,24 @@ function saveNewCheckOut($smarty, $module_name, $local_templates_dir, &$pDB, &$p
 			$Billing_page = $Billing_page.Detail_table_Title();
 	 		foreach($arrCDR as $key => $value_cdr)
 			{
+				// Ronding billsec.
+				$billingsec = $value_cdr['billsec'];
+				if ($arrLock['rounded'] == "1" && intval($value_cdr['billsec']/60) < ($value_cdr['billsec']/60) )
+					$value_cdr['billsec'] = (1 + intval($value_cdr['billsec']/60))*60;
+					
 				for ($Scan_Rate = 1; $Scan_Rate < count($arrRate); $Scan_Rate++)
 				{
+					// Compare if the called num is matched with a prefix, at 0 to the number of prefix digits.
+					//-----------------------------------------------------------------------------------------
 					if (!substr_compare($value_cdr['dst'],$arrRate[$Scan_Rate]['prefix'], 0, strlen($arrRate[$Scan_Rate]['prefix']))) 
 						{
-						$price_rate = ($value_cdr['billsec'] * ($arrRate[$Scan_Rate]['rate'] / 60)) + $arrRate[$Scan_Rate]['rate_offset'];
+						$price_rate = (($value_cdr['billsec'] / 60) * $arrRate[$Scan_Rate]['rate']) + $arrRate[$Scan_Rate]['rate_offset'];
 						$price_rate = intval($price_rate*100)/100;
 						$idx_rate   = $Scan_Rate;
 						}
 					if (!isset($price_rate))
 						{
-						$price_rate = ($value_cdr['billsec'] * ($arrRate[0]['rate'] / 60)) + $arrRate[0]['rate_offset'];
+						$price_rate = (($value_cdr['billsec'] / 60) * $arrRate[0]['rate']) + $arrRate[0]['rate_offset'];
 						$price_rate = intval($price_rate*100)/100;
 						$idx_rate   = 0;
 						}
@@ -387,7 +419,10 @@ function saveNewCheckOut($smarty, $module_name, $local_templates_dir, &$pDB, &$p
 				$Total_Calls    = $Total_Calls + $price_rate;
 				$Total_Call_VAT = $Total_Calls / (1+(strval($Config['vat_1'])/100));
 				$Total_Call_VAT = intval($Total_Call_VAT*100)/100;
-				$Billing_page   = $Billing_page.Detail_table_Line($value['calldate']." - ".$arrRate[$idx_rate]['name'], $value['dst'], TimeCall($value['billsec']), sprintf("%01.2f", $price_rate), $curr);
+                            $Destination    = substr($value_cdr['dst'],0,-$arrRate[$idx_rate]['hided_digits']);
+				$Destination    = $Destination.str_repeat("*",$arrRate[$idx_rate]['hided_digits']);
+                            //echo "<br>Date - ".$value_cdr['calldate']." - vers ".$arrRate[$idx_rate]['name']." - sur ce n° ".$value_cdr['dst']." d'une duree de ".TimeCall($value_cdr['billsec'])."<br>";
+				$Billing_page   = $Billing_page.Detail_table_Line($value_cdr['calldate']." - ".$arrRate[$idx_rate]['name'], $Destination, TimeCall($billingsec), sprintf("%01.2f", $price_rate), $curr);
 	 		}
 	  		$Billing_page = $Billing_page."</tbody></table><br>";
 	 	}
@@ -397,6 +432,10 @@ function saveNewCheckOut($smarty, $module_name, $local_templates_dir, &$pDB, &$p
              	 	$Total_Calls = 0; 
 	 		foreach($arrCDR as $key => $value_cdr)
 			{
+				// Ronding billsec.
+				if ($arrLock['rounded'] == "1" && intval($value_cdr['billsec']/60) < ($value_cdr['billsec']/60) )
+					$value_cdr['billsec'] = (1 + intval($value_cdr['billsec']/60))*60;
+
 				for ($Scan_Rate = 1; $Scan_Rate < count($arrRate); $Scan_Rate++)
 				{
 					if (!substr_compare($value_cdr['dst'],$arrRate[$Scan_Rate]['prefix'], 0, strlen($arrRate[$Scan_Rate]['prefix']))) 
@@ -459,20 +498,58 @@ function saveNewCheckOut($smarty, $module_name, $local_templates_dir, &$pDB, &$p
         //------------------------------------
 	 //
 
-        $value_re['date_co']	= "'".date('Y-m-d H:i:s')."'"; // Put a checkout date 
-        $value_re['paid']   	= "'0'";		          // and a paid flag
-        if ($_DATA['paid'] == "on")		         	   //--------------------
+        $value_re['paid']   	= "'0'";		          
+        if ($_DATA['paid'] == "on")		         	   
           $value_re['paid'] 	= "'1'";
         $value_re['status'] 	= "'0'";
         $value_re['billing_file']  = "'".$name."'";
         $value_re['total_room']    = "'".$patc."'";
 	 if($mb_price != 0)
-        	$value_re['total_bar']     = "'".$mb_price."'";
-	 if($$Total_Calls != 0)
-       	$value_re['total_call']    = "'".$Total_Calls."'";
+           $value_re['total_bar']  = "'".$mb_price."'";
+	 if($Total_Calls != 0)
+           $value_re['total_call'] = "'".$Total_Calls."'";
         $value_re['total_billing'] = "'".$total_bill."'";
         $where 			= "room_id = '".$arrExt['id']."' and status = '1'";
         $arrUpdateRoom 		= $pRoom->updateQuery('register', $value_re, $where);
+
+	 // creating job to keeping rooms unavailable in the case where 'When' is different of today
+	 //-----------------------------------------------------------------------------------------
+
+	 if ($_DATA['When'] != '0') 
+	 {
+		if ($_DATA['When'] == "1")
+			$date_co	   = $arrGuest['date_co'];
+		// Formatting job date
+		//--------------------
+		$arrStr		   = array(' ',':');
+	 	$date_job 		   = str_replace($arrStr,'-',$date_co);
+              list($Y,$M,$D,$H,$I,$S) = split('-',$date_job);
+		$date_co_job		   = $Y.$M.$D.$H.$I;
+
+		// Creating job file.
+		//-------------------
+              $tmp_job		   = fopen("/var/www/html/roomx_billing/rx_job","a");
+		$job_content		   = "/usr/bin/mysql -u root -p".obtenerClaveConocidaMySQL('root')." -s roomx -e \"UPDATE rooms SET free = '1' WHERE "."id = '".$arrExt['id']."';\"";
+    		fwrite($tmp_job, $job_content); 
+		fclose($tmp_job);		
+
+		// Launching job
+		//--------------
+		$cmd 			   = "/usr/bin/at -t ".$date_co_job." < /var/www/html/roomx_billing/rx_job";
+		exec($cmd);
+
+		// Deleting temp file
+		//-------------------
+		unlink("/var/www/html/roomx_billing/rx_job");
+
+		// Changing the room status to 0 (busy) until date_co will completed
+		//-------------------------------------------------------------------
+              $value_rooms['free']    = "'0'";
+        	$where 		   = "id = '".$arrExt['id']."'";
+        	$arrUpdateRoom 	   = $pRoom->updateQuery('rooms', $value_rooms, $where);		
+	 }
+		
+
        }	
         $smarty->assign("mb_message", $strMsg);
         $smarty->assign("call_number", $i);
@@ -481,7 +558,7 @@ function saveNewCheckOut($smarty, $module_name, $local_templates_dir, &$pDB, &$p
 	 $smarty->assign("bil_link", $name);
 
         $htmlForm = $oForm->fetchForm("$local_templates_dir/form.tpl",$arrLang["CheckOut"], $_DATA);
-        $content = viewFormCheckOut($smarty, $module_name, $local_templates_dir, $pDB, $pDB_Ast, $pDB_CDR, $pDB_Set, $pDB_Rat, $arrConf, $arrLang);        
+        $content = viewFormCheckOut($smarty, $module_name, $local_templates_dir, $pDB, $pDB_Ast, $pDB_CDR, $pDB_Set, $pDB_Rat, $pDB_Trk, $arrConf, $arrLang);        
 
     }
     return $content;
@@ -506,11 +583,23 @@ function createFieldForm($arrLang, &$pDB)
     	$arrOptionsG[$kG] = $valueG['groupe'];
 	}
 
+    $arrOptionsDate = array( '0' => $arrLang['Today'],
+				 '1' => $arrLang['Scheduled date'],
+				 '2' => $arrLang['Other day']);
+
     $arrFields = array(
             "room"   => array(      "LABEL"                  => $arrLang["Room"],
                                             "REQUIRED"               => "no",
                                             "INPUT_TYPE"             => "SELECT",
                                             "INPUT_EXTRA_PARAM"      => $arrOptionsR,
+                                            "VALIDATION_TYPE"        => "text",
+                                            "VALIDATION_EXTRA_PARAM" => "",
+                                            "EDITABLE"               => "si",
+                                            ),
+            "When"   => array(      "LABEL"                  => $arrLang["When"],
+                                            "REQUIRED"               => "no",
+                                            "INPUT_TYPE"             => "SELECT",
+                                            "INPUT_EXTRA_PARAM"      => $arrOptionsDate,
                                             "VALIDATION_TYPE"        => "text",
                                             "VALIDATION_EXTRA_PARAM" => "",
                                             "EDITABLE"               => "si",
@@ -530,6 +619,14 @@ function createFieldForm($arrLang, &$pDB)
                                             "VALIDATION_TYPE"        => "text",
                                             "VALIDATION_EXTRA_PARAM" => ""
                                             ),
+            "date"   => array(      "LABEL"                  => $arrLang["Date"],
+                                            "REQUIRED"               => "no",
+                                            "INPUT_TYPE"             => "DATE",
+                                            "INPUT_EXTRA_PARAM"      => array("TIME" => true, "FORMAT" => "%Y-%m-%d %H:%M:%S","TIMEFORMAT" => "24"),
+                                            "VALIDATION_TYPE"        => "text",
+                                            "EDITABLE"               => "si",
+                                            "VALIDATION_EXTRA_PARAM" => ""
+						  ),
             "details"   => array(      "LABEL"                  => $arrLang["Details"],
                                             "REQUIRED"               => "no",
                                             "INPUT_TYPE"             => "CHECKBOX",

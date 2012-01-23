@@ -87,21 +87,21 @@ function _moduleContent(&$smarty, $module_name)
 
 function saveAddRoom($smarty, $module_name, $local_templates_dir, &$pDB, &$pDBM, $arrConf, $arrLang)
 {
-       $pFreePBX = new paloSantoAddRoom($pDB);
-       $pRoomX = new paloSantoModel($pDBM);
+       $pFreePBX 		= new paloSantoAddRoom($pDB);
+       $pRoomX 		= new paloSantoModel($pDBM);
 
        $_DATA 		= $_POST;
-	   $r_selected	= $_DATA['room'];
+	$r_selected		= $_DATA['room'];
 
        foreach($r_selected as $key => $value)
 	{
-       	$room_idx 	= $pFreePBX -> getAddRoom('','','extension',$value);
-       	$room_name 	= $room_idx[0];
+       	$room_idx 		    = $pFreePBX -> getAddRoom('','','extension',$value);
+       	$room_name 		    = $room_idx[0];
 
-		$where = "where extension = '$value'";
-              $arrRoomExist = $pRoomX->get_Room('rooms' , $where);
+		$where 		    = "where extension = '$value'";
+              $arrRoomExist 	    = $pRoomX->get_Room('rooms' , $where);
 
-		$arrValores['id']	     = "'".$arrRoomExist['id']."'";
+		$arrValores['id']	    = "'".$arrRoomExist['id']."'";
        	$arrValores['extension'] = "'".$value."'";
        	$arrValores['room_name'] = "'".$room_name['name']."'";
        	$arrValores['model']     = "'".$_DATA[intval($value)]."'";
@@ -112,23 +112,152 @@ function saveAddRoom($smarty, $module_name, $local_templates_dir, &$pDB, &$pDBM,
 
         		// Modify the context extension into Freepbx data
         		//-----------------------------------------------
-				$value_rl['value']  	= "'true'";
+			$value_rl['value']  	= "'true'";
         		$where              	= "variable = 'need_reload';";
         		$arrReload          	= $pFreePBX->updateFreepbx('admin',$value_rl, $where);
 
         		$value_ac['data']   	= "'from-roomx'";
-				$where              	= "id = '".$value."' and keyword = 'context';";
+			$where              	= "id = '".$value."' and keyword = 'context';";
         		$arrAccount         	= $pFreePBX->updateFreepbx('sip',$value_ac, $where);
 
-        		$cmd					= "/var/lib/asterisk/bin/module_admin reload";
-				exec($cmd);	
+        		$cmd			= "/var/lib/asterisk/bin/module_admin reload";
+			exec($cmd);	
 		}
 		else
 		{
-			$save_rooms = $pRoomX->updateQuery('rooms',$arrValores);
+			$where 		= "id = ".$arrRoomExist['id'];
+			$save_rooms 		= $pRoomX->updateQuery('rooms',$arrValores, $where);
 		}
-      }
+    }
+
+    //$content = "<b>".count($r_selected)." rooms has been added / modified"."</b>";
+    //return $content;
+
+    $filter_field 	= getParameter("filter_field");
+    $filter_value 	= getParameter("filter_value");
+    $action 		= getParameter("nav");
+    $start  		= getParameter("start");
+    $as_csv 		= getParameter("exportcsv");
+
+    //begin grid parameters
+    $oGrid  		= new paloSantoGrid($smarty);
+    $totalAddRoom 	= $pFreePBX->getNumAddRoom($filter_field, $filter_value);
+    $totalModel 	= $pRoomX->getNumAddRoomModel('models',$filter_field, $filter_value);
+
+    $limit  		= 10;
+    $total  		= $totalAddRoom;
+    $oGrid->setLimit($limit);
+    $oGrid->setTotal($total);
+    //$oGrid->enableExport();   // enable csv export.
+    $oGrid->pagingShow(true); // show paging section.
+
+    $oGrid->calculatePagination($action,$start);
+    $offset 		= $oGrid->getOffsetValue();
+    $end    		= $oGrid->getEnd();
+    $url    		= "?menu=$module_name&filter_field=$filter_field&filter_value=$filter_value";
+    $select 		= "";
+
+    $smarty->assign("SAVE", $arrLang["Save"]);
+    $smarty->assign("DELETE", $arrLang["Delete"]);
+    $smarty->assign("EDIT", $arrLang["Edit"]);
+    $smarty->assign("CANCEL", $arrLang["Cancel"]);
+    $smarty->assign("REQUIRED_FIELD", $arrLang["Required field"]);
+    $smarty->assign("IMG", "images/list.png");
+
+    //$arrData = null;
+    $arrResult 	= $pFreePBX->getAddRoom($limit, $offset, $filter_field, $filter_value);
+    $arrModel 	= $pRoomX->getModel('models','', '', $filter_field, $filter_value);
+
+    if(is_array($arrResult) && $total>0){
+        foreach($arrResult as $key => $value){
+	 
+	    $where 	= "where extension = '".$value['extension']."'";
+           $arrRooms = $pRoomX->getModel('rooms', $where);
+           $chk	= 0;
+
+           foreach($arrRooms as $key_room => $value_rooms){
+           	if ($value_rooms['extension'] == $value['extension']) {
+                     $chk = 1;
+			}
+	    }
+
+	    $select="";
+
+    	    if(is_array($arrModel)){
+            	foreach($arrModel as $key_r => $value_r){ 
+	       
+		$where = "where extension = '".$value['extension']."'";
+           	$arrRoom = $pRoomX->getModel('rooms', $where);
+              if (is_array($arrRoom)){
+           		$Room = $arrRoom['0'];
+           		if ($Room['model'] == $value_r['room_model']) {
+	    				$select = "<option selected='selected'>".$value_r['room_model']."</option>".$select;
+	    			}
+	    			else {
+					$select = "<option>".$value_r['room_model']."</option>".$select;
+	    			}
+        		}
+		}
+    	    }
+
+           $checked = "";
+           if ( $chk == 1) 
+                $checked = "checked";
+           
+	    $arrTmp[0] = "<input type='checkbox' name='room[".$key."]' value=".$value['extension']." ".$checked.">";
+	    $arrTmp[1] = $value['extension'];
+	    $arrTmp[2] = $value['name'];
+	    $arrTmp[3] = "<select name='".$value['extension']."' >$select</select>";
+           $arrData[] = $arrTmp;
+        }
+    }
+
+    $arrGrid = array("title"       => $arrLang["Add Room"],
+                        "icon"     => "images/list.png",
+                        "width"    => "99%",
+                        "start"    => ($total==0) ? 0 : $offset + 1,
+                        "end"      => $end,
+                        "total"    => $total,
+                        "url"      => $url,
+                        "columns"  => array(
+			0 => array("name"      => $arrLang["Room"],
+                                   "property1" => ""),
+			1 => array("name"      => $arrLang["Extension"],
+                                   "property1" => ""),
+			2 => array("name"      => $arrLang["Name"],
+                                   "property1" => ""),
+			3 => array("name"      => $arrLang["Model"],
+                                   "property1" => ""),
+                                        )
+                    );
+
+
+    //begin section filter
+    $arrFormFilterAddRoom = createFieldFilter($arrLang);
+    $oFilterForm = new paloForm($smarty, $arrFormFilterAddRoom);
+    $smarty->assign("SHOW", $arrLang["Show"]);
+
+    $htmlFilter = $oFilterForm->fetchForm("$local_templates_dir/filter.tpl","",$_POST);
+    //end section filter
+
+    if($as_csv == 'yes'){
+        $name_csv = "AddRoom_".date("d-M-Y").".csv";
+        header("Cache-Control: private");
+        header("Pragma: cache");
+        header("Content-Type: application/octec-stream");
+        header("Content-disposition: inline; filename={$name_csv}");
+        header("Content-Type: application/force-download");
+        $content = $oGrid->fetchGridCSV($arrGrid, $arrData);
+    }
+    else{
+        $oGrid->showFilter(trim($htmlFilter));
+        $content = "<form  method='POST' style='margin-bottom:0;' action=\"$url\">".$oGrid->fetchGrid($arrGrid, $arrData,$arrLang)."</form>";
+    }
+    //end grid parameters
+
+    return $content;
 }
+
 
 function deleteAddRoom($smarty, $module_name, $local_templates_dir, &$pDB, &$pDBM, $arrConf, $arrLang)
 {
@@ -140,41 +269,165 @@ function deleteAddRoom($smarty, $module_name, $local_templates_dir, &$pDB, &$pDB
 	$r_selected=$_DATA['room'];
 
        foreach($r_selected as $key => $value)
-	{
-       	$room_idx 	= $pFreePBX -> getAddRoom('','','extension',$value);
-       	$room_name 	= $room_idx[0];
+	{ 
+       	$room_idx 		    = $pFreePBX -> getAddRoom('','','extension',$value);
+       	$room_name 		    = $room_idx[0];
 
-		$where 	= "where extension = '$value'";
-              $arrRoomExist = $pRoomX->get_Room('rooms' , $where);
+		$where 		    = "where extension = '$value'";
+              $arrRoomExist 	    = $pRoomX->get_Room('rooms' , $where);
 
-		$arrValores['id']	     = "'".$arrRoomExist['id']."'";
+		$arrValores['id']	    = "'".$arrRoomExist['id']."'";
        	$arrValores['extension'] = "'".$value."'";
        	$arrValores['room_name'] = "'".$room_name['name']."'";
        	$arrValores['model']     = "'".$_DATA[intval($value)]."'";
 
-		if ( $arrRoomExist['extension'] != $value ) 
+		if ( $arrRoomExist['extension'] == $value ) 
 		{
-       		$delete_rooms 		 = $pRoomX->DeleteRoom('extension',$value);
+       		$delete_rooms        = $pRoomX->DeleteRoom('extension',$value);
 
         		// Modify the context extension into Freepbx data
         		//-----------------------------------------------
-				$value_rl['value']  	= "'true'";
+			$value_rl['value']  	= "'true'";
         		$where              	= "variable = 'need_reload';";
         		$arrReload          	= $pFreePBX->updateFreepbx('admin',$value_rl, $where);
 
         		$value_ac['data']   	= "'from-internal'";
-				$where              	= "id = '".$value."' and keyword = 'context';";
+			$where              	= "id = '".$value."' and keyword = 'context';";
         		$arrAccount         	= $pFreePBX->updateFreepbx('sip',$value_ac, $where);
 
-        		$cmd					= "/var/lib/asterisk/bin/module_admin reload";
-				exec($cmd);	
+        		$cmd			= "/var/lib/asterisk/bin/module_admin reload";
+			exec($cmd);	
 		}
 		else
 		{
 			$save_rooms 		= $pRoomX->updateQuery('rooms',$arrValores);
 		}
       }
+    $filter_field 	= getParameter("filter_field");
+    $filter_value 	= getParameter("filter_value");
+    $action 		= getParameter("nav");
+    $start  		= getParameter("start");
+    $as_csv 		= getParameter("exportcsv");
+
+    //begin grid parameters
+    $oGrid  		= new paloSantoGrid($smarty);
+    $totalAddRoom 	= $pFreePBX->getNumAddRoom($filter_field, $filter_value);
+    $totalModel 	= $pRoomX->getNumAddRoomModel('models',$filter_field, $filter_value);
+
+    $limit  		= 10;
+    $total  		= $totalAddRoom;
+    $oGrid->setLimit($limit);
+    $oGrid->setTotal($total);
+    //$oGrid->enableExport();   // enable csv export.
+    $oGrid->pagingShow(true); // show paging section.
+
+    $oGrid->calculatePagination($action,$start);
+    $offset 		= $oGrid->getOffsetValue();
+    $end    		= $oGrid->getEnd();
+    $url    		= "?menu=$module_name&filter_field=$filter_field&filter_value=$filter_value";
+    $select 		= "";
+
+    $smarty->assign("SAVE", $arrLang["Save"]);
+    $smarty->assign("DELETE", $arrLang["Delete"]);
+    $smarty->assign("EDIT", $arrLang["Edit"]);
+    $smarty->assign("CANCEL", $arrLang["Cancel"]);
+    $smarty->assign("REQUIRED_FIELD", $arrLang["Required field"]);
+    $smarty->assign("IMG", "images/list.png");
+
+    //$arrData = null;
+    $arrResult 	= $pFreePBX->getAddRoom($limit, $offset, $filter_field, $filter_value);
+    $arrModel 	= $pRoomX->getModel('models','', '', $filter_field, $filter_value);
+
+    if(is_array($arrResult) && $total>0){
+        foreach($arrResult as $key => $value){
+	 
+	    $where 	= "where extension = '".$value['extension']."'";
+           $arrRooms = $pRoomX->getModel('rooms', $where);
+           $chk	= 0;
+
+           foreach($arrRooms as $key_room => $value_rooms){
+           	if ($value_rooms['extension'] == $value['extension']) {
+                     $chk = 1;
+			}
+	    }
+
+	    $select="";
+
+    	    if(is_array($arrModel)){
+            	foreach($arrModel as $key_r => $value_r){ 
+	       
+		$where = "where extension = '".$value['extension']."'";
+           	$arrRoom = $pRoomX->getModel('rooms', $where);
+              if (is_array($arrRoom)){
+           		$Room = $arrRoom['0'];
+           		if ($Room['model'] == $value_r['room_model']) {
+	    				$select = "<option selected='selected'>".$value_r['room_model']."</option>".$select;
+	    			}
+	    			else {
+					$select = "<option>".$value_r['room_model']."</option>".$select;
+	    			}
+        		}
+		}
+    	    }
+
+           $checked = "";
+           if ( $chk == 1) 
+                $checked = "checked";
+           
+	    $arrTmp[0] = "<input type='checkbox' name='room[".$key."]' value=".$value['extension']." ".$checked.">";
+	    $arrTmp[1] = $value['extension'];
+	    $arrTmp[2] = $value['name'];
+	    $arrTmp[3] = "<select name='".$value['extension']."' >$select</select>";
+           $arrData[] = $arrTmp;
+        }
+    }
+
+    $arrGrid = array("title"       => $arrLang["Add Room"],
+                        "icon"     => "images/list.png",
+                        "width"    => "99%",
+                        "start"    => ($total==0) ? 0 : $offset + 1,
+                        "end"      => $end,
+                        "total"    => $total,
+                        "url"      => $url,
+                        "columns"  => array(
+			0 => array("name"      => $arrLang["Room"],
+                                   "property1" => ""),
+			1 => array("name"      => $arrLang["Extension"],
+                                   "property1" => ""),
+			2 => array("name"      => $arrLang["Name"],
+                                   "property1" => ""),
+			3 => array("name"      => $arrLang["Model"],
+                                   "property1" => ""),
+                                        )
+                    );
+
+
+    //begin section filter
+    $arrFormFilterAddRoom = createFieldFilter($arrLang);
+    $oFilterForm = new paloForm($smarty, $arrFormFilterAddRoom);
+    $smarty->assign("SHOW", $arrLang["Show"]);
+
+    $htmlFilter = $oFilterForm->fetchForm("$local_templates_dir/filter.tpl","",$_POST);
+    //end section filter
+
+    if($as_csv == 'yes'){
+        $name_csv = "AddRoom_".date("d-M-Y").".csv";
+        header("Cache-Control: private");
+        header("Pragma: cache");
+        header("Content-Type: application/octec-stream");
+        header("Content-disposition: inline; filename={$name_csv}");
+        header("Content-Type: application/force-download");
+        $content = $oGrid->fetchGridCSV($arrGrid, $arrData);
+    }
+    else{
+        $oGrid->showFilter(trim($htmlFilter));
+        $content = "<form  method='POST' style='margin-bottom:0;' action=\"$url\">".$oGrid->fetchGrid($arrGrid, $arrData,$arrLang)."</form>";
+    }
+    //end grid parameters
+
+    return $content;
 }
+
 
 function reportAddRoom($smarty, $module_name, $local_templates_dir, &$pDB, &$pDBM, $arrConf, $arrLang)
 {
@@ -260,9 +513,6 @@ function reportAddRoom($smarty, $module_name, $local_templates_dir, &$pDB, &$pDB
            $arrData[] = $arrTmp;
         }
     }
-
-
-
 
     $arrGrid = array("title"       => $arrLang["Add Room"],
                         "icon"     => "images/list.png",

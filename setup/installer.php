@@ -8,9 +8,10 @@ require_once("$DocumentRoot/libs/paloSantoDB.class.php");
 $tmpDir = '/tmp/new_module/roomx';  # in this folder the load module extract the package content
 
 $return=1;
-$path_script_db="$tmpDir/setup/install.sql";
+$path_script_db		= "$tmpDir/setup/install.sql";
+$path_script_db_update	= "$tmpDir/setup/update.sql";
 $datos_conexion['user']     = "root";
-$datos_conexion['password'] =  obtenerClaveConocidaMySQL('root');
+$datos_conexion['password'] =  obtenerClaveConocidaMySQL('root',"$DocumentRoot"."/");
 $datos_conexion['locate']   = "";
 $oInstaller                 = new Installer(); 
 
@@ -34,17 +35,15 @@ if(file_exists($path_script_db)){
 	//--------------------------------------------------------
 	exec("sudo -u root chmod 777 /etc/",$arrConsole,$flagStatus);
 	exec("sudo -u root chmod 777 /etc/crontab",$arrConsole,$flagStatus);
-       $cmd = "echo '0 0 * * * root mysql -D roomx -u root -p".obtenerClaveConocidaMySQL('root')." < /var/www/html/modules/rx_general/libs/clean.sql' >> /etc/crontab";
+       $cmd = "echo '0 0 * * * root mysql -D roomx -u root -p".obtenerClaveConocidaMySQL('root','/var/www/html/')." < /var/www/html/modules/rx_general/libs/clean.sql' >> /etc/crontab";
 	exec($cmd,$arrConsole,$flagStatus);
 	exec("sudo -u root chmod 644 /etc/crontab",$arrConsole,$flagStatus);
 	exec("sudo -u root chmod 755 /etc/",$arrConsole,$flagStatus);
     }
-
-    //exec("sudo -u root chmod 777 /opt/",$arrConsole,$flagStatus);
-    //exec("mkdir -p /opt/elastix/dialer/",$arrConsole,$flagStatus);
-    //exec("mv -f $tmpDir/dialer_process/dialer/* /opt/elastix/dialer/",$arrConsole,$flagStatus);
-
-    //$return = ($flagStatus)?2:0;
+    else
+    {
+	$return = $oInstaller->createNewDatabaseMySQL($path_script_db_update,"roomx",$datos_conexion);
+    }
 }
 exit($return);
 ?>

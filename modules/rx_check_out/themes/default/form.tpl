@@ -8,6 +8,10 @@
             <input class="button" type="submit" name="save_new" value="{$SAVE}">&nbsp;&nbsp;
             <input class="button" type="submit" name="cancel" value="{$CANCEL}">
         </td>
+        <td align="right"><b>{$When.LABEL}: </b></td>
+        <td align="left">{$When.INPUT}</td>
+        <td align="right"><b>{$date.LABEL}: </b></td>
+        <td align="left">{$date.INPUT}</td>
         {elseif $mode eq 'view'}
         <td align="left">
             <input class="button" type="submit" name="cancel" value="{$CANCEL}">
@@ -18,31 +22,36 @@
             <input class="button" type="submit" name="cancel" value="{$CANCEL}">
         </td>
         {/if}
-        <td align="right" nowrap><span class="letra12"><span  class="required">*</span> {$REQUIRED_FIELD}</span></td>
+        <td align="right" nowrap>
+            <span class="letra12"><span  class="required">*</span> {$REQUIRED_FIELD}</span>
+        </td>
     </tr>
 </table>
-
-<table class="tabForm" style="font-size: 16px;" width="100%" >
+<br>
+<table class="tabForm" style="font-size: 16px;" width="100%">
     <tr class="letra12">
-        <td align="right"><b>{$room.LABEL}: </b></td>
-        <td align="left">{$room.INPUT}</td>
-        <td align="right"><b>{$group.LABEL}: </b></td>
-        <td align="left">{$group.INPUT}</td>
-        <td align="right"><b>{$paid.LABEL}: </b></td>
-        <td align="left">{$paid.INPUT}</td>
-        <td align="right"><b>{$details.LABEL}: </b></td>
-        <td align="left">{$details.INPUT}</td>
-        <td align="right"><b>{$sending_by_mail.LABEL}: </b></td>
-        <td align="left">{$sending_by_mail.INPUT}</td>
+        <td align="right" width="35"><b>{$room.LABEL}: </b></td>
+        <td align="left"  width="35">{$room.INPUT}</td>
+        <td align="right" width="35"><b>{$group.LABEL}: </b></td>
+        <td align="left"  width="35">{$group.INPUT}</td>
+        <td align="right" width="60"><b>{$paid.LABEL}: </b></td>
+        <td align="left"  width="35">{$paid.INPUT}</td>
+        <td align="right" width="35"><b>{$details.LABEL}: </b></td>
+        <td align="left"  width="35">{$details.INPUT}</td>
+        <td align="right" width="150"><b>{$sending_by_mail.LABEL}: </b></td>
+        <td align="left"  width="35">{$sending_by_mail.INPUT}</td>
+        <td align="right" widht="200"></td>
     </tr>
     {if $bil eq '1'}
     <tr class="letra12">
         <td align="center"></td>
         <td align="center"></td>
         <td align="center"></td>
+        <td align="center"></td>
         <td align="right"><b>{$call_number}</b> {$Call}</td>
         <td align="center"><b>{$Total}</b> : {$total}</td>
         <td align="center"><a style="text-decoration: none;" href="roomx_billing/{$bil_link}" target="_next"><button type="button">{$Display}</button></a></td>
+        <td align="center"></td>
         <td align="center"></td>
         <td align="center"></td>
         <td align="center"></td>

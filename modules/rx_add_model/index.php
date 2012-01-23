@@ -155,6 +155,8 @@ function saveNewAddModel($smarty, $module_name, $local_templates_dir, &$pDB, $ar
         //genQuery($query, $param = NULL)
 
         $save_model = $pAddModel->insertModel("models", $arrValores);
+        $_POST = null;
+	
         $content = viewFormAddModel($smarty, $module_name, $local_templates_dir, $pDB, $arrConf, $arrLang);
 
     }

@@ -21,8 +21,8 @@ All informations below, are not required.
 <br>
 However, Mail must be useful to sending the billing by mail. <br>
 These informations are saved in RoomX database, into the table: guest.<br>
-When check-in is done, if the guest is already in the database, you have this information: <i>Guest already exist, Check-in Done</i> . Like
-that, you could know if it's a new client or not.<br><br>
+When check-in is done, you have this information: <i>Guest already exist, Check-in Done</i> . Like
+During entering from <b>last name</b> field, you have a list of guests begining by the first characters entered.<br><br>
 <br>
 <h2>Français</h2>
 Ici, 3 informations sont requises.
@@ -35,7 +35,8 @@ Toutes les autres informations en dessous ne sont pas oubligatoires.<br>
 <br>
 Par contre, Mail peut-&ecirc;tre utile pour envoyer la facture par mail.<br>
 Ces informations sont sauv&eacute;es dans la base de donn&eacute;es roomx, dans la table 'guest'.<br>
-Quand l'Entr&eacute;e est effectu&eacute;e, si l'h&ocirc;te est d&eacute;j&agrave; enregistr&eacute; dans la base de donn&eacute;es, vous avez l'information: 
-<i>h&ocirc;te d&eacute;j&agrave; existant, Entr&eacute;e effectu&eacute;e.</i> Comme ç&agrave;, vous pouvez savoir si c'est un nouveau client ou pas.<br>
-    </body>
+Quand l'Entr&eacute;e est effectu&eacute;e, vous avez l'information: 
+<i>Entr&eacute;e effectu&eacute;e.</i><br>
+Pendant l'entr&eacute;e du champ <b>nom</b>, vous avez une liste d'invit&eacute;s commen&ccedil;ant par les premiers caract&egrave;res entr&eacute;s.
+</body>
 </html>

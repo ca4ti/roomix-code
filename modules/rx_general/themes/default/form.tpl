@@ -91,6 +91,10 @@
         <td align="right" width="200" valign="top"><b>{$vat_2.LABEL} : </b></td>
         <td align="left" valign="top">{$vat_2.INPUT}</td>
     </tr>
+    <tr class="letra12">
+        <td align="right" width="200" valign="top"><b>{$rounded.LABEL} : </b></td>
+        <td align="left" valign="top">{$rounded.INPUT}</td>
+    </tr>
 </table>
 
 <input class="button" type="hidden" name="id" value="{$ID}" />

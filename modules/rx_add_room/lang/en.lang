@@ -34,7 +34,7 @@ $arrLangModule=array(
 "Name" 	=> "Name",
 "Model" 	=> "Model",
 "Delete" 	=> "Delete",
-"Search"	=> "Serach",
+"Search"	=> "Search",
 "Show"		=> "Show",
 );
 ?>

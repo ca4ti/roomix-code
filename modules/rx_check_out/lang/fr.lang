@@ -28,6 +28,11 @@
   $Id: en.lang,v 1.1 2010-05-08 11:05:33 Franck Danard franckd@agmp.org Exp $ */
 global $arrLangModule;
 $arrLangModule=array(
+"When"			=> "Quand",
+"Date"			=> "Date",
+"Today"		=> "Aujourd'hui",
+"Scheduled date"	=> "Date prévue",
+"Other day"		=> "Autre date",
 "CheckOut" 		=> "Départ",
 "Room" 		=> "Chambre",
 "Group" 		=> "Groupe",

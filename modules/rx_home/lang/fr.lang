@@ -37,6 +37,6 @@ $arrLangModule=array(
 "No Booking Today"	=> "Aucune Réservation Aujourd'hui",
 "Potentially full"   => "Potentiellement Complet!",
 "Full"   		=> "Complet!",
-"Intro"		=> "<big><big><big><big>RoomX</big></big></big></big><br>Le module Hôtel - Hôpital pour Elastix. <br>Version : ",
+"Intro"		=> "<big><big><big><big>RoomX</big></big></big></big><br>Le module Hôtel pour Elastix. <br>Version : ",
 );
 ?>

@@ -28,6 +28,11 @@
   $Id: br.lang,v 1.1 2011-02-09 20:12:20 Ricardo Zippert rzippert@gmail.com Exp $ */
 global $arrLangModule;
 $arrLangModule=array(
+"When"			=> "Quando",
+"Today"		=> "Hoje",
+"Scheduled date"	=> "Data marcada",
+"Other day"		=> "Outro dia",
+"Date"			=> "Date",
 "CheckOut" 		=> "CheckOut",
 "Room" 		=> "Apto",
 "Group" 		=> "Grupo",

@@ -82,13 +82,12 @@ function saveModels($smarty, $module_name, $local_templates_dir, &$pDB, $arrConf
     $filter_field = getParameter("filter_field");
     $filter_value = getParameter("filter_value");
     $_DATA = $_POST;
-
-    $value = $_DATA['model'];
-    $save_model = $pModels->DeletModels("room_model", $value);
+    
+    foreach($_DATA['model'] as $key => $value)
+    	$save_model = $pModels->DeletModels("room_model", $value);
     $content = reportModels($smarty, $module_name, $local_templates_dir, $pDB, $arrConf, $arrLang);
 
-    return $content;
-    
+    return $content;    
 }
 
 
@@ -130,12 +129,12 @@ function reportModels($smarty, $module_name, $local_templates_dir, &$pDB, $arrCo
     if(is_array($arrResult) && $total>0){
         foreach($arrResult as $key => $value){ 
            $value_check = $value['room_model'];
-	    $arrTmp[0] = "<input type='checkbox' name='model' value='$value_check'>";
-	    $arrTmp[1] = $value['room_model'];
-	    $arrTmp[2] = $value['room_price'];
-	    $arrTmp[3] = $value['room_guest'];
-	    $arrTmp[4] = $value['room_vat']." %";
-           $arrData[] = $arrTmp;
+	    $arrTmp[0]   = "<input type='checkbox' name='model[".$key."]' value='$value_check'>";
+	    $arrTmp[1]   = $value['room_model'];
+	    $arrTmp[2]   = $value['room_price'];
+	    $arrTmp[3]   = $value['room_guest'];
+	    $arrTmp[4]   = $value['room_vat']." %";
+           $arrData[]   = $arrTmp;
         }
     }
 
