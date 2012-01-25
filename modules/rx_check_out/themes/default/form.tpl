@@ -42,23 +42,17 @@
         <td align="left"  width="35">{$sending_by_mail.INPUT}</td>
         <td align="right" widht="200"></td>
     </tr>
-    {if $bil eq '1'}
-    <tr class="letra12">
-        <td align="center"></td>
-        <td align="center"></td>
-        <td align="center"></td>
-        <td align="center"></td>
-        <td align="right"><b>{$call_number}</b> {$Call}</td>
-        <td align="center"><b>{$Total}</b> : {$total}</td>
-        <td align="center"><a style="text-decoration: none;" href="roomx_billing/{$bil_link}" target="_next"><button type="button">{$Display}</button></a></td>
-        <td align="center"></td>
-        <td align="center"></td>
-        <td align="center"></td>
-        <td align="center"></td>
-        <td align="center"></td>
-    </tr>
-    {/if}
 </table>
+    {if $bil eq '1'}
+<table class="tabForm" style="font-size: 16px;" width="100%">
+    <tr class="letra12">
+        <td align="right" width="100"><b>{$call_number}</b> {$Call}</td>
+        <td align="left"  width="175"><b>{$Total}</b> : {$total}</td>
+        <td align="right" width="100"><a style="text-decoration: none;" href="roomx_billing/{$bil_link}" target="_next"><button type="button">{$Display}</button></a></td>
+        <td align="right" widht="200"></td>
+     </tr>
+</table>
+    {/if}
 
 
 

@@ -176,6 +176,8 @@ function saveNewCheckOut($smarty, $module_name, $local_templates_dir, &$pDB, &$p
     else{
         $arrGroup		= $pCheckOut->getGroupCheckOut();
 
+	 $Total_billings = 0;
+
 	 // It's a group or one room?
 	 //---------------------------
 	 $CheckOutGuest[0]	= $_DATA['room'];
@@ -512,6 +514,9 @@ function saveNewCheckOut($smarty, $module_name, $local_templates_dir, &$pDB, &$p
         $where 			= "room_id = '".$arrExt['id']."' and status = '1'";
         $arrUpdateRoom 		= $pRoom->updateQuery('register', $value_re, $where);
 
+	 // Making total of billing.
+	 $Total_billings = $Total_billings + $total_bill;
+
 	 // creating job to keeping rooms unavailable in the case where 'When' is different of today
 	 //-----------------------------------------------------------------------------------------
 
@@ -553,7 +558,7 @@ function saveNewCheckOut($smarty, $module_name, $local_templates_dir, &$pDB, &$p
        }	
         $smarty->assign("mb_message", $strMsg);
         $smarty->assign("call_number", $i);
-        $smarty->assign("total", sprintf("%01.2f",$total_bill)." ".$curr);
+        $smarty->assign("total", sprintf("%01.2f",$Total_billings)." ".$curr);
         $smarty->assign("bil", "1");
 	 $smarty->assign("bil_link", $name);
 

@@ -146,7 +146,6 @@ function viewFormGeneral($smarty, $module_name, $local_templates_dir, &$pDB, $ar
     $_DATA["mail"]      = $get_config['mail'];
     $_DATA["vat_1"]     = $get_config['vat_1'];
     $_DATA["vat_2"]     = $get_config['vat_2'];
-    $_DATA["rounded"]   = $get_config['rounded'];
     
     $smarty->assign("LOGO", $get_config['logo']);
 
