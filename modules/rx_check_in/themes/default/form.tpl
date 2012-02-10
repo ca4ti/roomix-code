@@ -1,6 +1,6 @@
 <table width="100%" border="0" cellspacing="0" cellpadding="4" align="center">
     <tr class="moduleTitle">
-        <td class="moduleTitle" valign="middle" colspan='2'>&nbsp;&nbsp;<img src="{$IMG}" border="0" align="absmiddle">&nbsp;&nbsp;{$title}</td>
+        <td class="moduleTitle" valign="middle" colspan='2'>&nbsp;</td>
     </tr>
     <tr class="letra12">
         {if $mode eq 'input'}
@@ -37,7 +37,7 @@
         <td align="right" valign="top"><b>{$last_name.LABEL}: </b></td>
         <td align="left" valign="top"><div>{$last_name.INPUT} <span  class="required">*</span></div>
 			   <div class="suggestionsBox" id="suggestions" style="display: none;">
-			   	<img src="{$SRCIMG}/upArrow.png" style="position: relative; top: -12px; left: 30px;" alt="upArrow" />
+			   	<img src="{$SRCIMG}/upArrow.png" style="position: relative; top: -12px; left: 10px;" alt="upArrow" />
                         <div class="suggestionList" id="autoSuggestionsList">&nbsp;</div>
                         </div></td>
         <td align="right" valign="top"><b>{$first_name.LABEL}: </b></td>

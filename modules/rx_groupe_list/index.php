@@ -110,7 +110,8 @@ function viewFormAddGroupe($smarty, $module_name, $local_templates_dir, &$pDB, $
     $smarty->assign("EDIT", $arrLang["Edit"]);
     $smarty->assign("CANCEL", $arrLang["Cancel"]);
     $smarty->assign("REQUIRED_FIELD", $arrLang["Required field"]);
-    $smarty->assign("IMG", "images/list.png");
+    $smarty->assign("IMG", "/modules/$module_name/images/icone.png");
+    $smarty->assign("icon", "/modules/$module_name/images/icone.png");
 
     $htmlForm = $oForm->fetchForm("$local_templates_dir/form.tpl",$arrLang["Add Groupe"], $_DATA);
     $content = "<form  method='POST' style='margin-bottom:0;' action='?menu=$module_name'>".$htmlForm."</form>";
@@ -149,6 +150,8 @@ function saveNewAddGroupe($smarty, $module_name, $local_templates_dir, &$pDB, $a
                 $strErrorMsg .= "$k, ";
         }
         $smarty->assign("mb_message", $strErrorMsg);
+        $smarty->assign("IMG", "/modules/$module_name/images/icone.png");
+        $smarty->assign("icon", "/modules/$module_name/images/icone.png");
 
         $htmlForm = $oForm->fetchForm("$local_templates_dir/form.tpl",$arrLang["Add Groupe"], $_DATA);
         $content = viewFormAddGroupe($smarty, $module_name, $local_templates_dir, $pDB, $arrConf, $arrLang);
@@ -216,7 +219,8 @@ function reportGroupeList($smarty, $module_name, $local_templates_dir, &$pDB, $a
     $smarty->assign("CANCEL", $arrLang["Cancel"]);
     $smarty->assign("ADD", $arrLang["Add"]);
     $smarty->assign("REQUIRED_FIELD", $arrLang["Required field"]);
-    $smarty->assign("IMG", "images/list.png");
+    $smarty->assign("IMG", "/modules/$module_name/images/icone.png");
+    $smarty->assign("icon", "/modules/$module_name/images/icone.png");
 
     //begin grid parameters
     $oGrid  = new paloSantoGrid($smarty);
@@ -251,7 +255,7 @@ function reportGroupeList($smarty, $module_name, $local_templates_dir, &$pDB, $a
     }
 
     $arrGrid = array("title"    => $arrLang["Groupe List"],
-                        "icon"     => "images/list.png",
+                        "icon"     => "/modules/$module_name/images/icone.png",
                         "width"    => "99%",
                         "start"    => ($total==0) ? 0 : $offset + 1,
                         "end"      => $end,

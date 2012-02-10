@@ -1,6 +1,6 @@
 <table width="100%" border="0" cellspacing="0" cellpadding="4" align="center">
     <tr class="moduleTitle">
-        <td class="moduleTitle" valign="middle" colspan='2'>&nbsp;&nbsp;<img src="{$IMG}" border="0" align="absmiddle">&nbsp;&nbsp;{$title}</td>
+        <td class="moduleTitle" valign="middle" colspan='2'>&nbsp;</td>
     </tr>
     <tr class="letra12">
         {if $mode eq 'input'}
@@ -29,5 +29,5 @@
         <td align="left">{$date_end.INPUT}</td>
     </tr>
 </table>
-<div align="center"><br><br><img src="{$BOOKING}"></div>
+<div align="center"><br><br>{$BOOKING}</div>
 <input class="button" type="hidden" name="id" value="{$ID}" />

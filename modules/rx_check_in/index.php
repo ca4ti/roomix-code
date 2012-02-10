@@ -163,6 +163,8 @@ function viewFormCheckIn($smarty, $module_name, $local_templates_dir, &$pDB, &$p
     $smarty->assign("REQUIRED_FIELD", $arrLang["Required field"]);
     $smarty->assign("IMG", "images/list.png");
     $smarty->assign("SRCIMG", "modules/".$module_name."/images");
+    $smarty->assign("title",_tr("Check In"));
+    $smarty->assign("icon","/modules/$module_name/images/icone.png");
     
     $smarty->assign("BOOKING","<a style='text-decoration: none;' href='./index.php?menu=rx_booking_status'><button type='button'>".$arrLang['Show']."</button></a>");
 
@@ -181,6 +183,8 @@ function saveNewCheckIn($smarty, $module_name, $local_templates_dir, &$pDB, &$pD
     $_DATA = $_POST;
 
     $arrCheckBooking	= $pCheckIn->Check_Booking($_DATA['room'],$_DATA['date'],$_DATA['date_co']); 
+    $smarty->assign("title",_tr("Check In"));
+    $smarty->assign("icon","/modules/$module_name/images/icone.png");
 
     if ($arrCheckBooking == 0){
 

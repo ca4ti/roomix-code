@@ -28,17 +28,20 @@
   $Id: en.lang,v 1.1 2010-06-16 08:06:19 Franck Danard franckd@agmp.org Exp $ */
 global $arrLangModule;
 $arrLangModule=array(
-"Billing report" => "Rapports de Facturations",
-"Checkin Date"   => "Date d'arrivée",
-"Checkout Date"  => "Date de départ",
-"Room"           => "Chambre",
-"Guest"          => "Hôte",
-"File"           => "Facture",
-"Paid"           => "Payé",
-"Save"           => "Sauver",
-"Cancel"         => "Annuler",
-"View"		   => "Afficher",
-"Search" 	   => "Recherche",
-"Show"		   => "Filtrer",
+"Show Filter"		=> "Voir les Filter",
+"Hide Filter"		=> "Cacher les Filter",
+"Download"		=> "Télécharger",
+"Billing report" 	=> "Rapports de Facturations",
+"Checkin Date"   	=> "Date d'arrivée",
+"Checkout Date"  	=> "Date de départ",
+"Room"           	=> "Chambre",
+"Guest"          	=> "Hôte",
+"File"           	=> "Facture",
+"Paid"           	=> "Payé",
+"Save"           	=> "Sauver",
+"Cancel"         	=> "Annuler",
+"View"		   	=> "Afficher",
+"Search" 	   	=> "Recherche",
+"Show"		   	=> "Filtrer",
 );
 ?>

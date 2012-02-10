@@ -75,16 +75,16 @@ function _moduleContent(&$smarty, $module_name)
 
     switch($action){
         case "save_new":
-            $content = saveNewCompanyReport($smarty, $module_name, $local_templates_dir, $pDB, $arrConf);
+            $content = saveNewCompanyReport($smarty, $module_name, $local_templates_dir, $pDB, $pDB_Set, $arrConf, $arrLang );
             break;
         default: // view_form
-            $content = viewFormCompanyReport($smarty, $module_name, $local_templates_dir, $pDB, $arrConf);
+            $content = viewFormCompanyReport($smarty, $module_name, $local_templates_dir, $pDB, $pDB_Set, $arrConf, $arrLang);
             break;
     }
     return $content;
 }
 
-function viewFormCompanyReport($smarty, $module_name, $local_templates_dir, &$pDB, $arrConf)
+function viewFormCompanyReport($smarty, $module_name, $local_templates_dir, &$pDB, $pDB_Set, $arrConf, $arrLang)
 {
     $pCompanyReport = new paloSantoCompanyReport($pDB);
     $arrFormCompanyReport = createFieldForm();
@@ -117,6 +117,8 @@ function viewFormCompanyReport($smarty, $module_name, $local_templates_dir, &$pD
     $smarty->assign("CANCEL", _tr("Cancel"));
     $smarty->assign("REQUIRED_FIELD", _tr("Required field"));
     $smarty->assign("IMG", "images/list.png");
+    $smarty->assign("title",_tr("Company Report"));
+    $smarty->assign("icon","/modules/$module_name/images/icone.png");
     //$smarty->assign("Graph", $graph->Stroke());
 
     $htmlForm = $oForm->fetchForm("$local_templates_dir/form.tpl",_tr("Company Report"), $_DATA);
@@ -125,8 +127,10 @@ function viewFormCompanyReport($smarty, $module_name, $local_templates_dir, &$pD
     return $content;
 }
 
-function saveNewCompanyReport($smarty, $module_name, $local_templates_dir, &$pDB, $arrConf)
+function saveNewCompanyReport($smarty, $module_name, $local_templates_dir, &$pDB, $pDB_Set, $arrConf, $arrLang)
 {
+    $pCur    		= new paloSantoCompanyReport($pDB_Set);
+    $curr    		= $pCur->loadCurrency();
     $pCompanyReport = new paloSantoCompanyReport($pDB);
     $arrFormCompanyReport = createFieldForm();
     $oForm = new paloForm($smarty,$arrFormCompanyReport);
@@ -170,6 +174,7 @@ function saveNewCompanyReport($smarty, $module_name, $local_templates_dir, &$pDB
 			foreach($value as $key => $val) {
 			switch ($key) {
 				case "Num_co" :
+
 					$data_y_co[$day] = $val;
 					//echo "Day : $day; Valeur : $val <br />\n";	
 					break;
@@ -179,11 +184,16 @@ function saveNewCompanyReport($smarty, $module_name, $local_templates_dir, &$pDB
 					break;
 			}
 
-			}	
+			}
+	
 		}
+
+		$Comments = "<br>- ".$arrLang["Total Check-In for this period : "].array_sum($data_y_co)."<br>- ".
+			     $arrLang["Total Check-Out for this period : "].array_sum($data_y_co)."<br>";
 
 		CreateTwinGraph($data_x_ci,$data_y_ci,$data_x_co,$data_y_co,"modules/$module_name/images/Graph.png","CheckIn / Out by Day","","","Checkin","Checkout");
 		$smarty->assign("CheckInOutGraph","modules/$module_name/images/Graph.png");
+		$smarty->assign("Comments",$Comments);
 
 		break;
 
@@ -204,9 +214,11 @@ function saveNewCompanyReport($smarty, $module_name, $local_templates_dir, &$pDB
 
 			}	
 		}
+		$Comments = "<br>- ".$arrLang["Total price of rooms for this period : "].array_sum($data_y)." ".$curr."<br>";
 
 		CreateCkeckGraph($data_x,$data_y,"modules/$module_name/images/Graph.png", "Sum of Rooms  by Day", "", "");
 		$smarty->assign("CheckInOutGraph","modules/$module_name/images/Graph.png");
+		$smarty->assign("Comments",$Comments);
 		break; 
 
 	case 'Sum Calls' :
@@ -226,9 +238,11 @@ function saveNewCompanyReport($smarty, $module_name, $local_templates_dir, &$pDB
 
 			}	
 		}
+		$Comments = "<br>- ".$arrLang["Total price of calls for this period : "].array_sum($data_y)." ".$curr."<br>";
 
 		CreateCkeckGraph($data_x,$data_y,"modules/$module_name/images/Graph.png", "Sum of Calls by Day", "", "");
 		$smarty->assign("CheckInOutGraph","modules/$module_name/images/Graph.png");
+		$smarty->assign("Comments",$Comments);
 		break; 
 
 	case 'Sum Bar' :
@@ -249,8 +263,11 @@ function saveNewCompanyReport($smarty, $module_name, $local_templates_dir, &$pDB
 			}	
 		}
 
+		$Comments = "<br>- ".$arrLang["Total price of Bar for this period : "].array_sum($data_y)." ".$curr."<br>";
+
 		CreateCkeckGraph($data_x,$data_y,"modules/$module_name/images/Graph.png", "Sum of Bar by Day", "", "");
 		$smarty->assign("CheckInOutGraph","modules/$module_name/images/Graph.png");
+		$smarty->assign("Comments",$Comments);
 		break; 
 
 	case 'Sum Billing' :
@@ -271,8 +288,11 @@ function saveNewCompanyReport($smarty, $module_name, $local_templates_dir, &$pDB
 			}	
 		}
 
+		$Comments = "<br>- ".$arrLang["Total price of Billings for this period : "].array_sum($data_y)." ".$curr."<br>";
+
 		CreateCkeckGraph($data_x,$data_y,"modules/$module_name/images/Graph.png", "Sum Billing by Day", "", "");
 		$smarty->assign("CheckInOutGraph","modules/$module_name/images/Graph.png");
+		$smarty->assign("Comments",$Comments);
 		break; 
 
     	default:

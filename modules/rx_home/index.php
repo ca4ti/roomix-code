@@ -104,6 +104,8 @@ function viewFormHome($smarty, $module_name, $local_templates_dir, &$pDB, $arrCo
     $smarty->assign("Rooms_Free", $arrLang["Rooms Free"]);
     $smarty->assign("Rooms_Busy", $arrLang["Room Busy"]);
     $smarty->assign("Number_Rooms", $arrLang["Number of Rooms"]);
+    $smarty->assign("title",_tr("Home"));
+    $smarty->assign("icon","/modules/$module_name/images/icone.png");
 
     if($action=="view")
         $oForm->setViewMode();

@@ -136,7 +136,7 @@ class paloSantoCheckOut {
 
     function getCDR($where)
     {
-        $query   = "SELECT `calldate`, `dst`, `billsec` FROM cdr $where";
+        $query   = "SELECT `calldate`, `dst`, `billsec`, `dstchannel` FROM cdr $where";
 
         $result=$this->_DB->fetchTable($query, true);
 
@@ -178,7 +178,7 @@ class paloSantoCheckOut {
 
     function loadRates()
     {
-        $query = "select * from rate";
+        $query = "select * from rate where estado = 'activo' and fecha_creacion <=  '".date('Y-m-d 00:00:00')."' order by  fecha_creacion desc";
         $result = $this->_DB->fetchTable($query, true);
 
         if($result==FALSE){
@@ -187,11 +187,24 @@ class paloSantoCheckOut {
         }
 
         return $result;
+    }
+
+    function load_Def_Rate()
+    {
+        $query = "select `rate`, `rate_offset` from rate where name = 'Default' and estado = 'activo' and fecha_creacion <=  '".date('Y-m-d 00:00:00')."' order by fecha_creacion desc";
+        $result = $this->_DB->fetchTable($query, true);
+
+        if($result==FALSE){
+            $this->errMsg = $this->_DB->errMsg;
+            return false;
+        }
+
+        return $result[0];
     }
 
     function loadtrunk()
     {
-        $query = "select * from trunk_bill";
+        $query = "select `trunk` FROM `trunk_bill`";
         $result = $this->_DB->fetchTable($query, true);
 
         if($result==FALSE){
@@ -201,6 +214,5 @@ class paloSantoCheckOut {
 
         return $result;
     }
-
 }
 ?>

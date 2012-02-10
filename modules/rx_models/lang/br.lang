@@ -28,13 +28,24 @@
   $Id: br.lang,v 1.1 2011-02-09 20:12:20 Ricardo Zippert rzippert@gmail.com Exp $ */
 global $arrLangModule;
 $arrLangModule=array(
-"Models" => "Modelos",
-"Delete" => "Apagar",
-"Models" => "Modelos",
-"Prices" => "Preços",
-"V.A.T"  => "IMP",
-"Search" => "Buscar",
-"Show"   => "Mostrar",
-"Guest"  => "Pessoa Suplementares",
+"Show Filter"		=> "Show Filter",
+"Hide Filter"		=> "Hide Filter",
+"Download"		=> "Download",
+"Models" 		=> "Modelos",
+"Delete" 		=> "Apagar",
+"Model"  		=> "Modelo",
+"Prices" 		=> "Preços",
+"V.A.T"  		=> "IMP",
+"Search" 		=> "Buscar",
+"Show"   		=> "Mostrar",
+"Guest"  		=> "Pessoa Suplementares",
+"Price" 		=> "Preços",
+"VAT"    		=> "IMP",
+"Edit"   		=> "Edit",
+"Add Model" 		=> "Add Model",
+"Select" 		=> "Select",
+"Add"    		=> "Add",
+"Guest"  		=> "Guest",
+"Show"   		=> "Show",
 );
 ?>

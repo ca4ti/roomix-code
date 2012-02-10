@@ -85,6 +85,57 @@ class paloSantoRoomList {
         return $result;
     }
 
+    function getRoomListByName($name)
+    {
+        $query = "SELECT id, extension FROM rooms WHERE `room_name` = '".$name."'";
+
+        $result=$this->_DB->getFirstRowQuery($query,true);
+
+        if($result==FALSE){
+            $this->errMsg = $this->_DB->errMsg;
+            return null;
+        }
+        return $result;
+    }
+
+    function loadtrunk()
+    {
+        $query = "select `trunk` FROM `trunk_bill`";
+        $result = $this->_DB->fetchTable($query, true);
+
+        if($result==FALSE){
+            $this->errMsg = $this->_DB->errMsg;
+            return false;
+        }
+
+        return $result;
+    }
+
+    function getCDR($where)
+    {
+        $query   = "SELECT `calldate`, `dst`, `billsec`, `dstchannel` FROM cdr $where";
+        $result=$this->_DB->fetchTable($query, true);
+
+        if($result==FALSE){
+            $this->errMsg = $this->_DB->errMsg;
+            return array();
+        }
+        return $result;
+    }
+
+    function getRegisterByRoomId($id)
+    {
+        $query = "SELECT * FROM `register` WHERE `room_id` = '".$id."' AND `status` = '1'";
+
+        $result=$this->_DB->getFirstRowQuery($query,true);
+
+        if($result==FALSE){
+            $this->errMsg = $this->_DB->errMsg;
+            return null;
+        }
+        return $result;
+    }
+
     function getRoomListById($id)
     {
         $query = "SELECT * FROM rooms WHERE id=$id";

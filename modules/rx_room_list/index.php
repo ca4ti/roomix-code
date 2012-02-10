@@ -58,23 +58,60 @@ function _moduleContent(&$smarty, $module_name)
     $local_templates_dir="$base_dir/modules/$module_name/".$templates_dir.'/'.$arrConf['theme'];
 
     //conexion resource
-    $pDB = new paloDB($arrConf['dsn_conn_database']);
-    //$pDB = "";
-
+    $pDB     = new paloDB($arrConf['dsn_conn_database']);
+    $pDB_Trk = new paloDB("sqlite3:///$arrConf[elastix_dbdir]/trunk.db");
+    $pDB_CDR = new paloDB("mysql://root:".obtenerClaveConocidaMySQL('root')."@localhost/asteriskcdrdb");
 
     //actions
-    $action = getAction();
+    $action   = getAction();
+
     $content = "";
 
     switch($action){
         default:
-            $content = reportRoomList($smarty, $module_name, $local_templates_dir, $pDB, $arrConf, $arrLang);
+            $content = reportRoomList($smarty, $module_name, $local_templates_dir, $pDB, $pDB_Trk, $pDB_CDR, $arrConf, $arrLang);
             break;
     }
     return $content;
 }
 
-function reportRoomList($smarty, $module_name, $local_templates_dir, &$pDB, $arrConf, $arrLang)
+function findCalls($extension, $date_ci, $guest_id, $pDB, $pDB_Trk, $pDB_CDR, $arrConf)
+{
+    $pRoomList 	= new paloSantoRoomList($pDB);
+    $pTrunk  	 	= new paloSantoRoomList($pDB_Trk);
+    $pRoomCDR 	= new paloSantoRoomList($pDB_CDR);
+    $arrTrk  	 	= $pTrunk->loadTrunk();
+
+        // Find any room calls
+        //---------------------------------------------
+        
+        $dst_info = $dahdi_t = $misdn_t = $capi_t = "";
+ 	 foreach($arrTrk as $key_trk => $value_trk){
+		$trunk = $value_trk['trunk'];
+		if(substr($trunk,0,strlen('DAHDI')) == 'DAHDI')
+			$dahdi_t = "dstchannel LIKE '%DAHDI%' OR ";
+		if(substr($trunk,0,strlen('mISDN')) == 'mISDN')
+			$misdn_t = "dstchannel LIKE '%mISDN%' OR ";
+		if(substr($trunk,0,strlen('CAPI')) == 'CAPI')
+			$capi_t  = "dstchannel LIKE '%CAPI%' OR ";
+		$condition = "substr(cdr.dstchannel,1,length('$trunk')) = '".$trunk."'";
+		if( $key_trk < (count($arrTrk)-1)){
+			$condition = "substr(cdr.dstchannel,1,length('$trunk')) = '".$trunk."' OR ";
+		}
+		$dst_info = $dst_info.$condition;
+	 }
+	 $date_co	  = date('Y-m-d H:i:s');
+
+	 $where         = "WHERE channel LIKE '%/".$extension."%' and billsec > '0' and calldate > '".$date_ci."'".
+ 			    " and calldate < '".$date_co."' and disposition = 'ANSWERED' and accountcode ='".$guest_id."'".
+			    " and ( ".$dahdi_t.$misdn_t.$capi_t.$dst_info.");";
+        $arrCDR = $pRoomCDR->getCDR($where);
+
+        return count($arrCDR);
+}
+
+
+function reportRoomList($smarty, $module_name, $local_templates_dir, &$pDB, $pDB_Trk, $pDB_CDR, $arrConf, $arrLang)
 {
     $pRoomList = new paloSantoRoomList($pDB);
     $filter_field = getParameter("filter_field");
@@ -129,49 +166,68 @@ function reportRoomList($smarty, $module_name, $local_templates_dir, &$pDB, $arr
     	    $dnd = "<img src='modules/".$module_name."/images/dnd.png'>";
 
     	    $cmd = "asterisk -rx 'database show DND ".$value['extension']."' | grep YES ";
+	    $details 	= $value['room_name'];
+	    $ext	= $value['extension'];
     	    if (!exec($cmd))
     		$dnd = "<img src='modules/".$module_name."/images/d.png'>";
-	    $arrTmp[0] = "<b>".$arrLang['free']."</b>";
+    	    $id_room	 = $pRoomList->getRoomListByName($details);
+    	    $Register_Det	= $pRoomList->getRegisterByRoomId($id_room['id']);
+           $Add_Guest	= $Register_Det['num_guest'];
+	    $nb_calls		= findCalls($id_room['extension'], $Register_Det['date_ci'], $Register_Det['guest_id'],$pDB, $pDB_Trk, $pDB_CDR, $arrConf);
+	    $Call_info	= "";
+	    if($nb_calls > 0)
+	    	$Call_info	= $arrLang["The guest has used the phone with "].$nb_calls.$arrLang[" calls"];
+	    $msg_add_guest	= $arrLang["Additional guest"]."\\n";
+	    if($Add_Guest == 0)
+	    	$msg_add_guest= "";
+           $msgResponse 	= $arrLang["Guest present from"].$Register_Det['date_ci'].$arrLang[" To "].$Register_Det['date_co']."\\n".$msg_add_guest.$Call_info;
+
+	    if(!isset($Register_Det['date_ci']))
+           	$msgResponse 	= "None";
+	    $arrTmp[0] 	= "<img src='modules/".$module_name."/images/info.png' border='0' onclick='FindDetails(\"$msgResponse\")'>\n";
+	    $arrTmp[1] 	= "<b>".$arrLang['free']."</b>";
  	    if ($value['guest_name'] != "")
-	    	$arrTmp[0] = $value['guest_name'];
-	    $arrTmp[1] = $value['room_name'];	
-	    $arrTmp[2] = $value['extension']." ".$warning;
-	    $arrTmp[3] = $value['model'];
-	    $arrTmp[4] = $value['groupe'];
-	    $arrTmp[5] = $ok[$value['free']];
-	    $arrTmp[6] = $ok[$value['clean']];
-	    $arrTmp[7] = $minibar;
-	    $arrTmp[8] = $dnd;
-           $arrData[] = $arrTmp;
+	    	$arrTmp[1] 	= $value['guest_name'];
+	    $arrTmp[2] 	= $value['room_name'];	
+	    $arrTmp[3] 	= $value['extension']." ".$warning;
+	    $arrTmp[4] 	= $value['model'];
+	    $arrTmp[5] 	= $value['groupe'];
+	    $arrTmp[6] 	= $ok[$value['free']];
+	    $arrTmp[7] 	= $ok[$value['clean']];
+	    $arrTmp[8] 	= $minibar;
+	    $arrTmp[9] 	= $dnd;
+           $arrData[] 	= $arrTmp;
         }
     }
 
 
     $arrGrid = array("title"    => $arrLang["Room List"],
-                        "icon"     => "images/list.png",
+                        "icon"     => "/modules/$module_name/images/icone.png",
                         "width"    => "99%",
                         "start"    => ($total==0) ? 0 : $offset + 1,
                         "end"      => $end,
                         "total"    => $total,
                         "url"      => $url,
                         "columns"  => array(
-			0 => array("name"      => $arrLang["Name"],
+			0 => array("name"      => $arrLang["Details"],
                                    "property1" => ""),
-			1 => array("name"      => $arrLang["Room Name"],
+			1 => array("name"      => $arrLang["Name"],
                                    "property1" => ""),
-			2 => array("name"      => $arrLang["Extension"],
+			2 => array("name"      => $arrLang["Room Name"],
                                    "property1" => ""),
-			3 => array("name"      => $arrLang["Model "],
+			3 => array("name"      => $arrLang["Extension"],
                                    "property1" => ""),
-			4 => array("name"      => $arrLang["Groupe"],
+			4 => array("name"      => $arrLang["Model "],
                                    "property1" => ""),
-			5 => array("name"      => $arrLang["Free"],
+			5 => array("name"      => $arrLang["Groupe"],
                                    "property1" => ""),
-			6 => array("name"      => $arrLang["Clean"],
+			6 => array("name"      => $arrLang["Free"],
                                    "property1" => ""),
-			7 => array("name"      => $arrLang["Mini bar"],
+			7 => array("name"      => $arrLang["Clean"],
                                    "property1" => ""),
-			8 => array("name"      => $arrLang["DND"],
+			8 => array("name"      => $arrLang["Mini bar"],
+                                   "property1" => ""),
+			9 => array("name"      => $arrLang["DND"],
                                    "property1" => ""),
                                         )
                     );

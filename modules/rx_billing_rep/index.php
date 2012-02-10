@@ -148,7 +148,7 @@ function reportBillingreport($smarty, $module_name, $local_templates_dir, &$pDB,
 
 
     $arrGrid = array("title"    => $arrLang["Billing report"],
-                        "icon"     => "images/list.png",
+                        "icon"     => "modules/$module_name/images/icone.png",
                         "width"    => "99%",
                         "start"    => ($total==0) ? 0 : $offset + 1,
                         "end"      => $end,

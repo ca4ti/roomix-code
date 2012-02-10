@@ -127,7 +127,7 @@ function Detail_table_Line($date, $call, $duration, $price, $curr)
 	return $content;
 }
 
-function Total_Billing($ht, $vat, $total, $curr)
+function Total_Billing($ht, $vat, $total, $curr, $arrLang)
 {
 $content = "
 <table style='text-align: left; width: 287px; margin-left: auto; margin-right: 0px;' border='0' cellpadding='0' cellspacing='0'>
@@ -141,7 +141,7 @@ $content = "
 		<td style='vertical-align: top; width: 70px; text-align: right;'>$ht $curr</td>
 	</tr>
 	<tr class='line'>
-		<td style='vertical-align: top; width: 197px; text-align: right; font-weight: bold;'>VAT -</td>
+		<td style='vertical-align: top; width: 197px; text-align: right; font-weight: bold;'>".$arrLang["VAT"]." -</td>
 		<td style='vertical-align: top; width: 70px; text-align: right;'>$vat $curr</td>
 	</tr>
 	<tr class='line'>

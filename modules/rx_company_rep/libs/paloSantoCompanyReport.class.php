@@ -214,6 +214,22 @@ class paloSantoCompanyReport{
         return $result;
     }
 
+    function loadCurrency()
+    {
+        $query = "SELECT * FROM settings WHERE key='currency'";
+        $result = $this->_DB->fetchTable($query, true);
+
+        if($result==FALSE){
+            $this->errMsg = $this->_DB->errMsg;
+            return false;
+        }
+
+        $result = $result[0];
+        $curr = $result['value'];
+
+        return $curr;
+    }
+
     function getCompanyReportById($id)
     {
         $query = "SELECT * FROM table WHERE id=?";

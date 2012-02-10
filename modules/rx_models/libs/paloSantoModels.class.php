@@ -104,7 +104,7 @@ class paloSantoModels {
 
     function getModelsById($id)
     {
-        $query = "SELECT * FROM models WHERE id=$id";
+        $query = "SELECT * FROM models WHERE room_model=$id";
 
         $result=$this->_DB->getFirstRowQuery($query,true);
 
@@ -113,6 +113,78 @@ class paloSantoModels {
             return null;
         }
         return $result;
+    }
+    function getNumAddModel($filter_field, $filter_value)
+    {
+        $where = "";
+        if(isset($filter_field) & $filter_field !="")
+            $where = "where $filter_field like '$filter_value%'";
+
+        $query   = "SELECT COUNT(*) FROM table $where";
+
+        $result=$this->_DB->getFirstRowQuery($query);
+
+        if($result==FALSE){
+            $this->errMsg = $this->_DB->errMsg;
+            return 0;
+        }
+        return $result[0];
+    }
+
+    function getAddModel($limit, $offset, $filter_field, $filter_value)
+    {
+        $where = "";
+        if(isset($filter_field) & $filter_field !="")
+            $where = "where $filter_field like '$filter_value%'";
+
+        $query   = "SELECT * FROM table $where LIMIT $limit OFFSET $offset";
+
+        $result=$this->_DB->fetchTable($query, true);
+
+        if($result==FALSE){
+            $this->errMsg = $this->_DB->errMsg;
+            return array();
+        }
+        return $result;
+    }
+
+    function getVatModel()
+    {
+        $query   = "SELECT DISTINCT `vat_1` , `vat_2` FROM config";
+
+        $result=$this->_DB->fetchTable($query, true);
+
+        if($result==FALSE){
+            $this->errMsg = $this->_DB->errMsg;
+            return array();
+        }
+        return $result[0];
+    }
+
+    function insertModel($sTabla, $arrValores){
+	// call function construirInsert
+	$query = $this->_DB->construirInsert($sTabla, $arrValores) ;
+
+	// now execute the query with genQuery(fucntion of the paloSantoDB.class)
+	$result = $this->_DB->genQuery($query);
+
+	// catch the error
+	if($result==FALSE)
+       return O;
+       return 1; 
+    }
+
+    function updateModel($sTabla, $arrValores, $arrOldData ){
+	// call function construirUpdate
+	$query = $this->_DB->construirUpdate($sTabla, $arrValores, $where = $arrOldData);
+
+	// now execute the query with genQuery(fucntion of the paloSantoDB.class)
+	$result = $this->_DB->genQuery($query);
+
+	// catch the error
+	if($result==FALSE)
+       return;
+       return; 
     }
 }
 ?>

@@ -28,9 +28,15 @@
   $Id: en.lang,v 1.1 2011-05-18 04:05:28 Franck Danard franckd@agmp.org Exp $ */
 global $arrLangModule;
 $arrLangModule=array(
-"Company Report" => "Rapport Société",
-"Date Start" => "Du",
-"Date End" => "Au",
-"Type of Report" => "Type de Rapport",
+"Total Check-In for this period : " 		=> "Total d'Arrivée pour cette période : ",
+"Total Check-Out for this period : " 		=> "Total de Départs pour cette période : ",
+"Total price of rooms for this period : " 	=> "Total des recettes chambres pour cette période : ",
+"Total price of calls for this period : " 	=> "Total des recettes des communications pour cette préiode : ",
+"Total price of Bar for this period : "		=> "Total des recettes Bar pour cette période : ",
+"Total price of Billings for this period : " 	=> "Total des recettes facturations pour cette période : ",
+"Company Report" 					=> "Rapport Société",
+"Date Start"						=> "Du",
+"Date End" 						=> "Au",
+"Type of Report" 					=> "Type de Rapport",
 );
 ?>

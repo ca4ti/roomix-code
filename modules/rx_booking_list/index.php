@@ -58,8 +58,8 @@ function _moduleContent(&$smarty, $module_name)
     $smarty->assign("EDIT", $arrLang["Edit"]);
     $smarty->assign("CANCEL", $arrLang["Cancel"]);
     $smarty->assign("REQUIRED_FIELD", $arrLang["Required field"]);
-    $smarty->assign("IMG", "images/list.png");
-
+    $smarty->assign("IMG", "/modules/$module_name/images/icone.png");
+    $smarty->assign("icon", "/modules/$module_name/images/icone.png");
     //folder path for custom templates
     $templates_dir=(isset($arrConf['templates_dir']))?$arrConf['templates_dir']:'themes';
     $local_templates_dir="$base_dir/modules/$module_name/".$templates_dir.'/'.$arrConf['theme'];
@@ -92,6 +92,7 @@ function reportBookingList($smarty, $module_name, $local_templates_dir, &$pDB, $
     //begin grid parameters
     $oGrid  = new paloSantoGrid($smarty);
     $oGrid->setTitle(_tr("Booking List"));
+    $oGrid->setIcon(_tr("/modules/$module_name/images/icone.png"));
     $oGrid->pagingShow(true); // show paging section.
 
     $oGrid->enableExport();   // enable export.

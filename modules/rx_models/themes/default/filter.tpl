@@ -2,7 +2,9 @@
     <tr class="letra12">
         {if $mode eq 'input'}
         <td align="left">
-            <input class="button" type="submit" name="save_new" value="{$SAVE}">&nbsp;&nbsp;
+            <input class="button" type="submit" name="add" value="{$ADD}">&nbsp;&nbsp;
+            <input class="button" type="submit" name="delete" value="{$DELETE}">&nbsp;&nbsp;
+            <input class="button" type="submit" name="edit" value="{$EDIT}">&nbsp;&nbsp;
             <input class="button" type="submit" name="cancel" value="{$CANCEL}">
         </td>
         {elseif $mode eq 'view'}
@@ -21,7 +23,7 @@
 <table width="99%" border="0" cellspacing="0" cellpadding="0" align="center">
     <tr class="letra12">
         <td width="10%" align="left">&nbsp;&nbsp;</td>
-        <td width="10%" align="right">
+        <td width="10%" align="left">
             {$filter_field.LABEL}:&nbsp;&nbsp;{$filter_field.INPUT}&nbsp;&nbsp;{$filter_value.INPUT}
             <input class="button" type="submit" name="show" value="{$SHOW}" />
         </td>

@@ -111,14 +111,16 @@ function viewFormBookingStatus($smarty, $module_name, $local_templates_dir, &$pD
     $smarty->assign("CANCEL", _tr("Cancel"));
     $smarty->assign("REQUIRED_FIELD", _tr("Required field"));
     $smarty->assign("IMG", "images/list.png");
+    $smarty->assign("icon","/modules/$module_name/images/icone.png");
+
     $Cb 		= $pBookingStatus->Clean_booking();
     $arrBookingRooms = $pBookingStatus->getBookingStatus_Once();
     $today 		= $pBookingStatus->ToDay();
 
-    $smarty->assign("BOOKING","modules/$module_name/images/no_data.png");
+    $smarty->assign("BOOKING"," ");
     if (isset($arrBookingRooms[0])){
     	Booking_Cal("","",$arrBookingRooms,"modules/$module_name/images/Booking.png","Booking Rooms Calendar",$today);
-    	$smarty->assign("BOOKING","modules/$module_name/images/Booking.png");
+    	$smarty->assign("BOOKING","<img src='modules/".$module_name."/images/Booking.png'>");
     }
 
     $htmlForm = $oForm->fetchForm("$local_templates_dir/form.tpl",_tr("Booking Status"), $_DATA);

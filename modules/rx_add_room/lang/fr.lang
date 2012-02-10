@@ -28,13 +28,16 @@
   $Id: en.lang,v 1.1 2010-04-03 04:04:58 Franck Danard franckd@agmp.org Exp $ */
 global $arrLangModule;
 $arrLangModule=array(
-"Add Room" 	=> "Ajout d'une Chambre",
-"Room" 	=> "Chambre",
-"Extension" 	=> "Poste",
-"Name" 	=> "Nom",
-"Model" 	=> "Modèle",
-"Delete" 	=> "Effacer",
-"Search" 	=> "Recherche",
-"Show" 	=> "Filtrer",
+"Show Filter"		=> "Voir les Filter",
+"Hide Filter"		=> "Cacher les Filter",
+"Download"		=> "Télécharger",
+"Add Room" 		=> "Ajout d'une Chambre",
+"Room" 		=> "Chambre",
+"Extension" 		=> "Poste",
+"Name" 		=> "Nom",
+"Model" 		=> "Modèle",
+"Delete" 		=> "Effacer",
+"Search" 		=> "Recherche",
+"Show" 		=> "Filtrer",
 );
 ?>

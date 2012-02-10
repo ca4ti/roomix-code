@@ -1,6 +1,6 @@
 <table width="100%" border="0" cellspacing="0" cellpadding="4" align="center">
     <tr class="moduleTitle">
-        <td class="moduleTitle" valign="middle" colspan='2'>&nbsp;&nbsp;<img src="{$IMG}" border="0" align="absmiddle">&nbsp;&nbsp;{$title}</td>
+        <td class="moduleTitle" valign="middle" colspan='2'>&nbsp;</td>
     </tr>
     <tr class="letra12">
         {if $mode eq 'input'}
@@ -30,17 +30,19 @@
 <br>
 <table class="tabForm" style="font-size: 16px;" width="100%">
     <tr class="letra12">
-        <td align="right" width="35"><b>{$room.LABEL}: </b></td>
-        <td align="left"  width="35">{$room.INPUT}</td>
-        <td align="right" width="35"><b>{$group.LABEL}: </b></td>
-        <td align="left"  width="35">{$group.INPUT}</td>
+        <td align="right" width="50"><b>{$room.LABEL}: </b></td>
+        <td align="left"  width="40">{$room.INPUT}</td>
+        <td align="right" width="130"><b>{$asModel.LABEL}: </b></td>
+        <td align="left"  width="130">{$asModel.INPUT}</td>
+        <td align="right" width="50"><b>{$group.LABEL}: </b></td>
+        <td align="left"  width="40">{$group.INPUT}</td>
         <td align="right" width="60"><b>{$paid.LABEL}: </b></td>
         <td align="left"  width="35">{$paid.INPUT}</td>
         <td align="right" width="35"><b>{$details.LABEL}: </b></td>
         <td align="left"  width="35">{$details.INPUT}</td>
         <td align="right" width="150"><b>{$sending_by_mail.LABEL}: </b></td>
         <td align="left"  width="35">{$sending_by_mail.INPUT}</td>
-        <td align="right" widht="200"></td>
+        <td align="right" widht="100"></td>
     </tr>
 </table>
     {if $bil eq '1'}

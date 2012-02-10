@@ -28,13 +28,23 @@
   $Id: en.lang,v 1.1 2010-04-03 04:04:47 Franck Danard franckd@agmp.org Exp $ */
 global $arrLangModule;
 $arrLangModule=array(
-"Models" => "Models",
-"Delete" => "Delete",
-"Models" => "Models",
-"Prices" => "Prices",
-"V.A.T"  => "V.A.T",
-"Search" => "Search",
-"Guest"  => "Additional Guest",
-"Show"   => "Show",
+"Show Filter"		=> "Show Filter",
+"Hide Filter"		=> "Hide Filter",
+"Download"		=> "Download",
+"Models" 		=> "Models",
+"Model"  		=> "Model",
+"Add Model" 		=> "Add Model",
+"Price"  		=> "Price",
+"VAT"    		=> "VAT",
+"Select" 		=> "Select",
+"Delete" 		=> "Delete",
+"Add"    		=> "Add",
+"Edit"   		=> "Edit",
+"Models" 		=> "Models",
+"Prices" 		=> "Prices",
+"V.A.T"  		=> "V.A.T",
+"Search" 		=> "Search",
+"Guest"  		=> "Additional Guest",
+"Show"   		=> "Show",
 );
 ?>

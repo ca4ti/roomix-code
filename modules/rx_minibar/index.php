@@ -108,7 +108,8 @@ function viewFormMiniBar($smarty, $module_name, $local_templates_dir, &$pDB, $ar
     $smarty->assign("EDIT", $arrLang["Edit"]);
     $smarty->assign("CANCEL", $arrLang["Cancel"]);
     $smarty->assign("REQUIRED_FIELD", $arrLang["Required field"]);
-    $smarty->assign("IMG", "images/list.png");
+    $smarty->assign("IMG", "/modules/$module_name/images/icone.png");
+    $smarty->assign("icon", "/modules/$module_name/images/icone.png");
     $smarty->assign("Digits", $arrLang["Digits"]);
     $smarty->assign("Prices", $arrLang["Prices"]);
     $smarty->assign("Labels", $arrLang["Labels"]);
@@ -141,7 +142,8 @@ function saveNewMiniBar($smarty, $module_name, $local_templates_dir, &$pDB, $arr
     $smarty->assign("EDIT", $arrLang["Edit"]);
     $smarty->assign("CANCEL", $arrLang["Cancel"]);
     $smarty->assign("REQUIRED_FIELD", $arrLang["Required field"]);
-    $smarty->assign("IMG", "images/list.png");
+    $smarty->assign("IMG", "/modules/$module_name/images/icone.png");
+    $smarty->assign("icon", "/modules/$module_name/images/icone.png");
     $smarty->assign("Digits", $arrLang["Digits"]);
     $smarty->assign("Prices", $arrLang["Prices"]);
     $smarty->assign("Labels", $arrLang["Labels"]);

@@ -28,12 +28,24 @@
   $Id: en.lang,v 1.1 2010-04-03 04:04:47 Franck Danard franckd@agmp.org Exp $ */
 global $arrLangModule;
 $arrLangModule=array(
-"Models" => "Modèles",
-"Delete" => "Effacer",
-"Prices" => "Prix",
-"V.A.T"  => "TVA",
-"Search" => "Recherche",
-"Show"   => "Filtrer",
-"Guest"  => "Personne sup.",
+"Show Filter"		=> "Voir les Filter",
+"Hide Filter"		=> "Cacher les Filter",
+"Download"		=> "Télécharger",
+"Models" 		=> "Modèles",
+"Model"  		=> "Modèle",
+"Delete" 		=> "Effacer",
+"Prices" 		=> "Prix",
+"Price" 		=> "Prix",
+"V.A.T"  		=> "TVA",
+"VAT"    		=> "TVA",
+"Search" 		=> "Recherche",
+"Show"   		=> "Filtrer",
+"Guest"  		=> "Personne sup.",
+"Edit"   		=> "Editer",
+"Add Model" 		=> "Ajout Modèle",
+"Select" 		=> "Sélection",
+"Add"    		=> "Ajouter",
+"Guest"  		=> "Personne Sup.",
+"Show"   		=> "Voir",
 );
 ?>

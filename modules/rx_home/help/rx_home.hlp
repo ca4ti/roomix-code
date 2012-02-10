@@ -24,5 +24,15 @@
 		<br>
 		<img style="width: 159px; height: 37px;" alt="" src="../modules/{$node_id}/images/room_total.png"><br>
 		<br>
+		5 - <span style="font-weight: bold;">The booking of day.</span><br>
+		<br>
+		If any rooms are booked.
+		<img style="width: 159px; height: 37px;" alt="" src="../modules/{$node_id}/images/room_booking.png"><br>
+		<br>
+		<br>
+		If there's one or more rooms booked.<br>
+		<img style="width: 159px; height: 37px;" alt="" src="../modules/{$node_id}/images/room_booking_button.png"><br>
+		<br>
+		<br>
     </body>
 </html>

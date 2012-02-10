@@ -5,17 +5,52 @@
     </header>
     <body>
         <h1>{$node_name}</h1>
-        <p align="Justify">
-	 <h><b>English</b></h><br><br>
-	 You can see the rooms status currently in your hotel. The guest name, the room name, if it's free or busy, cleaned or not. If the guest used the mini-bar or not. If the room is on DND status or not ( Do Not Disturb ). And you can see if the room is included in a group or not.
-        <br><br>If the phone device is a SIP phone, you can know if the phone is connected or not. In this case, youhave a small yellow triangle beside the phone number</p>
-	 <p align="Justify">
-	 <h><b>Fran&ccedil;ais</b></h><br><br>
-	 Vous pouvez voir l'&eacute;tat des chambres actuellement dans votre h&ocirc;tel. Le nom du client, le nom de la chambre, si elle est libre ou occup&eacute;, nettoy&eacute;s ou non. Si le client a utilis&eacute; le mini-bar ou pas. Si la pi&egrave;ce est en Ne Pas D&eacute;ranger ou non (DND ou NPD). Et vous pouvez voir si la chambre fait parti dans un groupe ou non.
-	 <br><br>Si le t&eacute;l&eacute;phone est un t&eacute;l&eacute;phone SIP, vous pouvez savoir s'il est connect&eacute; ou non. Dans ce cas, vous avez un petit triangle jaune &agrave; c&ocirc;t&eacute; du num&eacute;ro de t&eacute;l&eacute;phone.
-	 </p>
+        <p align="Justify">English</p>
+
         <!-- Form to add images -->
         <!--<div><img src="../modules/{$node_id}/images/images.png" border="0"></div> -->
 
+        <table class="inline">
+            <tr>
+                <th>Details</th>
+            </tr>
+            <tr>
+                <td>You can see the rooms status currently in your hotel. The guest name, the room name, if it's free or busy,<br>
+			 cleaned or not. If the guest used the mini-bar or not. If the room is on DND status or not ( Do Not Disturb ).<br>
+			 And you can see if the room is included in a group or not.<br>
+        		 If the phone device is a SIP phone, you can know if the phone is connected or not.<br>
+			 In this case, you have a small yellow triangle beside the phone number.
+			 You can have more details clicking to (?) icone. these informations will appear:<br>
+			 <li> Check-In date, and Check-Out date.
+			 <li> Additionnal guest (yes or not).
+			 <li> How many calls had been sent by the guest.
+		</td>
+            </tr>
+        </table>
+
+        <p align="Justify">Fran&ccedil;ais</p>
+
+        <!-- Form to add images -->
+        <!--<div><img src="../modules/{$node_id}/images/images.png" border="0"></div> -->
+
+        <table class="inline">
+            <tr>
+                <th>D&eacute;tails</th>
+            </tr>
+            <tr>
+                <td>Vous pouvez voir l'&eacute;tat des chambres actuellement dans votre h&ocirc;tel.<br>
+			Le nom du client, le nom de la chambre, si elle est libre ou occup&eacute;, nettoy&eacute;s ou non.<br>
+			Si le client a utilis&eacute; le mini-bar ou pas. Si la pi&egrave;ce est en Ne Pas D&eacute;ranger ou non (DND ou NPD).<br>
+			Et vous pouvez voir si la chambre fait parti dans un groupe ou non.<br>
+			Si le t&eacute;l&eacute;phone est un t&eacute;l&eacute;phone SIP, vous pouvez savoir s'il est connect&eacute; ou non.<br>
+			Dans ce cas, vous avez un petit triangle jaune &agrave; c&ocirc;t&eacute; du num&eacute;ro de t&eacute;l&eacute;phone.
+			Vous pouvez avoir plus de d&eacute;tails en cliquant sur l'ic&ocirc;ne (?). Ces informations apparaitront:<br>
+			<li> Date d'arriv&eacute;e et de D&eacute;part.
+			<li> Personne supp. (oui/non).
+			<li> Combien d'appels ont &eacute;t&eacute; pass&eacute; par le client.
+	 </p>
+		</td>
+            </tr>
+        </table>
     </body>
 </html>

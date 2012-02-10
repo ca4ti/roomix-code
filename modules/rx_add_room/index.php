@@ -162,7 +162,8 @@ function saveAddRoom($smarty, $module_name, $local_templates_dir, &$pDB, &$pDBM,
     $smarty->assign("EDIT", $arrLang["Edit"]);
     $smarty->assign("CANCEL", $arrLang["Cancel"]);
     $smarty->assign("REQUIRED_FIELD", $arrLang["Required field"]);
-    $smarty->assign("IMG", "images/list.png");
+    $smarty->assign("IMG", "modules/$module_name/images/icone.png");
+    $smarty->assign("icon", "modules/$module_name/images/icone.png");
 
     //$arrData = null;
     $arrResult 	= $pFreePBX->getAddRoom($limit, $offset, $filter_field, $filter_value);
@@ -213,7 +214,7 @@ function saveAddRoom($smarty, $module_name, $local_templates_dir, &$pDB, &$pDBM,
     }
 
     $arrGrid = array("title"       => $arrLang["Add Room"],
-                        "icon"     => "images/list.png",
+                        "icon"     => "modules/$module_name/images/icone.png",
                         "width"    => "99%",
                         "start"    => ($total==0) ? 0 : $offset + 1,
                         "end"      => $end,
@@ -332,7 +333,8 @@ function deleteAddRoom($smarty, $module_name, $local_templates_dir, &$pDB, &$pDB
     $smarty->assign("EDIT", $arrLang["Edit"]);
     $smarty->assign("CANCEL", $arrLang["Cancel"]);
     $smarty->assign("REQUIRED_FIELD", $arrLang["Required field"]);
-    $smarty->assign("IMG", "images/list.png");
+    $smarty->assign("IMG", "modules/$module_name/images/icone.png");
+    $smarty->assign("icon", "modules/$module_name/images/icone.png");
 
     //$arrData = null;
     $arrResult 	= $pFreePBX->getAddRoom($limit, $offset, $filter_field, $filter_value);
@@ -383,7 +385,7 @@ function deleteAddRoom($smarty, $module_name, $local_templates_dir, &$pDB, &$pDB
     }
 
     $arrGrid = array("title"       => $arrLang["Add Room"],
-                        "icon"     => "images/list.png",
+                        "icon"     => "modules/$module_name/images/icone.png",
                         "width"    => "99%",
                         "start"    => ($total==0) ? 0 : $offset + 1,
                         "end"      => $end,
@@ -464,7 +466,8 @@ function reportAddRoom($smarty, $module_name, $local_templates_dir, &$pDB, &$pDB
     $smarty->assign("EDIT", $arrLang["Edit"]);
     $smarty->assign("CANCEL", $arrLang["Cancel"]);
     $smarty->assign("REQUIRED_FIELD", $arrLang["Required field"]);
-    $smarty->assign("IMG", "images/list.png");
+    $smarty->assign("IMG", "/modules/$module_name/images/icone.png");
+    $smarty->assign("icon", "/modules/$module_name/images/icone.png");
 
     $arrData = null;
     $arrResult =$pAddRoom->getAddRoom($limit, $offset, $filter_field, $filter_value);
@@ -515,7 +518,7 @@ function reportAddRoom($smarty, $module_name, $local_templates_dir, &$pDB, &$pDB
     }
 
     $arrGrid = array("title"       => $arrLang["Add Room"],
-                        "icon"     => "images/list.png",
+                        "icon"     => "modules/$module_name/images/icone.png",
                         "width"    => "99%",
                         "start"    => ($total==0) ? 0 : $offset + 1,
                         "end"      => $end,

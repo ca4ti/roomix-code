@@ -5,17 +5,44 @@
     </header>
     <body>
         <h1>{$node_name}</h1>
-        <p align="Justify"></p>
+        <p align="Justify">English</p>
 
         <!-- Form to add images -->
         <!--<div><img src="../modules/{$node_id}/images/images.png" border="0"></div> -->
 
         <table class="inline">
             <tr>
-                <th></th>
+                <th>Details</th>
             </tr>
             <tr>
-                <td></td>
+                <td><h2>Add model.</h2>
+			Before adding a room, you must create some models to put them on each room.<br>
+			Just putting a model with its price, and why not, enter a price for additionnal guest if you want,<br> 
+			and select the V.A.T used by this room. (2 V.A.T. are enabled).
+			<h2>List.</h2>
+			Displays all models already recorded into RoomX configuration. You could delete a room or<br>
+			more, or edit this one, just selecting the checkbox at left of the row.</td>
+            </tr>
+        </table>
+    </body>
+
+        <p align="Justify">Fran&ccedil;ais</p>
+
+        <!-- Form to add images -->
+        <!--<div><img src="../modules/{$node_id}/images/images.png" border="0"></div> -->
+
+        <table class="inline">
+            <tr>
+                <th>D&eacute;tails</th>
+            </tr>
+            <tr>
+                <td><h2>Ajouter un Mod&egrave;le.</h2>
+			Avant d'ajouter une chambre, vous devez cr&eacute;er des mod&egrave;les pour les affecter dans chaque chambre.<br>
+			Juste entrer the mod&egrave;le avec son prix, et pourquoi pas ajouter un prix pour une personne suppl&eacute;mentaire si vous voulez,<br>
+			ensuite s&eacute;lectionnez la TVA utilis&eacute;e par cette chambre. (2 TVA. sont possibles).<br>
+			<h2>Liste.</h2>
+			Affiche tous les mod&egrave;les d&eacute;j&agrave; enregistr&eacute;s dans la configuration RoomX.<br>
+			Vous pouvez supprimer un mod&egrave;le ou plus, ou &eacute;diter un mod&egrave;le juste en cochant la case S&eacute;lectionner</td>
             </tr>
         </table>
     </body>

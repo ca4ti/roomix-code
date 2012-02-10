@@ -2,7 +2,7 @@
   /* vim: set expandtab tabstop=4 softtabstop=4 shiftwidth=4:
   Codificación: UTF-8
   +----------------------------------------------------------------------+
-  | Elastix version 2.0.0-18                                               |
+  | Elastix version 2.0.4-21                                               |
   | http://www.elastix.org                                               |
   +----------------------------------------------------------------------+
   | Copyright (c) 2006 Palosanto Solutions S. A.                         |
@@ -25,13 +25,18 @@
   | The Original Code is: Elastix Open Source.                           |
   | The Initial Developer of the Original Code is PaloSanto Solutions    |
   +----------------------------------------------------------------------+
-  $Id: en.lang,v 1.1 2010-04-05 09:04:41 Franck Danard franckd@agmp.org Exp $ */
+  $Id: en.lang,v 1.1 2011-05-18 04:05:28 Franck Danard franckd@agmp.org Exp $ */
 global $arrLangModule;
 $arrLangModule=array(
-"Add Model" => "Add Model",
-"Model"     => "Model",
-"Price"     => "Price",
-"Guest"     => "Additional Guest",
-"VAT"       => "V.A.T.",
+"Total Check-In for this period : " 		=> "Total Check-In for this period : ",
+"Total Check-Out for this period : " 		=> "Total Check-Out for this period : ",
+"Total price of rooms for this period : " 	=> "Total price of rooms for this period : ",
+"Total price of calls for this period : " 	=> "Total price of calls for this period : ",
+"Total price of Bar for this period : "		=> "Total price of Bar for this period : ",
+"Total price of Billings for this period : " 	=> "Total price of Billings for this period : ",
+"Company Report" 					=> "Company Report",
+"Date Start"						=> "Date Start",
+"Date End" 						=> "Date End",
+"Type of Report" 					=> "Type of Report",
 );
 ?>
