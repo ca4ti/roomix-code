@@ -62,6 +62,11 @@
 			<group id="1" name="administrator" desc="total access"></group>
 		</permissions>
 		</menuitem>
+		<menuitem menuid="rx_r_action" desc="Remote Action Control" parent="rx_config" module="yes" link="" order="65">
+		<permissions>
+			<group id="1" name="administrator" desc="total access"></group>
+		</permissions>
+		</menuitem>
 		<menuitem menuid="rx_billing_rep" desc="Billing Report" parent="roomx"  module="yes" link="" order="7">
 		<permissions>
 			<group id="1" name="administrator" desc="total access"></group>

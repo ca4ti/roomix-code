@@ -96,6 +96,15 @@ function _moduleContent(&$smarty, $module_name)
     return $content;
 }
 
+function remoteActionControl($url)
+{
+	if(isset($url)){
+		$rac		= fopen($url, "r");
+		$getRac 	= fread($rac,1024);
+		fclose($rac);
+	}
+}
+
 function getInfoGuest($module_name, &$pDB, $arrConf, $findguest)
 {
     $jsonObject      = new PaloSantoJSON();
@@ -290,6 +299,12 @@ function saveNewCheckIn($smarty, $module_name, $local_templates_dir, &$pDB, &$pD
         $where 			= "WHERE id = '".$_DATA['room']."'";
         $arrRooms 			= $pCheckIn->getCheckIn('rooms',$where);
         $Rooms 			= $arrRooms['0'];
+
+	 // Sending a R.A.C information
+	 //-------------------------------	
+
+	 $Rac_Url			= $Rooms['RACI'];
+	 remoteActionControl($Rac_Url);
 
         // Modify the account code extension into Freepbx data
         //---------------------------------------------

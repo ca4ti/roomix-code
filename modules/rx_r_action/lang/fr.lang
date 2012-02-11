@@ -2,7 +2,7 @@
   /* vim: set expandtab tabstop=4 softtabstop=4 shiftwidth=4:
   Codificación: UTF-8
   +----------------------------------------------------------------------+
-  | Elastix version 2.0.0-22                                               |
+  | Elastix version 2.2.0-27                                               |
   | http://www.elastix.org                                               |
   +----------------------------------------------------------------------+
   | Copyright (c) 2006 Palosanto Solutions S. A.                         |
@@ -25,38 +25,23 @@
   | The Original Code is: Elastix Open Source.                           |
   | The Initial Developer of the Original Code is PaloSanto Solutions    |
   +----------------------------------------------------------------------+
-  $Id: en.lang,v 1.1 2010-05-08 11:05:33 Franck Danard franckd@agmp.org Exp $ */
+  $Id: en.lang,v 1.1 2012-02-05 06:02:02 Danard Franck franckd@agmp.org Exp $ */
 global $arrLangModule;
 $arrLangModule=array(
-"Total Calls"			=> "Total des appels",
-"Same Model"			=> "Même Modèle",
-"Billed as"			=> "Facturé comme",
-"Billing at"			=> "Facture du",
-" Number : "			=> " No : ",
-"Nights with room's model: "=> "Nuit�s avec une chambre de type ",
-"Sale"				=> "Prestations",
-"There is some calls"	=> "Il y a quelques appels",
-"VAT"				=> "TVA",
-"When"				=> "Quand",
-"Date"				=> "Date",
-"Today"			=> "Aujourd'hui",
-"Scheduled date"		=> "Date prévue",
-"Other day"			=> "Autre date",
-"CheckOut" 			=> "Départ",
-"Room" 			=> "Chambre",
-"Group" 			=> "Groupe",
-"Billing" 			=> "Facturation",
-"Paid" 			=> "Payé",
-"Details" 			=> "Détails",
-"Sending by mail" 		=> "Envoyer par @mail",
-"Call"				=> "Appel(s)",
-"Display"			=> "Afficher",
-"Total"			=> "Total",
-"Checkout Done"      	=> "Départ fait",
-"No Room!"			=> "Aucune Chambre!",
-"No Group"			=> "Aucun Groupe",
-"Mini Bar"			=> "Mini Bar",
-"Warning"			=> "<b> Attention !!!! </b><br>Le téléphone de la chambre n'est pas détecté.<br>Allez verifier si le téléphone est bien présent.",
-"Dismiss"			=> "Masquer",
+"Apply"		=> "Appliquer",
+"Show Filter"		=> "Voir les Filtres",
+"Hide Filter"		=> "Cacher les Filtres",
+"Download"		=> "Télécharger",
+"Remote_Action"	=> "Contrôle Action Distante",
+"EDIT"			=> "Editer",
+"CANCEL"		=> "Cancel",
+"ADD"			=> "AJour",
+"SAVE"			=> "Sauver",
+"CANCEL"		=> "Annuler",
+"select" 		=> "Sélection",
+"Rooms" 		=> "Chambres",
+"Action CI" 		=> "Action sur Entrée",
+"Action CO" 		=> "Action sur Depart",
+"Edit Action"		=> "Edition de l'action",
 );
 ?>

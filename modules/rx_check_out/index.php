@@ -129,6 +129,15 @@ function viewFormCheckOut($smarty, $module_name, $local_templates_dir, &$pDB, &$
     return $content;
 }
 
+function remoteActionControl($url)
+{
+	if(isset($url)){
+		$rac 		= fopen($url, "r");
+		$getRac 	= fread($rac,1024);
+		fclose($rac);
+	}
+}
+
 function TimeCall($second)
 {
 	$temp = $second % 3600;
@@ -203,6 +212,12 @@ function saveNewCheckOut($smarty, $module_name, $local_templates_dir, &$pDB, &$p
         $where 	= "where id = '".$_DATA['room']."'";
         $arrRoom 	= $pRoom->getCheckOut('rooms', $where);
         $arrExt 	= $arrRoom['0'];
+
+	 // Sending url to R.A.C.
+	 //----------------------
+
+	 $rac_url	= $arrExt['RACO'];
+	 remoteActionControl($rac_url);
 
         // Update room : The room was busy and now it's free and not clean.
 	 // In same time, deleting the guest name and group.

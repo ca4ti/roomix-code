@@ -4,7 +4,7 @@ function Billing_Header()
 $content="
 <html>
 <head>
-<meta content='text/html; charset=ISO-8859-1' http-equiv='content-type'>
+<meta content='text/html; charset=utf-8' http-equiv='content-type'>
 <title></title>
 <style type='text/css'>
 	body {
