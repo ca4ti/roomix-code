@@ -29,6 +29,7 @@
 global $arrLangModule;
 $arrLangModule=array(
 "The guest has used the phone with " => "The guest has used the phone with ",
+"None"			=> "None",
 "Guest present from" => "Guest present from ",
 " To "			=> " To ",
 " calls"		=> " calls",

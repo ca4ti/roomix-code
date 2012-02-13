@@ -183,7 +183,7 @@ function reportRoomList($smarty, $module_name, $local_templates_dir, &$pDB, $pDB
            $msgResponse 	= $arrLang["Guest present from"].$Register_Det['date_ci'].$arrLang[" To "].$Register_Det['date_co']."\\n".$msg_add_guest.$Call_info;
 
 	    if(!isset($Register_Det['date_ci']))
-           	$msgResponse 	= "None";
+           	$msgResponse 	= $arrLang["None"];
 	    $arrTmp[0] 	= "<img src='modules/".$module_name."/images/info.png' border='0' onclick='FindDetails(\"$msgResponse\")'>\n";
 	    $arrTmp[1] 	= "<b>".$arrLang['free']."</b>";
  	    if ($value['guest_name'] != "")
