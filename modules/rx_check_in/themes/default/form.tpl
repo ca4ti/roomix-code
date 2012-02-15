@@ -1,7 +1,5 @@
+<br>
 <table width="100%" border="0" cellspacing="0" cellpadding="4" align="center">
-    <tr class="moduleTitle">
-        <td class="moduleTitle" valign="middle" colspan='2'>&nbsp;</td>
-    </tr>
     <tr class="letra12">
         {if $mode eq 'input'}
         <td align="left">

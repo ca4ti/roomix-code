@@ -395,9 +395,9 @@ function saveNewCheckOut($smarty, $module_name, $local_templates_dir, &$pDB, &$p
 			 $mb_price	 = $mb_vat*(1+(strval($MiniBar['vat'])/100));
 			 $TT_MiniBar	 = $TT_MiniBar + $mb_price;
 			 $TT_MiniBar_v = $TT_MiniBar_v + ($mb_price - $mb_vat);
-			 $Billing_page = $Billing_page.Sale($MiniBar['label'], $QT, sprintf("%01.2f", $MiniBar['price']), sprintf("%01.2f",$mb_price - $mb_vat), sprintf("%01.2f", $mb_price), $curr);		 
-			 $Billing_page = $Billing_page."</tbody></table><br>";
-		}	
+			 $Billing_page = $Billing_page.Sale($MiniBar['label'], $QT, sprintf("%01.2f", $MiniBar['price']), sprintf("%01.2f",$mb_price - $mb_vat), sprintf("%01.2f", $mb_price), $curr);
+		}
+		$Billing_page = $Billing_page."</tbody></table><br>";	
 	 }
 	 else
 	 {

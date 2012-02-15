@@ -44,7 +44,6 @@ CREATE TABLE IF NOT EXISTS `config` (
   `logo64` mediumtext NOT NULL,
   `vat_1` decimal(5,2) NOT NULL default '19.60',
   `vat_2` decimal(5,2) NOT NULL default '5.50',
-  `rounded` tinyint(1) NOT NULL default '0',
   `mail` varchar(50) NOT NULL,
   `version` varchar(10) NOT NULL,
   UNIQUE KEY `o_m` (`o_m`)
@@ -92,7 +91,6 @@ CREATE TABLE IF NOT EXISTS `register` (
   `total_bar` decimal(12,2) NOT NULL,
   `total_call` decimal(12,2) NOT NULL,
   `total_billing` decimal(12,2) NOT NULL,
-  `remote_folio` varchar(255) NOT NULL,
   KEY `id` (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=latin1;
 

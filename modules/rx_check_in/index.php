@@ -77,6 +77,7 @@ function _moduleContent(&$smarty, $module_name)
             $content = saveNewCheckIn($smarty, $module_name, $local_templates_dir, $pDB, $pDB_Ast, $arrConf, $arrLang);
             break;
         case "save_edit":
+	     $_POST['booking'] = "on";
             $content = viewFormCheckIn($smarty, $module_name, $local_templates_dir, $pDB, $pDB_Ast, $arrConf, $arrLang);
             break;
         case "guest_id":
@@ -238,7 +239,6 @@ function saveNewCheckIn($smarty, $module_name, $local_templates_dir, &$pDB, &$pD
 
 	 		$arrGuestID 	= $pCheckIn->get_ID_Gest($conditions);
         		$GuestID 	= $arrGuestID[0];
-	 		$news_guest 	= "Guest already exist, ";
 
 	 if (!isset($GuestID)){
 		// New Guest

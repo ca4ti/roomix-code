@@ -136,8 +136,8 @@ function saveNewBookingStatus($smarty, $module_name, $local_templates_dir, &$pDB
     $oForm = new paloForm($smarty,$arrFormBookingStatus);
 
     $_DATA      = $_POST;
-    $date_start = $_DATA['date_start'];
-    $date_end   = $_DATA['date_end'];
+    $date_start = $_DATA['date_start']." 00:00:00";
+    $date_end   = $_DATA['date_end']." 23:59:59";
 
     if(!$oForm->validateForm($_POST)){
         // Validation basic, not empty and VALIDATION_TYPE 
@@ -164,7 +164,7 @@ function saveNewBookingStatus($smarty, $module_name, $local_templates_dir, &$pDB
         $smarty->assign("BOOKING","modules/$module_name/images/no_data.png");
     	 if (isset($arrBookingRooms[0])){
     	 	Booking_Cal($date_start,$date_end,$arrBookingRooms,"modules/$module_name/images/Booking.png","Booking Rooms Calendar",$today);
-    	 	$smarty->assign("BOOKING","modules/$module_name/images/Booking.png");
+    	 	$smarty->assign("BOOKING","<img src='modules/".$module_name."/images/Booking.png'>");
 	 }
 
     	 $htmlForm        = $oForm->fetchForm("$local_templates_dir/form.tpl",_tr("Booking Status"), $_DATA);
@@ -199,9 +199,18 @@ function createFieldForm()
     return $arrFields;
 }
 
+function date_diff($date1, $date2)  
+{
+ $s = strtotime($date2)-strtotime($date1);
+ $d = intval($s/86400)+1;  
+ return "$d";
+} 
+
 function Booking_Cal($date_start, $date_end, $booking_rooms, $files_graph, $Title, $today) {
 
-	$graph = new GanttGraph(0,0,"auto");
+	$dayNumber = date_diff($date_start, $date_end);
+
+	$graph = new GanttGraph(900);
 	$graph->SetMarginColor('blue:1.7');
 
 	$graph->SetColor('white');
@@ -215,15 +224,28 @@ function Booking_Cal($date_start, $date_end, $booking_rooms, $files_graph, $Titl
 	$graph->title->Set($Title);
 	$graph->title->SetColor('white');
 	//$graph->title->SetFont(FF_FONT1,FS_BOLD,14);
-
-	$graph->ShowHeaders(GANTT_HHOUR| GANTT_HDAY );
+	if ($dayNumber == 1 )
+		$graph->ShowHeaders(GANTT_HDAY | GANTT_HWEEK | GANTT_HMONTH );
+	if ($dayNumber >= 2 && $dayNumber < 7 )
+              $graph->ShowHeaders(GANTT_HHOUR| GANTT_HDAY | GANTT_HMONTH );
+	if ($dayNumber >= 8 && $dayNumber < 45 )
+              $graph->ShowHeaders(GANTT_HDAY | GANTT_HWEEK | GANTT_HMONTH );
+	if ($dayNumber >= 46 )
+              $graph->ShowHeaders(GANTT_HWEEK | GANTT_HMONTH );
 
 	$graph->scale->week->SetStyle(WEEKSTYLE_FIRSTDAY);
 	$graph->scale->week->SetFont(FF_FONT1);
 	$graph->scale->hour->SetIntervall(12);
 	$graph->scale->hour->SetStyle(HOURSTYLE_HM24);
-	$graph->scale->day->SetStyle(DAYSTYLE_LONGDAYDATE1);
-
+	if ($dayNumber == 1 )
+       	$graph->scale->day->SetStyle(DAYSTYLE_SHORTDATE4);
+	if ($dayNumber >= 2 && $dayNumber < 7 )
+		$graph->scale->day->SetStyle(DAYSTYLE_SHORTDAYDATE1);
+	if ($dayNumber >= 8 && $dayNumber < 40 )
+       	$graph->scale->day->SetStyle(DAYSTYLE_SHORTDATE4);
+	if ($dayNumber >= 41 )
+       	$graph->scale->day->SetStyle(DAYSTYLE_ONELETTER);
+		
 	$vline = new GanttVLine($today);
 	$vline->SetDayOffset(0.5);
 	$graph->Add($vline);
