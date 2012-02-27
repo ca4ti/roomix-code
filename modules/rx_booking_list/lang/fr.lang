@@ -28,8 +28,8 @@
   $Id: en.lang,v 1.1 2011-05-26 06:05:07 Franck Danard franckd@agmp.org Exp $ */
 global $arrLangModule;
 $arrLangModule=array(
-"Show Filter"		=> "Voir les Filter",
-"Hide Filter"		=> "Cacher les Filter",
+"Show Filter"		=> "Voir les Filtres",
+"Hide Filter"		=> "Cacher les Filtres",
 "Download"		=> "Télécharger",
 "Booking List" 	=> "Liste des Réservations",
 "Checkin" 		=> "Arrivée",

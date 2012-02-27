@@ -192,6 +192,25 @@ class paloSantoCheckIn {
         return $result[0]['ToDay'];
     }
 
+    function Check_CheckIn($room,$date_ci,$date_co)
+    {
+       $query    = "SELECT count(room_name) AS CheckIn FROM register 
+		      RIGHT JOIN `rooms` ON room_id  = rooms.id
+		      RIGHT JOIN `guest` ON guest_id = guest.id
+		      WHERE 
+		      room_id = '$room' AND
+		      date_ci <= '$date_co' AND
+		      date_co >= '$date_ci';";
+
+        $result=$this->_DB->fetchTable($query, true, "");
+
+        if($result==FALSE){
+            $this->errMsg = $this->_DB->errMsg;
+            return array();
+        }
+        return $result[0]['CheckIn'];
+    }
+
     function Check_Booking($room,$date_ci,$date_co)
     {
        $query    = "SELECT count(room_name) AS booking FROM booking 

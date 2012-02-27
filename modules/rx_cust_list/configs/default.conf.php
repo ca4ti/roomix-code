@@ -2,7 +2,7 @@
   /* vim: set expandtab tabstop=4 softtabstop=4 shiftwidth=4:
   Codificación: UTF-8
   +----------------------------------------------------------------------+
-  | Elastix version 2.0.0-18                                               |
+  | Elastix version 2.2.0-30                                               |
   | http://www.elastix.org                                               |
   +----------------------------------------------------------------------+
   | Copyright (c) 2006 Palosanto Solutions S. A.                         |
@@ -25,18 +25,15 @@
   | The Original Code is: Elastix Open Source.                           |
   | The Initial Developer of the Original Code is PaloSanto Solutions    |
   +----------------------------------------------------------------------+
-  $Id: en.lang,v 1.1 2010-03-28 08:03:53 Franck Danard franckd@agmp.org Exp $ */
-global $arrLangModule;
-$arrLangModule=array(
-"Home" 		=> "Accueil",
-"room" 		=> "Chambre",
-"Rooms Free"		=> "Chambres Libres",
-"Room Busy"		=> "Chambres Occupées",
-"Number of Rooms"	=> "Total de Chambres",
-"Booking Today"	=> "Réservations Aujourd'hui",
-"No Booking Today"	=> "Aucune Réservation Aujourd'hui",
-"Potentially full"   => "Potentiellement Complet!",
-"Full"   		=> "Complet!",
-"Intro"		=> "<big><big><big><big>RoomX</big></big></big></big><br>Le module Hôtel pour Elastix. <br>Version RC3 : ",
-);
+  $Id: default.conf.php,v 1.1 2012-02-22 04:02:36 Franck Danard franckd@agmp.org Exp $ */
+  $DocumentRoot = (isset($_SERVER['argv'][1]))?$_SERVER['argv'][1]:"/var/www/html";
+  require_once("$DocumentRoot/libs/misc.lib.php");
+    global $arrConf;
+    global $arrConfModule;
+
+    $arrConfModule['module_name']       = 'rx_cust_list';
+    $arrConfModule['templates_dir']     = 'themes';
+    //ex1: $arrConfModule['dsn_conn_database'] = "sqlite3:///$arrConf[elastix_dbdir]/base_name.db";
+    $arrConfModule['dsn_conn_database'] = "mysql://root:".obtenerClaveConocidaMySQL('root')."@localhost/roomx";
+    //$arrConfModule['dsn_conn_database'] = '';
 ?>

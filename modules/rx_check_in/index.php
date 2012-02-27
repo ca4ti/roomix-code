@@ -53,7 +53,6 @@ function _moduleContent(&$smarty, $module_name)
     global $arrConfModule;
     global $arrLang;
     global $arrLangModule;
-    global $guest_ID;
     $arrConf = array_merge($arrConf,$arrConfModule);
     $arrLang = array_merge($arrLang,$arrLangModule);
 
@@ -175,6 +174,7 @@ function viewFormCheckIn($smarty, $module_name, $local_templates_dir, &$pDB, &$p
     $smarty->assign("SRCIMG", "modules/".$module_name."/images");
     $smarty->assign("title",_tr("Check In"));
     $smarty->assign("icon","/modules/$module_name/images/icone.png");
+    $smarty->assign("booking_mode",$arrLang['booking mode']);
     
     $smarty->assign("BOOKING","<a style='text-decoration: none;' href='./index.php?menu=rx_booking_status'><button type='button'>".$arrLang['Show']."</button></a>");
 
@@ -193,10 +193,12 @@ function saveNewCheckIn($smarty, $module_name, $local_templates_dir, &$pDB, &$pD
     $_DATA = $_POST;
 
     $arrCheckBooking	= $pCheckIn->Check_Booking($_DATA['room'],$_DATA['date'],$_DATA['date_co']); 
+    $arrCheckCheckIn	= $pCheckIn->Check_CheckIn($_DATA['room'],$_DATA['date'],$_DATA['date_co']); 
+
     $smarty->assign("title",_tr("Check In"));
     $smarty->assign("icon","/modules/$module_name/images/icone.png");
 
-    if ($arrCheckBooking == 0){
+    if ($arrCheckBooking == 0 && $arrCheckCheckIn == 0 && $_DATA['room'] != "None"){
 
     if(!$oForm->validateForm($_POST)){
         // Validation basic, not empty and VALIDATION_TYPE 
@@ -253,101 +255,113 @@ function saveNewCheckIn($smarty, $module_name, $local_templates_dir, &$pDB, &$pD
 
         // Save all Datas into the table register. 
         //---------------------------------------------
-        $add_guest			  = 0;
-	 if ( $_DATA['num_guest'] == "on")
-        	$add_guest		  = 1;
-        $value_register['room_id']   = "'".$_DATA['room']."'";
-        $value_register['guest_id']  = "'".$GuestID['id']."'";
-        $value_register['date_ci']   = "'".$_DATA['date']."'";
-        $value_register['date_co']   = "'".$_DATA['date_co']."'";
-        $value_register['num_guest'] = "'".$add_guest."'";
-	 if ($_DATA['booking'] == "off"){
-        	$value_register['status']    = "'1'";
-        	$arrRegister 		  = $pCheckIn->insertQuery('register',$value_register);
-	 	}
-	 else
-	 	{
-		$arrRegister 		  = $pCheckIn->insertQuery('booking',$value_register);
-	 	}
-	 
-        // Update the room status (Free -> Busy)
-	 // Put the guest name into the room.
-        //---------------------------------------------
-	 if ($_DATA['booking'] == "off"){
-	 	$guest_name 			= str_replace("'","",$value_guest['first_name']." ".$value_guest['last_name']);
-       	$value_rooms['free'] 	= '0'; 
-        	$value_rooms['guest_name']  = "'".$guest_name."'";
-        	$where 			= "id = '".$_DATA['room']."'";
-        	$arrRegister 			= $pCheckIn->updateQuery('rooms',$value_rooms, $where);
-	 }
+	 if($GuestID['id'] != "" || $GuestID['id'] != 0){
+        	$add_guest			  = 0;
+	 	if ( $_DATA['num_guest'] == "on")
+        		$add_guest		  = 1;
+        	$value_register['room_id']   = "'".$_DATA['room']."'";
+        	$value_register['guest_id']  = "'".$GuestID['id']."'";
+        	$value_register['date_ci']   = "'".$_DATA['date']."'";
+        	$value_register['date_co']   = "'".$_DATA['date_co']."'";
+        	$value_register['num_guest'] = "'".$add_guest."'";
+	 	if ($_DATA['booking'] == "off"){
+        		$value_register['status']    = "'1'";
+        		$arrRegister 		  = $pCheckIn->insertQuery('register',$value_register);
+	 		}
+	 		else
+	 		{
+			$arrRegister 		  = $pCheckIn->insertQuery('booking',$value_register);
+	 		}
 
-	 // Update status table.
-	 //---------------------
-	 $free				= $pCheckIn->Free();				// Take all free rooms
-	 $busy				= $pCheckIn->Busy();				// Take all busy rooms
-	 $booking			= $pCheckIn->getBookingStatus();		// Take all booking of the day. 
+        	// Update the room status (Free -> Busy)
+	 	// Put the guest name into the room.
+        	//---------------------------------------------
+	 	if ($_DATA['booking'] == "off"){
+	 		$guest_name 			= str_replace("'","",$value_guest['first_name']." ".$value_guest['last_name']);
+       		$value_rooms['free'] 	= '0'; 
+        		$value_rooms['guest_name']  = "'".$guest_name."'";
+        		$where 			= "id = '".$_DATA['room']."'";
+        		$arrRegister 			= $pCheckIn->updateQuery('rooms',$value_rooms, $where);
+	 		}
 
-        $value_status['free']  	= strval($free);
-        $value_status['busy']   	= strval($busy);
-        $value_status['booking']   = strval($booking);
+	 	// Update status table.
+	 	//---------------------
+	 	$free				= $pCheckIn->Free();				// Take all free rooms
+	 	$busy				= $pCheckIn->Busy();				// Take all busy rooms
+	 	$booking			= $pCheckIn->getBookingStatus();		// Take all booking of the day. 
+
+        	$value_status['free']  	= strval($free);
+        	$value_status['busy']   	= strval($busy);
+        	$value_status['booking']    = strval($booking);
 	  
-	 $arrStatus	 		= $pCheckIn->UpdateStatus($value_status);	// At first, creating the day if not exist
-	 $arrStatus	 		= $pCheckIn->UpdateStatus($value_status);	// Next, re-sending request to update free, busy, and booking
+	 	$arrStatus	 		= $pCheckIn->UpdateStatus($value_status);	// At first, creating the day if not exist
+	 	$arrStatus	 		= $pCheckIn->UpdateStatus($value_status);	// Next, re-sending request to update free, busy, and booking
 
-	 // Take the rooms extension from id 
-        //---------------------------------------------
-        $where 			= "WHERE id = '".$_DATA['room']."'";
-        $arrRooms 			= $pCheckIn->getCheckIn('rooms',$where);
-        $Rooms 			= $arrRooms['0'];
+	 	// Take the rooms extension from id 
+        	//---------------------------------------------
+        	$where 			= "WHERE id = '".$_DATA['room']."'";
+        	$arrRooms 			= $pCheckIn->getCheckIn('rooms',$where);
+        	$Rooms 			= $arrRooms['0'];
 
-	 // Sending a R.A.C information
-	 //-------------------------------	
+	 	// Sending a R.A.C information
+	 	//-------------------------------	
 
-	 $Rac_Url			= $Rooms['RACI'];
-	 remoteActionControl($Rac_Url);
+	 	$Rac_Url			= $Rooms['RACI'];
+	 	remoteActionControl($Rac_Url);
 
-        // Modify the account code extension into Freepbx data
-        //---------------------------------------------
-	 if ($_DATA['booking'] == "off"){
-        	$value_rl['value']  	= "'true'";
-        	$where              	= "variable = 'need_reload';";
-        	$arrReload          	= $pCheckIn_Ast->updateQuery('admin',$value_rl, $where);
+        	// Modify the account code extension into Freepbx data
+        	//---------------------------------------------
+	 	if ($_DATA['booking'] == "off"){
+        		$value_rl['value']  	= "'true'";
+        		$where              	= "variable = 'need_reload';";
+        		$arrReload          	= $pCheckIn_Ast->updateQuery('admin',$value_rl, $where);
 
-        	$value_ac['data']   	= "'".$GuestID['id']."'";
-        	$where              	= "id = '".$Rooms['extension']."' and keyword = 'accountcode';";
-        	$arrAccount         	= $pCheckIn_Ast->updateQuery('sip',$value_ac, $where);
+        		$value_ac['data']   	= "'".$GuestID['id']."'";
+        		$where              	= "id = '".$Rooms['extension']."' and keyword = 'accountcode';";
+        		$arrAccount         	= $pCheckIn_Ast->updateQuery('sip',$value_ac, $where);
 
-        	$cmd			="/var/lib/asterisk/bin/module_admin reload";
-        	exec($cmd);
+        		$cmd			="/var/lib/asterisk/bin/module_admin reload";
+        		exec($cmd);
+	 		}
+
+        	// Unlock the extension 
+        	//---------------------------------------------
+	 	if ($_DATA['booking'] == "off"){
+	 		$cmd 			= "/usr/sbin/asterisk -rx 'database put LOCKED ".$Rooms['extension']." 0'";
+			exec($cmd);
+	 		}
+
+        	// Call Between rooms enabled or not.
+        	//---------------------------------------------
+        	$strMsg 			= $news_guest." ".$arrLang["Booking Done"];
+	 	if ($_DATA['booking'] == "off"){
+        		$where 		= "";
+        		$arrConfig 		= $pCheckIn->getCheckIn('config',$where);
+        		$arrAstDB 		= $arrConfig['0'];
+
+        		$cmd			= "/usr/sbin/asterisk -rx 'database put CBR ".$Rooms['extension']." ".$arrAstDB['cbr']."'";
+        		exec($cmd);
+
+        		$strMsg 		= $news_guest." ".$arrLang["Checkin Done"];
+	 		}
+	 	}
+	 	else 
+	 	{
+		$strMsg 			= $arrLang["Error during entering guest"];
 	 }
-
-        // Unlock the extension 
-        //---------------------------------------------
-	 if ($_DATA['booking'] == "off"){
-	 	$cmd 			= "/usr/sbin/asterisk -rx 'database put LOCKED ".$Rooms['extension']." 0'";
-		exec($cmd);
-	 }
-
-        // Call Between rooms enabled or not.
-        //---------------------------------------------
-        $strMsg 			= $news_guest." ".$arrLang["Booking Done"];
-	 if ($_DATA['booking'] == "off"){
-        	$where 		= "";
-        	$arrConfig 		= $pCheckIn->getCheckIn('config',$where);
-        	$arrAstDB 		= $arrConfig['0'];
-
-        	$cmd			= "/usr/sbin/asterisk -rx 'database put CBR ".$Rooms['extension']." ".$arrAstDB['cbr']."'";
-        	exec($cmd);
-
-        	$strMsg 		= $news_guest." ".$arrLang["Checkin Done"];
-	 }
-	 
         $smarty->assign("mb_message", $strMsg);
     }
     }
     else
     {
-    	$smarty->assign("mb_message", $arrLang["Already Booked"]);
+	if($_DATA['room']='None')
+		$msg	= $arrLang["No room available"];
+	if($arrCheckBooking > 0)
+		$msg	= $arrLang["Room already booked between"].$_DATA['date'].$arrLang["and"].$_DATA['date_co']."!!";
+	if($arrCheckCheckIn > 0)
+		$msg	= $arrLang["Room already busy between"].$_DATA['date'].$arrLang["and"].$_DATA['date_co']."!!";
+    	
+    	$smarty->assign("mb_message", $arrLang["Checking Failed because"].$msg);
     }
     $content 			= viewFormCheckIn($smarty, $module_name, $local_templates_dir, $pDB,$dDP_Ast, $arrConf, $arrLang);
     return $content;
@@ -380,7 +394,7 @@ function createFieldForm($arrLang, &$pDB)
     	$arrOptions[$value['id']] = $value['room_name'];
 
     if (!isset($value['room_name']))
-    	$arrOptions = array( '1' => $arrLang['No Room!'] );
+    	$arrOptions = array( 'None' => $arrLang['No Room!'] );
 
     $arrFields = array(
             "room"   => array(      "LABEL"                  => $arrLang["Room"],

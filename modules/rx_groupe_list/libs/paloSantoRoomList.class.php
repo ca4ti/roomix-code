@@ -2,7 +2,7 @@
   /* vim: set expandtab tabstop=4 softtabstop=4 shiftwidth=4:
   Codificación: UTF-8
   +----------------------------------------------------------------------+
-  | Elastix version 2.0.0-22                                               |
+  | Elastix version 2.0.0-18                                               |
   | http://www.elastix.org                                               |
   +----------------------------------------------------------------------+
   | Copyright (c) 2006 Palosanto Solutions S. A.                         |
@@ -25,12 +25,12 @@
   | The Original Code is: Elastix Open Source.                           |
   | The Initial Developer of the Original Code is PaloSanto Solutions    |
   +----------------------------------------------------------------------+
-  $Id: paloSantoCheckOut.class.php,v 1.1 2010-05-08 11:05:33 Franck Danard franckd@agmp.org Exp $ */
-class paloSantoCheckOut {
+  $Id: paloSantoRoomList.class.php,v 1.1 2010-04-18 07:04:21 Franck Danard franckd@agmp.org Exp $ */
+class paloSantoRoomList {
     var $_DB;
     var $errMsg;
 
-    function paloSantoCheckOut(&$pDB)
+    function paloSantoRoomList(&$pDB)
     {
         // Se recibe como parámetro una referencia a una conexión paloDB
         if (is_object($pDB)) {
@@ -51,39 +51,13 @@ class paloSantoCheckOut {
 
     /*HERE YOUR FUNCTIONS*/
 
-    function insertQuery($sTabla, $arrValores){
-	// call function construirInsert
-	$query = $this->_DB->construirInsert($sTabla, $arrValores) ;
-
-	// now execute the query with genQuery(fucntion of the paloSantoDB.class)
-	$result = $this->_DB->genQuery($query);
-
-	// catch the error
-	if($result==FALSE)
-         return false;
-         return true; 
-    }
-
-    function updateQuery($sTabla, $arrValores, $where){
-	// call function construirInsert
-	$query = $this->_DB->construirUpdate($sTabla, $arrValores, $where);
-
-	// now execute the query with genQuery(fucntion of the paloSantoDB.class)
-	$result = $this->_DB->genQuery($query);
-
-	// catch the error
-	if($result==FALSE)
-         return false;
-         return true; 
-    }
-
-    function getNumCheckOut($table, $filter_field, $filter_value)
+    function getNumRoomList($filter_field, $filter_value)
     {
         $where = "";
         if(isset($filter_field) & $filter_field !="")
             $where = "where $filter_field like '$filter_value%'";
 
-        $query   = "SELECT COUNT(*) FROM $table $where";
+        $query   = "SELECT COUNT(*) FROM rooms $where";
 
         $result=$this->_DB->getFirstRowQuery($query);
 
@@ -94,49 +68,13 @@ class paloSantoCheckOut {
         return $result[0];
     }
 
-    function getGroupCheckOut()
+    function getRoomList($limit, $offset, $filter_field, $filter_value)
     {
+        $where = "";
+        if(isset($filter_field) & $filter_field !="")
+            $where = "where $filter_field like '$filter_value%'";
 
-        $query = "SELECT DISTINCT groupe FROM `rooms` WHERE 1 ";
-
-        $result=$this->_DB->fetchTable($query, true);
-
-        if($result==FALSE){
-            $this->errMsg = $this->_DB->errMsg;
-            return 0;
-        }
-        return $result;
-    }
-
-    function getCheckOut($table, $where)
-    {
-
-        $query   = "SELECT * FROM $table $where";
-
-        $result=$this->_DB->fetchTable($query, true);
-        if($result==FALSE){
-            $this->errMsg = $this->_DB->errMsg;
-            return array();
-        }
-        return $result;
-    }
-
-    function getNightNumber($ci, $co, $id)
-    {
-        $query   = "SELECT DATEDIFF('".$co."','".$ci."') FROM `register` WHERE id ='".$id."'";
-
-        $result=$this->_DB->fetchTable($query, true);
-
-        if($result==FALSE){
-            $this->errMsg = $this->_DB->errMsg;
-            return array();
-        }
-        return $result[0];
-    }
-
-    function getCDR($where)
-    {
-        $query   = "SELECT `calldate`, `dst`, `billsec`, `dstchannel` FROM cdr $where";
+        $query   = "SELECT * FROM rooms $where LIMIT $limit OFFSET $offset";
 
         $result=$this->_DB->fetchTable($query, true);
 
@@ -147,9 +85,9 @@ class paloSantoCheckOut {
         return $result;
     }
 
-    function getCheckOutById($table, $id)
+    function getRoomListByName($name)
     {
-        $query = "SELECT * FROM $table WHERE id=$id";
+        $query = "SELECT id, extension FROM rooms WHERE `room_name` = '".$name."'";
 
         $result=$this->_DB->getFirstRowQuery($query,true);
 
@@ -158,48 +96,6 @@ class paloSantoCheckOut {
             return null;
         }
         return $result;
-    }
-
-    function loadCurrency()
-    {
-        $query = "SELECT * FROM settings WHERE key='currency'";
-        $result = $this->_DB->fetchTable($query, true);
-
-        if($result==FALSE){
-            $this->errMsg = $this->_DB->errMsg;
-            return false;
-        }
-
-        $result = $result[0];
-        $curr = $result['value'];
-
-        return $curr;
-    }
-
-    function loadRates()
-    {
-        $query = "select * from rate where estado = 'activo' and fecha_creacion <=  '".date('Y-m-d 00:00:00')."' order by  fecha_creacion desc";
-        $result = $this->_DB->fetchTable($query, true);
-
-        if($result==FALSE){
-            $this->errMsg = $this->_DB->errMsg;
-            return false;
-        }
-
-        return $result;
-    }
-
-    function load_Def_Rate()
-    {
-        $query = "select * from rate where name = 'Default' and estado = 'activo' and fecha_creacion <=  '".date('Y-m-d 00:00:00')."' order by fecha_creacion desc";
-        $result = $this->_DB->fetchTable($query, true);
-
-        if($result==FALSE){
-            $this->errMsg = $this->_DB->errMsg;
-            return false;
-        }
-
-        return $result[0];
     }
 
     function loadtrunk()
@@ -212,6 +108,44 @@ class paloSantoCheckOut {
             return false;
         }
 
+        return $result;
+    }
+
+    function getCDR($where)
+    {
+        $query   = "SELECT `calldate`, `dst`, `billsec`, `dstchannel` FROM cdr $where";
+        $result=$this->_DB->fetchTable($query, true);
+
+        if($result==FALSE){
+            $this->errMsg = $this->_DB->errMsg;
+            return array();
+        }
+        return $result;
+    }
+
+    function getRegisterByRoomId($id)
+    {
+        $query = "SELECT * FROM `register` WHERE `room_id` = '".$id."' AND `status` = '1'";
+
+        $result=$this->_DB->getFirstRowQuery($query,true);
+
+        if($result==FALSE){
+            $this->errMsg = $this->_DB->errMsg;
+            return null;
+        }
+        return $result;
+    }
+
+    function getRoomListById($id)
+    {
+        $query = "SELECT * FROM rooms WHERE id=$id";
+
+        $result=$this->_DB->getFirstRowQuery($query,true);
+
+        if($result==FALSE){
+            $this->errMsg = $this->_DB->errMsg;
+            return null;
+        }
         return $result;
     }
 }

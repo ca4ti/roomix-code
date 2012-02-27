@@ -77,6 +77,37 @@ function _moduleContent(&$smarty, $module_name)
     return $content;
 }
 
+function update_cbr($value, $module_name)
+{
+    include_once "modules/$module_name/libs/phpagi-asmanager.php";
+    $asm = new AGI_AsteriskManager();
+
+    if($asm->connect())
+	{
+	$arrCBR = $asm->command("DATABASE SHOW CBR");
+    	if(!strpos($arrCBR['data'], ':'))
+		$result = 0;
+    	else
+    	{
+      		$data = array();
+      		foreach(explode("\n", $arrCBR['data']) as $line)
+      		{
+        		$a = strpos('z'.$line, ':') - 1;
+        		if($a >= 0) $data[trim(substr($line, 0, $a))] = trim(substr($line, $a + 1));
+      		}
+
+		foreach($data as $family => $value_data)
+		{
+			$family = str_replace("/"," ",$family);
+			if($family != 'Privilege')
+				$arrCBR = $asm->command("DATABASE put $family $value");
+		} 
+		$result = 1;
+    	}
+    }    
+return $result;
+}
+
 function viewFormGeneral($smarty, $module_name, $local_templates_dir, &$pDB, $arrConf, $arrLang)
 {
     $pGeneral = new paloSantoGeneral($pDB);
@@ -208,6 +239,8 @@ function saveNewGeneral($smarty, $module_name, $local_templates_dir, &$pDB, $arr
 	 $cbr		= "0";
         if ($_DATA["calling_between_rooms"] == "on")
 	 	$cbr	= "1";
+
+	 update_cbr($cbr,$module_name);
 
 	 $rmbc		= "0";
         if ($_DATA["rmbc"] == "on")

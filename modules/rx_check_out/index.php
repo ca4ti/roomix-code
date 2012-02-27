@@ -433,7 +433,7 @@ function saveNewCheckOut($smarty, $module_name, $local_templates_dir, &$pDB, &$p
 						{
 						$price_rate = (($value_cdr['billsec'] /60) * $arrDef_Rate['rate'] ) + $arrDef_Rate['rate_offset'];
 						$price_rate = intval($price_rate*100)/100;
-						$idx_rate   = 0;
+						$idx_rate   = $arrDef_Rate['id'];
 						}
 					}
 				$Total_Calls = $Total_Calls + $price_rate;
@@ -476,7 +476,7 @@ function saveNewCheckOut($smarty, $module_name, $local_templates_dir, &$pDB, &$p
 						{
 						$price_rate = (($value_cdr['billsec'] / 60) * $arrDef_Rate['rate']) + $arrDef_Rate['rate_offset'];
 						$price_rate = intval($price_rate*100)/100;
-						$idx_rate   = 0;
+						$idx_rate   = $arrDef_Rate['id'];
 						}
 				}
 
@@ -517,7 +517,7 @@ function saveNewCheckOut($smarty, $module_name, $local_templates_dir, &$pDB, &$p
 						{
 						$price_rate = ($value_cdr['billsec'] * ($arrDef_Rate['rate'] / 60)) + $arrDef_Rate['rate_offset'];
 						$price_rate = intval($price_rate*100)/100;
-						$idx_rate   = 0;
+						$idx_rate   = $arrDef_Rate['id'];
 						}
 				}
 				$Total_Calls    = $Total_Calls + $price_rate;
