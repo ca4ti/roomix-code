@@ -93,6 +93,14 @@ function saveAddRoom($smarty, $module_name, $local_templates_dir, &$pDB, &$pDBM,
        $_DATA 		= $_POST;
 	$r_selected		= $_DATA['room'];
 
+    	// Check if one or more models exist.
+    	//----------------------------------
+    	$t_model		= $pRoomX->countModel();
+    	if ($t_model['model'] = 0){    		
+		$smarty->assign("mb_message", $arrLang["No model setted!!"]);
+	}
+	else
+	{
        foreach($r_selected as $key => $value)
 	{
        	$room_idx 		    = $pFreePBX -> getAddRoom('','','extension',$value);
@@ -128,7 +136,9 @@ function saveAddRoom($smarty, $module_name, $local_templates_dir, &$pDB, &$pDBM,
 			$where 		= "id = ".$arrRoomExist['id'];
 			$save_rooms 		= $pRoomX->updateQuery('rooms',$arrValores, $where);
 		}
+    	}
     }
+   
 
     //$content = "<b>".count($r_selected)." rooms has been added / modified"."</b>";
     //return $content;
@@ -255,7 +265,7 @@ function saveAddRoom($smarty, $module_name, $local_templates_dir, &$pDB, &$pDBM,
         $content = "<form  method='POST' style='margin-bottom:0;' action=\"$url\">".$oGrid->fetchGrid($arrGrid, $arrData,$arrLang)."</form>";
     }
     //end grid parameters
-
+    
     return $content;
 }
 
@@ -436,6 +446,12 @@ function reportAddRoom($smarty, $module_name, $local_templates_dir, &$pDB, &$pDB
     $pAddRoom = new paloSantoAddRoom($pDB);
     $pAddRoomModel = new paloSantoModel($pDBM);
     $_DATA = $_POST;
+
+    // Check if one or more models exist.
+    //----------------------------------
+    $t_model		= $pAddRoomModel->countModel();
+    if ($t_model['model'] = 0)
+    	$smarty->assign("mb_message", $arrLang["No model setted!!"]);
 
     $filter_field = getParameter("filter_field");
     $filter_value = getParameter("filter_value");

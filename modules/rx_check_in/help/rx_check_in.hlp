@@ -30,8 +30,10 @@ These informations are saved in RoomX database, into the table: guest.<br>
 When check-in is done, you have this information: <i>Guest already exist, Check-in Done</i> . Like
 During entering from <b>last name</b> field, you have a list of guests begining by the first characters entered.<br><br>
 <br>
-Additional Guest, is used in the case where you have a kid, or another person into the room.
-Booking check box is here for book room.
+Additional Guest, is used in the case where you have a kid, or another person into the room.<br>
+<b>Booking</b> check box is here to book a room if you are into check-in menu.<br>
+<b>Booking Mode</b> display all room into the combo list to be able to book room. You are out of check-in mode. 
+
 		</td>
             </tr>
         </table>
@@ -60,7 +62,8 @@ Ces informations sont sauv&eacute;es dans la base de donn&eacute;es roomx, dans 
 Quand l'Entr&eacute;e est effectu&eacute;e, vous avez l'information: 
 <i>Entr&eacute;e effectu&eacute;e.</i><br><br>
 Personne suppl&eacute;mentaire, est utilis&eacute; dans le cas o&ugrave; vous avez un enfant, ou une autre personne dans la chambre.
-Case &agrave; cocher r&eacute;servation est ici pour r&eacute;server une chambre.
+Case &agrave; cocher <b>R&eacute;servation</b> est ici pour r&eacute;server une chambre.<br>
+<b>Mode r&eacute;servation</b> affiche toutes les chambres dans la liste pour pouvoir r&eacute;server une chambre. Vous n'&ecirc;tes plus en mode check-in.
 <br><br>
 Pendant l'entr&eacute;e du champ <b>nom</b>, vous avez une liste de clients commen&ccedil;ant par les premiers caract&egrave;res entr&eacute;s.<br>
 		</td>

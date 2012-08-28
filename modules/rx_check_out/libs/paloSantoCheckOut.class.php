@@ -136,7 +136,7 @@ class paloSantoCheckOut {
 
     function getCDR($where)
     {
-        $query   = "SELECT `calldate`, `dst`, `billsec`, `dstchannel` FROM cdr $where";
+        $query   = "SELECT `calldate`, `dst`, `billsec`, `dstchannel`, `lastdata`  FROM cdr $where";
 
         $result=$this->_DB->fetchTable($query, true);
 
@@ -178,7 +178,8 @@ class paloSantoCheckOut {
 
     function loadRates()
     {
-        $query = "select * from rate where estado = 'activo' and fecha_creacion <=  '".date('Y-m-d 00:00:00')."' order by  fecha_creacion desc";
+        $query = "select * from rate where prefix != '' and estado = 'activo' and fecha_creacion <=  '".date('Y-m-d H:i:s')."'";
+
         $result = $this->_DB->fetchTable($query, true);
 
         if($result==FALSE){
@@ -191,7 +192,7 @@ class paloSantoCheckOut {
 
     function load_Def_Rate()
     {
-        $query = "select * from rate where name = 'Default' and estado = 'activo' and fecha_creacion <=  '".date('Y-m-d 00:00:00')."' order by fecha_creacion desc";
+        $query = "select * from rate where name = 'Default' and estado = 'activo' and fecha_creacion <=  '".date('Y-m-d H:i:s')."'";
         $result = $this->_DB->fetchTable($query, true);
 
         if($result==FALSE){

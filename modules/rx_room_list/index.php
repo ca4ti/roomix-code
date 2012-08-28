@@ -29,6 +29,7 @@
 //include elastix framework
 include_once "libs/paloSantoGrid.class.php";
 include_once "libs/paloSantoForm.class.php";
+include_once "libs/paloSantoJSON.class.php";
 
 function _moduleContent(&$smarty, $module_name)
 {
@@ -63,16 +64,63 @@ function _moduleContent(&$smarty, $module_name)
     $pDB_CDR = new paloDB("mysql://root:".obtenerClaveConocidaMySQL('root')."@localhost/asteriskcdrdb");
 
     //actions
-    $action   = getAction();
+    $action   	= getAction();
+    $Exten		= getParameter("Who");
+    $DND_Status 	= getParameter("DND_St");
+    $CLEAN_Status 	= getParameter("CLEAN_St");
 
     $content = "";
 
     switch($action){
+	 case "dnd_status":
+            $content = SendDNDStatus($Exten, $DND_Status);
+	     break;	
+	 case "clean_status":
+            $content = SendCleanStatus($pDB, $Exten, $CLEAN_Status);
+	     break; 
         default:
             $content = reportRoomList($smarty, $module_name, $local_templates_dir, $pDB, $pDB_Trk, $pDB_CDR, $arrConf, $arrLang);
             break;
     }
     return $content;
+}
+
+function SendDNDStatus($Exten, $DND_Status)
+{
+    $jsonObject      = new PaloSantoJSON();
+    $msgResponse     = "ERROR";
+
+    $cmd1 = "asterisk -rx 'database put DND ".$Exten." YES'";
+    $cmd2 = "asterisk -rx 'devstate change Custom:DND".$Exten." INUSE'";
+    if ( $DND_Status == "NO"){
+    	$cmd1 = "asterisk -rx 'database del DND ".$Exten."'";
+	$cmd2 = "asterisk -rx 'devstate change Custom:DND".$Exten." NOT_INUSE'";
+    }
+    if(isset($Exten) && isset($DND_Status)){
+    	exec($cmd1);
+    	exec($cmd2);
+	$msgResponse	= "OK";
+    }
+
+    $jsonObject->set_message($msgResponse);
+    return $jsonObject->createJSON();
+}
+
+function SendCleanStatus($pDB, $extension, $Clean_Status)
+{
+    $jsonObject          = new PaloSantoJSON();
+    $pRoomList 	    = new paloSantoRoomList($pDB);
+    $msgResponse	    = "ERROR";
+    $arrValores['clean'] = "'0'";
+    if($Clean_Status == "YES")
+    	$arrValores['clean'] = "'1'";
+
+    $Ext_Clean	    = $pRoomList->updateQuery("rooms", $arrValores, "extension = '".$extension."'");
+
+    if($Ext_Clean == true)
+	$msgResponse	    = "OK";
+    $jsonObject->set_message($msgResponse);
+    return $jsonObject->createJSON();
 }
 
 function findCalls($extension, $date_ci, $guest_id, $pDB, $pDB_Trk, $pDB_CDR, $arrConf)
@@ -94,9 +142,9 @@ function findCalls($extension, $date_ci, $guest_id, $pDB, $pDB_Trk, $pDB_CDR, $a
 			$misdn_t = "dstchannel LIKE '%mISDN%' OR ";
 		if(substr($trunk,0,strlen('CAPI')) == 'CAPI')
 			$capi_t  = "dstchannel LIKE '%CAPI%' OR ";
-		$condition = "substr(cdr.dstchannel,1,length('$trunk')) = '".$trunk."'";
+		$condition = "lastdata LIKE '%".$trunk."%'";
 		if( $key_trk < (count($arrTrk)-1)){
-			$condition = "substr(cdr.dstchannel,1,length('$trunk')) = '".$trunk."' OR ";
+			$condition = "lastdata LIKE '%".$trunk."%' OR ";
 		}
 		$dst_info = $dst_info.$condition;
 	 }
@@ -140,8 +188,8 @@ function reportRoomList($smarty, $module_name, $local_templates_dir, &$pDB, $pDB
     $arrData = null;
 
     $arrResult =$pRoomList->getRoomList($limit, $offset, $filter_field, $filter_value);
-    $enable  = "<img src='modules/".$module_name."/images/1.png'>";
-    $disable = "<img src='modules/".$module_name."/images/0.png'>";
+    $enable  = "/images/1.png";
+    $disable = "/images/0.png";
 
     $ok  = array("0" => $disable, "1" => $enable);
 
@@ -163,14 +211,28 @@ function reportRoomList($smarty, $module_name, $local_templates_dir, &$pDB, $pDB
 
     	    // DND is YES ?
     	    //-------------
-    	    $dnd = "<img src='modules/".$module_name."/images/dnd.png'>";
-
-    	    $cmd = "asterisk -rx 'database show DND ".$value['extension']."' | grep YES ";
 	    $details 	= $value['room_name'];
 	    $ext	= $value['extension'];
+    	    $cmd 	= "asterisk -rx 'database show DND ".$value['extension']."' | grep YES ";
+
+    	    $dnd 	= "<div id='dnd".$value['extension']."'>
+		     	   <img src='modules/".$module_name."/images/dnd.png' onclick='dnd_status(\"".$value['extension']."\",\"NO\")'>
+		     	   </div>";
     	    if (!exec($cmd))
-    		$dnd = "<img src='modules/".$module_name."/images/d.png'>";
-    	    $id_room	 = $pRoomList->getRoomListByName($details);
+    		$dnd 	= "<div id='dnd".$value['extension']."'>
+			   <img src='modules/".$module_name."/images/d.png' onclick='dnd_status(\"".$value['extension']."\",\"YES\")'>
+			   </div>";
+
+           $clean 		= "<div id='clean".$value['extension']."'>
+			 	   <img src='modules/".$module_name.$ok[$value['clean']]."' onclick='clean_status(\"".$value['extension']."\",\"NO\")'>
+		                 </div>";
+	    if ($value['clean'] == 0){
+           	$clean 	= "<div id='clean".$value['extension']."'>
+			 	   <img src='modules/".$module_name.$ok[$value['clean']]."' onclick='clean_status(\"".$value['extension']."\",\"YES\")'>
+		                 </div>";
+	    }
+
+    	    $id_room	 	= $pRoomList->getRoomListByName($details);
     	    $Register_Det	= $pRoomList->getRegisterByRoomId($id_room['id']);
            $Add_Guest	= $Register_Det['num_guest'];
 	    $nb_calls		= findCalls($id_room['extension'], $Register_Det['date_ci'], $Register_Det['guest_id'],$pDB, $pDB_Trk, $pDB_CDR, $arrConf);
@@ -192,8 +254,8 @@ function reportRoomList($smarty, $module_name, $local_templates_dir, &$pDB, $pDB
 	    $arrTmp[3] 	= $value['extension']." ".$warning;
 	    $arrTmp[4] 	= $value['model'];
 	    $arrTmp[5] 	= $value['groupe'];
-	    $arrTmp[6] 	= $ok[$value['free']];
-	    $arrTmp[7] 	= $ok[$value['clean']];
+	    $arrTmp[6] 	= "<img src='modules/".$module_name.$ok[$value['free']]."'>";
+	    $arrTmp[7] 	= $clean;
 	    $arrTmp[8] 	= $minibar;
 	    $arrTmp[9] 	= $dnd;
            $arrData[] 	= $arrTmp;
@@ -305,6 +367,10 @@ function getAction()
         return "view_form";
     else if(getParameter("action")=="view_edit")
         return "view_form";
+    else if(getParameter("action")=="DND")
+        return "dnd_status";
+    else if(getParameter("action")=="CLEAN")
+        return "clean_status";
     else
         return "report"; //cancel
 }

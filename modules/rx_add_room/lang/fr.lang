@@ -39,5 +39,6 @@ $arrLangModule=array(
 "Delete" 		=> "Effacer",
 "Search" 		=> "Recherche",
 "Show" 		=> "Filtrer",
+"No model setted!!"  => "Aucun model paramétré!!",
 );
 ?>

@@ -39,5 +39,6 @@ $arrLangModule=array(
 "Delete" 		=> "Delete",
 "Search"		=> "Search",
 "Show"			=> "Show",
+"No model setted!!"  => "No model setted!!",
 );
 ?>

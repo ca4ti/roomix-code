@@ -85,21 +85,12 @@ function viewFormHome($smarty, $module_name, $local_templates_dir, &$pDB, $arrCo
     // Moving context file at first using.
     //------------------------------------
     $context	= "modules/rx_general/extensions_roomx.conf";
-    if (file_exists($context)){
-	    // Replacing the default password. 
-           //--------------------------------
-	    $cmd = "sed -i 's|eLaStIx.2oo7|".obtenerClaveConocidaMySQL('root')."|' modules/rx_general/extensions_roomx.conf";
-	    exec($cmd);
-        $cmd="mv /var/www/html/".$context." /etc/asterisk/";
-	    exec($cmd);
-        $cmd="chown asterisk:asterisk /etc/asterisk/extensions_roomx.conf";
-	    exec($cmd);
-	}
 
     //begin, Form data persistence to errors and other events.
     $_DATA  = $_POST;
     $action = getParameter("action");
     $id     = getParameter("id");
+
     $smarty->assign("ID", $id); 		//persistence id with input hidden in tpl
     $smarty->assign("Rooms_Free", $arrLang["Rooms Free"]);
     $smarty->assign("Rooms_Busy", $arrLang["Room Busy"]);

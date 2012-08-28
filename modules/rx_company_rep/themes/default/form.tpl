@@ -32,6 +32,8 @@
     </tr>
 
 </table>
-<div align="Left">{$Comments}</div>
-<div align="Center"><br><img src="{$CheckInOutGraph}"></div>
+{if $Comments neq ''}
+	<div align="left" class="ReportBox">{$Comments}</div>
+	<div align="Center"><br><img src="{$CheckInOutGraph}"></div>
+{/if}
 <input class="button" type="hidden" name="id" value="{$ID}" />

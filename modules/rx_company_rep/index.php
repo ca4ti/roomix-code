@@ -96,6 +96,11 @@ function viewFormCompanyReport($smarty, $module_name, $local_templates_dir, &$pD
     $id     = getParameter("id");
     $smarty->assign("ID", $id); //persistence id with input hidden in tpl
 
+    if ( $_DATA['date_start'] == "" && $_DATA['date_end'] == ""){
+    	$_DATA['date_start'] = date("Y-m-d");
+    	$_DATA['date_end'] = date("Y-m-d");
+    }
+
     if($action=="view")
         $oForm->setViewMode();
     else if($action=="view_edit" || getParameter("save_edit"))
@@ -138,6 +143,11 @@ function saveNewCompanyReport($smarty, $module_name, $local_templates_dir, &$pDB
 
     $date_start = $_DATA['date_start'];
     $date_end = $_DATA['date_end'];
+
+    if ( $_DATA['date_start'] == "" && $_DATA['date_end'] == ""){
+    	$_DATA['date_start'] = date("Y-m-d");
+    	$_DATA['date_end'] = date("Y-m-d");
+    }
 
     $smarty->assign("SAVE", _tr("Save"));
     $smarty->assign("EDIT", _tr("Edit"));
@@ -188,8 +198,8 @@ function saveNewCompanyReport($smarty, $module_name, $local_templates_dir, &$pDB
 	
 		}
 
-		$Comments = "<br>- ".$arrLang["Total Check-In for this period : "].array_sum($data_y_co)."<br>- ".
-			     $arrLang["Total Check-Out for this period : "].array_sum($data_y_co)."<br>";
+		$Comments = "<br><ul><li><b> ".$arrLang["Total Check-In for this period : "]."</b>".array_sum($data_y_co)."<br><li><b> ".
+			     $arrLang["Total Check-Out for this period : "]."</b>".array_sum($data_y_co)."</ul><br>";
 
 		CreateTwinGraph($data_x_ci,$data_y_ci,$data_x_co,$data_y_co,"modules/$module_name/images/Graph.png","CheckIn / Out by Day","","","Checkin","Checkout");
 		$smarty->assign("CheckInOutGraph","modules/$module_name/images/Graph.png");
@@ -214,7 +224,7 @@ function saveNewCompanyReport($smarty, $module_name, $local_templates_dir, &$pDB
 
 			}	
 		}
-		$Comments = "<br>- ".$arrLang["Total price of rooms for this period : "].array_sum($data_y)." ".$curr."<br>";
+		$Comments = "<br><ul><li><b> ".$arrLang["Total price of rooms for this period : "]."</b>".array_sum($data_y)." ".$curr."</ul><br>";
 
 		CreateCkeckGraph($data_x,$data_y,"modules/$module_name/images/Graph.png", "Sum of Rooms  by Day", "", "");
 		$smarty->assign("CheckInOutGraph","modules/$module_name/images/Graph.png");
@@ -238,7 +248,7 @@ function saveNewCompanyReport($smarty, $module_name, $local_templates_dir, &$pDB
 
 			}	
 		}
-		$Comments = "<br>- ".$arrLang["Total price of calls for this period : "].array_sum($data_y)." ".$curr."<br>";
+		$Comments = "<br><ul><li><b> ".$arrLang["Total price of calls for this period : "]."</b>".array_sum($data_y)." ".$curr."</ul><br>";
 
 		CreateCkeckGraph($data_x,$data_y,"modules/$module_name/images/Graph.png", "Sum of Calls by Day", "", "");
 		$smarty->assign("CheckInOutGraph","modules/$module_name/images/Graph.png");
@@ -263,7 +273,7 @@ function saveNewCompanyReport($smarty, $module_name, $local_templates_dir, &$pDB
 			}	
 		}
 
-		$Comments = "<br>- ".$arrLang["Total price of Bar for this period : "].array_sum($data_y)." ".$curr."<br>";
+		$Comments = "<br><ul><li><b> ".$arrLang["Total price of Bar for this period : "]."</b>".array_sum($data_y)." ".$curr."</ul><br>";
 
 		CreateCkeckGraph($data_x,$data_y,"modules/$module_name/images/Graph.png", "Sum of Bar by Day", "", "");
 		$smarty->assign("CheckInOutGraph","modules/$module_name/images/Graph.png");
@@ -288,7 +298,7 @@ function saveNewCompanyReport($smarty, $module_name, $local_templates_dir, &$pDB
 			}	
 		}
 
-		$Comments = "<br>- ".$arrLang["Total price of Billings for this period : "].array_sum($data_y)." ".$curr."<br>";
+		$Comments = "<br><ul><li><b> ".$arrLang["Total price of Billings for this period : "]."</b>".array_sum($data_y)." ".$curr."</ul><br>";
 
 		CreateCkeckGraph($data_x,$data_y,"modules/$module_name/images/Graph.png", "Sum Billing by Day", "", "");
 		$smarty->assign("CheckInOutGraph","modules/$module_name/images/Graph.png");

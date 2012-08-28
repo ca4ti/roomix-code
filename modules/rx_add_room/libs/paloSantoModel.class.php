@@ -80,6 +80,18 @@ class paloSantoModel {
         return $result;
     }
 
+    function countModel()
+    {
+        $query   = "SELECT count(room_model) as model FROM models";
+        $result=$this->_DB->fetchTable($query, true);
+
+        if($result==FALSE){
+            $this->errMsg = $this->_DB->errMsg;
+            return array();
+        }
+        return $result[0];
+    }
+
     function get_Room($table, $where)
     {
         $query   = "SELECT * FROM $table $where";

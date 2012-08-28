@@ -1,0 +1,11 @@
+.ReportBox {
+		position: relative;
+		left: 30px;
+		margin: 0px 0px 0px 0px;
+		width: 560px;
+		background-color: #FFFFCC;
+		-moz-border-radius: 7px;
+		-webkit-border-radius: 7px;
+		border: 1px solid #DDD;	
+		color: #000;
+		}

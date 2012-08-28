@@ -29,6 +29,7 @@
 
 include_once "libs/paloSantoGrid.class.php";
 include_once "libs/paloSantoForm.class.php";
+include_once "libs/paloSantoCDR.class.php";
 
 function _moduleContent(&$smarty, $module_name)
 {
@@ -132,6 +133,7 @@ function viewFormCheckOut($smarty, $module_name, $local_templates_dir, &$pDB, &$
 function remoteActionControl($url)
 {
 	if(isset($url)){
+echo $url;
 		$rac 		= fopen($url, "r");
 		$getRac 	= fread($rac,1024);
 		fclose($rac);
@@ -149,6 +151,19 @@ function TimeCall($second)
 		$result = $time[1]." m ".$time[2]." s";
        return $result;
 }
+
+function vm_clean($Ext)
+    {
+        $errMsg = '';
+        $cmd = "/usr/bin/elastix-helper vm_clean ".$Ext." 2>&1";
+        $output = $ret = NULL;
+        exec($cmd, $output, $ret);
+        if ($ret != 0) {
+            $errMsg = implode('', $output);
+            return FALSE;
+        }
+        return TRUE;
+    } 
 
 function saveNewCheckOut($smarty, $module_name, $local_templates_dir, &$pDB, &$pDB_Ast, &$pDB_CDR, &$pDB_Set, &$pDB_Rat, &$pDB_Trk, $arrConf, $arrLang)
 {
@@ -259,7 +274,7 @@ function saveNewCheckOut($smarty, $module_name, $local_templates_dir, &$pDB, &$p
         $cmd 		 	= "/usr/sbin/asterisk -rx 'database del DND ".$arrExt['extension']."'";
         exec($cmd);
 
-        // Delete the account code extension into Freepbx data
+        // Delete account code extension into Freepbx data
         //----------------------------------------------------
         $value_rl['value']  = "'true'";
         $where              = "variable = 'need_reload';";
@@ -271,6 +286,11 @@ function saveNewCheckOut($smarty, $module_name, $local_templates_dir, &$pDB, &$p
 
         $cmd="/var/lib/asterisk/bin/module_admin reload";
         exec($cmd);
+
+	 // Delete voicemail 
+	 //-----------------
+
+	 vm_clean($arrExt['extension']);
 
         // Find any room calls
         //---------------------------------------------
@@ -291,9 +311,9 @@ function saveNewCheckOut($smarty, $module_name, $local_templates_dir, &$pDB, &$p
 			$misdn_t = "dstchannel LIKE '%mISDN%' OR ";
 		if(substr($trunk,0,strlen('CAPI')) == 'CAPI')
 			$capi_t  = "dstchannel LIKE '%CAPI%' OR ";
-		$condition = "substr(cdr.dstchannel,1,length('$trunk')) = '".$trunk."'";
+		$condition = "lastdata LIKE '%".$trunk."%'";
 		if( $key_trk < (count($arrTrk)-1)){
-			$condition = "substr(cdr.dstchannel,1,length('$trunk')) = '".$trunk."' OR ";
+			$condition = "lastdata LIKE '%".$trunk."%' OR ";
 		}
 		$dst_info = $dst_info.$condition;
 	 }
@@ -319,9 +339,9 @@ function saveNewCheckOut($smarty, $module_name, $local_templates_dir, &$pDB, &$p
 
         if (!exec($cmd))
 		$strMsg .= "<br><img src='modules/".$module_name."/images/warning.png'><br>".$arrLang['Warning'];
-	 // Write the billing into the html file. 
-        //---------------------------------------------
 
+	 // Write the billing into the html file. 
+        //-------------------------------------
         $arrConf   = $pCheckOut->getCheckOut('config', '');
         $Config    = $arrConf['0'];
 
@@ -422,12 +442,12 @@ function saveNewCheckOut($smarty, $module_name, $local_templates_dir, &$pDB, &$p
 				for ($Scan_Rate = 0; $Scan_Rate < count($arrRate); $Scan_Rate++)
 					{
 					if (substr($value_cdr['dst'],0,strlen($arrRate[$Scan_Rate]['prefix'])) == $arrRate[$Scan_Rate]['prefix'] && 
-					    substr($value_cdr['dstchannel'],0,strlen($arrRate[$Scan_Rate]['trunk'])) == $arrRate[$Scan_Rate]['trunk'])
+					    substr($value_cdr['lastdata'],0,strlen($arrRate[$Scan_Rate]['trunk'])) == $arrRate[$Scan_Rate]['trunk'])
 						{
 						$price_rate = (($value_cdr['billsec'] / 60) * $arrRate[$Scan_Rate]['rate']) + $arrRate[$Scan_Rate]['rate_offset'];
 						$price_rate = intval($price_rate*100)/100;
 						$idx_rate   = $Scan_Rate;
-						$Scan_Rate  = count($arrRate);
+						break;
 						}
 					else
 						{
@@ -459,18 +479,18 @@ function saveNewCheckOut($smarty, $module_name, $local_templates_dir, &$pDB, &$p
 				$billingsec = $value_cdr['billsec'];
 				if ($arrLock['rounded'] == "1" && intval($value_cdr['billsec']/60) < ($value_cdr['billsec']/60) )
 					$value_cdr['billsec'] = (1 + intval($value_cdr['billsec']/60))*60;
-					
+
 				for ($Scan_Rate = 0; $Scan_Rate < count($arrRate); $Scan_Rate++)
 				{
-					// Compare if the called num is matched with a prefix, at 0 to the number of prefix digits.
-					//-----------------------------------------------------------------------------------------
+					// Compare if the called num is matched with a prefix, from first position
+					//------------------------------------------------------------------------
 					if (substr($value_cdr['dst'],0,strlen($arrRate[$Scan_Rate]['prefix'])) == $arrRate[$Scan_Rate]['prefix'] && 
-					    substr($value_cdr['dstchannel'],0,strlen($arrRate[$Scan_Rate]['trunk'])) == $arrRate[$Scan_Rate]['trunk'])
+					    substr($value_cdr['lastdata'],0,strlen($arrRate[$Scan_Rate]['trunk'])) == $arrRate[$Scan_Rate]['trunk'])
 						{
 						$price_rate = (($value_cdr['billsec'] / 60) * $arrRate[$Scan_Rate]['rate']) + $arrRate[$Scan_Rate]['rate_offset'];
 						$price_rate = intval($price_rate*100)/100;
 						$idx_rate   = $Scan_Rate;
-						$Scan_Rate  = count($arrRate);
+						break;
 						}
 					else
 						{
@@ -479,7 +499,6 @@ function saveNewCheckOut($smarty, $module_name, $local_templates_dir, &$pDB, &$p
 						$idx_rate   = $arrDef_Rate['id'];
 						}
 				}
-
 
 				$Total_Calls    = $Total_Calls + $price_rate;
 				$Total_Call_VAT = $Total_Calls / (1+(strval($Config['vat_1'])/100));
@@ -506,12 +525,12 @@ function saveNewCheckOut($smarty, $module_name, $local_templates_dir, &$pDB, &$p
 				for ($Scan_Rate = 0; $Scan_Rate < count($arrRate); $Scan_Rate++)
 				{
 					if (substr($value_cdr['dst'],0,strlen($arrRate[$Scan_Rate]['prefix'])) == $arrRate[$Scan_Rate]['prefix'] && 
-					    substr($value_cdr['dstchannel'],0,strlen($arrRate[$Scan_Rate]['trunk'])) == $arrRate[$Scan_Rate]['trunk'])
+					    substr($value_cdr['lastdata'],0,strlen($arrRate[$Scan_Rate]['trunk'])) == $arrRate[$Scan_Rate]['trunk'])
 						{
 						$price_rate = ($value_cdr['billsec'] * ($arrRate[$Scan_Rate]['rate'] / 60)) + $arrRate[$Scan_Rate]['rate_offset'];
 						$price_rate = intval($price_rate*100)/100;
 						$idx_rate   = $Scan_Rate;
-						$Scan_Rate  = count($arrRate);
+						break;
 						}
 					else
 						{
@@ -526,6 +545,7 @@ function saveNewCheckOut($smarty, $module_name, $local_templates_dir, &$pDB, &$p
 	 		}		
 	  	}
 	 }
+
 	 $ht		 = $vat_Nights + $Total_Call_VAT + $TT_MiniBar_v;
 	 $total_bill	 = $TT_Nights  + $Total_Calls    + $TT_MiniBar;
 	 

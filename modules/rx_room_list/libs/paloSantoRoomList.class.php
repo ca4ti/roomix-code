@@ -148,5 +148,19 @@ class paloSantoRoomList {
         }
         return $result;
     }
+
+    function updateQuery($sTabla, $arrValores, $where){
+	// call function construirInsert
+	$query = $this->_DB->construirUpdate($sTabla, $arrValores, $where);
+
+	// now execute the query with genQuery(fucntion of the paloSantoDB.class)
+	$result = $this->_DB->genQuery($query);
+
+	// catch the error
+	if($result==FALSE)
+         return false;
+         return true; 
+    }
+
 }
 ?>

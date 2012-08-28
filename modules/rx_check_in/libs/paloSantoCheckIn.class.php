@@ -258,5 +258,18 @@ class paloSantoCheckIn {
         }
         return $result;
     }
+
+    function delQuery($tables, $where)
+    {
+        $query = "DELETE * FROM $tables $where";
+
+        $result=$this->_DB->getFirstRowQuery($query,true);
+
+        if($result==FALSE){
+            $this->errMsg = $this->_DB->errMsg;
+            return null;
+        }
+        return $result;
+    }
 }
 ?>

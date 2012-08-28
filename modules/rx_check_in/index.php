@@ -272,11 +272,33 @@ function saveNewCheckIn($smarty, $module_name, $local_templates_dir, &$pDB, &$pD
 	 		{
 			$arrRegister 		  = $pCheckIn->insertQuery('booking',$value_register);
 	 		}
+		// Control if Guest_id is present into the database.
+		//-------------------------------------------------
+        	$conditions = "WHERE first_name = '".$_DATA['first_name'].
+                      	"' and last_name = '".$_DATA['last_name'].
+                      	"' and address ='".$_DATA['address'].
+                      	"' and cp = '".$_DATA['cp'].
+                      	"' and city = '".$_DATA['city'].
+                      	"' and phone = '".$_DATA['phone'].
+                      	"' and mobile = '".$_DATA['mobile'].
+                      	"' and fax = '".$_DATA['fax'].
+                      	"' and mail = '".$_DATA['mail']."'";
 
-        	// Update the room status (Free -> Busy)
+	 			$arrGuestID 		= $pCheckIn->getCheckIn("guest", $where);
+        			$GuestID_checked	= $arrGuestID[0];
+				
+				if ( $GuestID_checked['id'] != "" || $GuestID_checked != 0){
+					$arrdel 	= $pCheckIn->delQuery("guest", $where);
+					$bad_id	= true;
+					$strMsg	= "Error during recording guest...try again"; 
+				}
+				$bad_id = false;
+
+		if ( $bad_id == false){
+        	// Updating room status (Free -> Busy)
 	 	// Put the guest name into the room.
         	//---------------------------------------------
-	 	if ($_DATA['booking'] == "off"){
+	 	if ($_DATA['booking'] == "off" ){
 	 		$guest_name 			= str_replace("'","",$value_guest['first_name']." ".$value_guest['last_name']);
        		$value_rooms['free'] 	= '0'; 
         		$value_rooms['guest_name']  = "'".$guest_name."'";
@@ -348,6 +370,7 @@ function saveNewCheckIn($smarty, $module_name, $local_templates_dir, &$pDB, &$pD
 	 	else 
 	 	{
 		$strMsg 			= $arrLang["Error during entering guest"];
+	 }
 	 }
         $smarty->assign("mb_message", $strMsg);
     }
