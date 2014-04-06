@@ -1,0 +1,22 @@
+#!/bin/sh
+INBOX="/var/spool/asterisk/voicemail/default/$1/INBOX"
+OLD="/var/spool/asterisk/voicemail/default/$1/Old"
+TMP="/var/spool/asterisk/voicemail/default/$1/tmp"
+URGENT="/var/spool/asterisk/voicemail/default/$1/Urgent"
+
+if [ "$1" != "" ] ; then 
+	rm -f /var/spool/asterisk/voicemail/default/$1/*.*
+	if [ -d $INBOX ] ; then 
+		rm -f $INBOX/*.*
+	fi
+	if [ -d $OLD ] ; then 
+		rm -f $OLD/*.*
+	fi
+	if [ -d $TMP ] ; then 
+		rm -f $TMP/*.*
+	fi
+	if [ -d $URGENT ] ; then 
+		rm -f $URGENT/*.*
+	fi
+	asterisk -rx "voicemail reload"
+fi

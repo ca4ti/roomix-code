@@ -1,0 +1,51 @@
+<html>
+    <header>
+        <link rel="stylesheet" href="/themes/{$THEMENAME}/styles.css">
+        <link rel="stylesheet" href="/themes/{$THEMENAME}/help.css">
+    </header>
+    <body>
+        <h1>{$node_name}</h1>
+        <p align="Justify">English</p>
+
+        <!-- Form to add images -->
+        <!--<div><img src="../modules/{$node_id}/images/images.png" border="0"></div> -->
+
+        <table class="inline">
+            <tr>
+                <th>Details</th>
+            </tr>
+            <tr>
+                <td>Here, you have all bookings currently entered into RoomX.<br> You can do a view between 2 dates.</td>
+            </tr>
+        </table>
+
+        <p align="Justify">Fran&ccedil;ais</p>
+
+        <!-- Form to add images -->
+        <!--<div><img src="../modules/{$node_id}/images/images.png" border="0"></div> -->
+
+        <table class="inline">
+            <tr>
+                <th>D&eacute;tails</th>
+            </tr>
+            <tr>
+                <td>Ici, vous affichez toutes les r&eacute;servations courantes dans RoomX.<br>
+		      Vous pouvez faire une vue entre 2 dates..</td>
+            </tr>
+        </table>
+    
+            <p align="Justify">Espa–ol</p>
+
+        <!-- Form to add images -->
+        <!--<div><img src="../modules/{$node_id}/images/images.png" border="0"></div> -->
+
+        <table class="inline">
+            <tr>
+                <th>Detalles</th>
+            </tr>
+            <tr>
+                <td>Aqui tendr&aacute; usted todas las reservas actualmente introducidas en RoomX.<br> Usted podr&aacute; visualizar entre dos fechas.</td>
+            </tr>
+        </table>
+    </body>
+</html>

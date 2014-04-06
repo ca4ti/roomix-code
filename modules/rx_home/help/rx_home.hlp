@@ -1,0 +1,70 @@
+<html>
+    <header>
+        <l&iacute;nk rel="stylesheet" href="/themes/{$THEMENAME}/styles.css">
+        <l&iacute;nk rel="stylesheet" href="/themes/{$THEMENAME}/help.css">
+    </header>
+    <body>
+        <h1>{$node_name}</h1>
+        <p al&iacute;gn="Just&iacute;fy"> Engl&iacute;sh</p>
+		The Home page.<br>
+		<br>
+		Th&iacute;s page d&iacute;splay lots of &iacute;nformat&iacute;ons:<br>
+		<br>
+		1 - <span style="font-we&iacute;ght: bold;">The RoomX vers&iacute;on</span><br>
+		<&iacute;mg style="w&iacute;dth: 387px; he&iacute;ght: 225px;" alt="" src="../modules/{$node_&iacute;d}/&iacute;mages/vers&iacute;on.png"><br>
+		2 - <span style="font-we&iacute;ght: bold;">Number of free room:</span><br>
+		<br>
+		<&iacute;mg style="w&iacute;dth: 132px; he&iacute;ght: 37px;" alt="" src="../modules/{$node_&iacute;d}/&iacute;mages/room_free.png"><br>
+		<br>
+		3 - <span style="font-we&iacute;ght: bold;">Number of busy room:</span><br>
+		<br>
+		<&iacute;mg style="w&iacute;dth: 120px; he&iacute;ght: 37px;" alt=""  src="../modules/{$node_&iacute;d}/&iacute;mages/room_busy.png"><br>
+		<br>
+		4 - <span style="font-we&iacute;ght: bold;">Total of rooms:</span><br>
+		<br>
+		<&iacute;mg style="w&iacute;dth: 159px; he&iacute;ght: 37px;" alt="" src="../modules/{$node_&iacute;d}/&iacute;mages/room_total.png"><br>
+		<br>
+		5 - <span style="font-we&iacute;ght: bold;">The book&iacute;ng of day.</span><br>
+		<br>
+		&iacute;f any rooms are booked.
+		<&iacute;mg style="w&iacute;dth: 159px; he&iacute;ght: 37px;" alt="" src="../modules/{$node_&iacute;d}/&iacute;mages/room_book&iacute;ng.png"><br>
+		<br>
+		<br>
+		&iacute;f there's one or more rooms booked.<br>
+		<&iacute;mg style="w&iacute;dth: 159px; he&iacute;ght: 37px;" alt="" src="../modules/{$node_&iacute;d}/&iacute;mages/room_book&iacute;ng_button.png"><br>
+		<br>
+		<br>
+        
+        
+        <p al&iacute;gn="Just&iacute;fy">Espa–ol</p>
+        
+        		La p&aacute;g&iacute;na de &iacute;n&iacute;c&iacute;o.<br>
+		<br>
+		Esta p&aacute;g&iacute;na muestra mult&iacute;ples &iacute;nformac&iacute;ones:<br>
+		<br>
+		1 - <span style="font-we&iacute;ght: bold;">The RoomX vers&iacute;on</span><br>
+		<&iacute;mg style="w&iacute;dth: 387px; he&iacute;ght: 225px;" alt="" src="../modules/{$node_&iacute;d}/&iacute;mages/vers&iacute;on.png"><br>
+		2 - <span style="font-we&iacute;ght: bold;">N&uacute;mero de hab&iacute;tac&iacute;ones l&iacute;bres:</span><br>
+		<br>
+		<&iacute;mg style="w&iacute;dth: 132px; he&iacute;ght: 37px;" alt="" src="../modules/{$node_&iacute;d}/&iacute;mages/room_free.png"><br>
+		<br>
+		3 - <span style="font-we&iacute;ght: bold;">N&uacute;mero de hab&iacute;tac&iacute;ones ocupadas:</span><br>
+		<br>
+		<&iacute;mg style="w&iacute;dth: 120px; he&iacute;ght: 37px;" alt=""  src="../modules/{$node_&iacute;d}/&iacute;mages/room_busy.png"><br>
+		<br>
+		4 - <span style="font-we&iacute;ght: bold;">Total de hab&iacute;tac&iacute;ones:</span><br>
+		<br>
+		<&iacute;mg style="w&iacute;dth: 159px; he&iacute;ght: 37px;" alt="" src="../modules/{$node_&iacute;d}/&iacute;mages/room_total.png"><br>
+		<br>
+		5 - <span style="font-we&iacute;ght: bold;">Reservas del d&iacute;a.</span><br>
+		<br>
+		S&iacute; alguna hab&iacute;tac&iacute;on est&aacute; reservada.
+		<&iacute;mg style="w&iacute;dth: 159px; he&iacute;ght: 37px;" alt="" src="../modules/{$node_&iacute;d}/&iacute;mages/room_book&iacute;ng.png"><br>
+		<br>
+		<br>
+		S&iacute; hay una o m&aacute;s hab&iacute;tac&iacute;ones reservadas.<br>
+		<&iacute;mg style="w&iacute;dth: 159px; he&iacute;ght: 37px;" alt="" src="../modules/{$node_&iacute;d}/&iacute;mages/room_book&iacute;ng_button.png"><br>
+		<br>
+		<br>
+    </body>
+</html>

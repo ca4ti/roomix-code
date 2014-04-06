@@ -1,0 +1,56 @@
+<html>
+    <header>
+        <link rel="stylesheet" href="/themes/{$THEMENAME}/styles.css">
+        <link rel="stylesheet" href="/themes/{$THEMENAME}/help.css">
+    </header>
+    <body>
+        <h1>{$node_name}</h1>
+        <p align="Justify">English</p>
+
+        <!-- Form to add images -->
+        <!--<div><img src="../modules/{$node_id}/images/images.png" border="0"></div> -->
+
+        <table class="inline">
+            <tr>
+                <th>Details</th>
+            </tr>
+            <tr>
+                <td>Here, you can see all existing groups, and you can add multiple rooms into a group at the same time.<br> 
+			Just by selecting several rooms and pressing the [shift] key, and click on the rooms that you want.
+	     	  </td>
+            </tr>
+        </table>
+
+        <p align="Justify">Fran&ccedil;ais</p>
+
+        <!-- Form to add images -->
+        <!--<div><img src="../modules/{$node_id}/images/images.png" border="0"></div> -->
+
+        <table class="inline">
+            <tr>
+                <th>D&eacute;tails</th>
+            </tr>
+            <tr>
+                <td>ici, vous pouvez voir tous les groupes existants, et vous pouvez ajouter plusieurs chambres dans un m&ecirc;me groupe.<br>
+			Juste en s&eacute;lectionnant plusieurs chmabres, en appuyant sur la touche [shift], et en cliquant sur les chambres que vous souhaitez.
+	     	  </td>
+            </tr>
+        </table>
+    
+        <p align="Justify">Espa–ol</p>
+
+        <!-- Form to add images -->
+        <!--<div><img src="../modules/{$node_id}/images/images.png" border="0"></div> -->
+
+        <table class="inline">
+            <tr>
+                <th>Detalles</th>
+            </tr>
+            <tr>
+                <td>Aqui podr&aacute; ver todos los grupos existentes, y podr&aacute; a–adir multiples habitaciones a un grupo al mismo tiempo.<br> 
+			Simplemente seleccione varias habitaciones, presione la tecla [shift] y haga click en las habitaciones que quiera.
+	     	  </td>
+            </tr>
+        </table>
+    </body>
+</html>

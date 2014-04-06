@@ -1,0 +1,58 @@
+<html>
+    <header>
+        <link rel="stylesheet" href="/themes/{$THEMENAME}/styles.css">
+        <link rel="stylesheet" href="/themes/{$THEMENAME}/help.css">
+    </header>
+    <body>
+        <h1>{$node_name}</h1>
+        <p align="Justify">English</p>
+
+        <!-- Form to add images -->
+        <!--<div><img src="../modules/{$node_id}/images/images.png" border="0"></div> -->
+
+        <table class="inline">
+            <tr>
+                <th>Details</th>
+            </tr>
+            <tr>
+                <td>This module is able to provide a customers lists.<br>
+			You can delete one or more records in same time.<br>
+			Also, you can edit a record to making change in a guest recording.<br>
+			You can export list under differents files format.<br></td>
+            </tr>
+        </table>
+        <p align="Justify">Fran&ccedil;ais</p>
+
+        <!-- Form to add images -->
+        <!--<div><img src="../modules/{$node_id}/images/images.png" border="0"></div> -->
+
+        <table class="inline">
+            <tr>
+                <th>D&eacute;tails</th>
+            </tr>
+            <tr>
+                <td>Ce module est capable de fournir une liste clients.<br>
+			Vous pouvez supprimer un ou plusieurs enregistrements en m&ecirc;me temps.<br>
+			Aussi, vous pouvez modifier un enregistrement pour modifer un enregistrement client.<br>
+			Vous pouvez exporter la liste sous differents type de fichiers.<br></td>
+            </tr>
+        </table>
+    
+        <p align="Justify">Espa–ol</p>
+
+        <!-- Form to add images -->
+        <!--<div><img src="../modules/{$node_id}/images/images.png" border="0"></div> -->
+
+        <table class="inline">
+            <tr>
+                <th>Detalles</th>
+            </tr>
+            <tr>
+                <td> Este modulo es capa de faclitar un listado de clientes.<br>
+			Puede borrar una o m&aacute;s entradas al mismo tiempo.<br>
+			Tambien pude editar una entrada para efectuar cambios en los datos de un invitado.<br>
+			Puede exportar la lista en diferentes formatos.<br></td>
+            </tr>
+        </table>
+    </body>
+</html>

@@ -1,0 +1,58 @@
+<?php
+  /* vim: set expandtab tabstop=4 softtabstop=4 shiftwidth=4:
+  Codificación: UTF-8
+  +----------------------------------------------------------------------+
+  | Elastix version 2.0.0-27                                               |
+  | http://www.elastix.org                                               |
+  +----------------------------------------------------------------------+
+  | Copyright (c) 2006 Palosanto Solutions S. A.                         |
+  +----------------------------------------------------------------------+
+  | Cdla. Nueva Kennedy Calle E 222 y 9na. Este                          |
+  | Telfs. 2283-268, 2294-440, 2284-356                                  |
+  | Guayaquil - Ecuador                                                  |
+  | http://www.palosanto.com                                             |
+  +----------------------------------------------------------------------+
+  | The contents of this file are subject to the General Public License  |
+  | (GPL) Version 2 (the "License"); you may not use this file except in |
+  | compliance with the License. You may obtain a copy of the License at |
+  | http://www.opensource.org/licenses/gpl-license.php                   |
+  |                                                                      |
+  | Software distributed under the License is distributed on an "AS IS"  |
+  | basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See  |
+  | the License for the specific language governing rights and           |
+  | limitations under the License.                                       |
+  +----------------------------------------------------------------------+
+  | The Original Code is: Elastix Open Source.                           |
+  | The Initial Developer of the Original Code is PaloSanto Solutions    |
+  +----------------------------------------------------------------------+
+  $Id: es.lang,v 1.1 2013-02-09 09:40:20 Cesar Hernandez Arcas cesarhernandezarcas@gmail.com  Exp $ */
+global $arrLangModule;
+$arrLangModule=array(
+"Mini Bar" 	=> "Minibar",
+"vat" 		=> "Para todos los productos",
+"VAT" 		=> "I.V.A.",
+"Digits" 	=> "Digitos",
+"Prices" 	=> "Precios sin IVA",
+"Labels" 	=> "Productos",
+"_1" => "1",
+"Cost (1)" => "Coste (1)",
+"_2" => "2",
+"Cost (2)" => "Coste (2)",
+"_3" => "3",
+"Cost (3)" => "Coste (3)",
+"_4" => "4",
+"Cost (4)" => "Coste (4)",
+"_5" => "5",
+"Cost (5)" => "Coste (5)",
+"_6" => "6",
+"Cost (6)" => "Coste (6)",
+"_7" => "7",
+"Cost (7)" => "Coste (7)",
+"_8" => "8",
+"Cost (8)" => "Coste (8)",
+"_9" => "9",
+"Cost (9)" => "Coste (9)",
+"_0" => "0",
+"Cost (0)" => "Coste (0)",
+);
+?>

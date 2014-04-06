@@ -1,0 +1,66 @@
+<html>
+    <header>
+        <link rel="stylesheet" href="/themes/{$THEMENAME}/styles.css">
+        <link rel="stylesheet" href="/themes/{$THEMENAME}/help.css">
+    </header>
+    <body>
+        <h1>{$node_name}</h1>
+        <div><img src="../modules/{$node_id}/images/iprelayboard.png" border="0"></div>
+        <p align="Justify">English</p>
+
+        <!-- Form to add images -->
+
+
+        <table class="inline">
+            <tr>
+                <th>Details</th>
+            </tr>
+            <tr>
+                <td>This module provides a new function to RoomX.<br>
+		      This module is able to send some information at a remote device by http request.<br> 
+		      These requests are sent at each check-in and check-out.<br>
+		      Like this, it's very easy to turning on or off any devices across an ip relay board or else..<br>
+		      Just enter an url as for example like this: <i>http://your_server/index.php?rel_id=1&status=on</i><br>
+		  </td>
+            </tr>
+        </table>
+
+        <p align="Justify">Fran&ccedil;ais</p>
+
+        <!-- Form to add images -->
+        <!--<div><img src="../modules/{$node_id}/images/images.png" border="0"></div> -->
+
+        <table class="inline">
+            <tr>
+                <th>D&eacute;tails</th>
+            </tr>
+            <tr>
+                <td>Ce module fournit une nouvelle fonction &agrave; RoomX.<br>
+		      Ce module est capable d'envoyer des informations &agrave; un p&eacute;riph&eacute;rique distant par requ&ecirc;te http.<br>
+		      Ces demandes sont envoy&eacute;es &agrave; chaque check-in et check-out.<br>
+		      Comme &ccedil;&agrave;, il est tr&egrave;s facile d'allumer ou d'&eacute;teindre les appareils via une carte relais iP ou autre.<br>
+		      il suffit d'entrer une url comme par exemple comme ceci: <i>http://your_server/index.php?rel_id=1&status=on</i><br>
+		  </td>
+            </tr>
+        </table>
+
+        <p align="Justify">Espa–ol</p>
+
+        <!-- Form to add images -->
+
+
+        <table class="inline">
+            <tr>
+                <th>Detalles</th>
+            </tr>
+            <tr>
+                <td>Este modulo provee de una nueva funci&oacute;n a RoomX.<br>
+		      Este modulo es capaz de mandar informacion a un dispositivo remoto mediante peticioes HTTP.<br> 
+		      Estas peticiones son enviadas a cada entrada y salida.<br>
+		      De esta forma es muy sencillo encender o apagar dispositivos mendiante un aut&oacute;mata iP con rel&eacute;s, u otros.<br>
+		     Simplemente introduzca una URL, por ejemplo: <i>http://su_servidor/index.php?rel_id=1&status=on</i><br>
+		  </td>
+            </tr>
+        </table>
+    </body>
+</html>

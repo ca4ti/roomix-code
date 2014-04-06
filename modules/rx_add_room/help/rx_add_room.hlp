@@ -1,0 +1,56 @@
+<html>
+    <header>
+        <link rel="stylesheet" href="/themes/{$THEMENAME}/styles.css">
+        <link rel="stylesheet" href="/themes/{$THEMENAME}/help.css">
+    </header>
+    <body>
+        <h1>{$node_name}</h1>
+        <p align="Justify">English</p>
+
+        <!-- Form to add images -->
+        <!--<div><img src="../modules/{$node_id}/images/images.png" border="0"></div> -->
+
+        <table class="inline">
+            <tr>
+                <th>Details</th>
+            </tr>
+            <tr>
+                <td>With this module, you can select the rooms that you want from Freepbx, and into each line,<br> 
+			select the type model for room. Don't forget, try to prepare a good list of names for each room.<br>
+			(eg: R100, R101..etc). This name will be used by RoomX if no name is entered.</td>
+            </tr>
+        </table>
+
+        <p align="Justify">Fran&ccedil;ais</p>
+
+        <!-- Form to add images -->
+        <!--<div><img src="../modules/{$node_id}/images/images.png" border="0"></div> -->
+
+        <table class="inline">
+            <tr>
+                <th>D&eacute;tails</th>
+            </tr>
+            <tr>
+                <td>Avec ce module, vous pouvez s&eacute;lectionner les chambres que vous voulez &agrave; partir des extensions de FreePBX, et dans chaque ligne,<br>
+			s&eacute;lectionner le mod&egrave;le de chambre. Essayer de pr&eacute;parer une liste appropri&eacute;e de noms pour les chambres.<br>
+			(par exemple: CH 100, CH 101 .. etc). Ces noms seront utilis&eacute;s par RoomX si aucun nom n'est entr&eacute;.</td>
+            </tr>
+        </table>
+    
+         <p align="Justify">Espa–ol</p>
+
+        <!-- Form to add images -->
+        <!--<div><img src="../modules/{$node_id}/images/images.png" border="0"></div> -->
+
+        <table class="inline">
+            <tr>
+                <th>Detalles</th>
+            </tr>
+            <tr>
+                <td>Con este modulo, usted podr&aacute; seleccionar las habitaciones que quiera desde Freepbx, y en de cada linea,<br> 
+			seleccionar el modelo de habitaci&oacute;n. No se olvide, intente crear una lista de nombres para cada habitaci&oacute;n.<br>
+			(Ej: R100, R101..etc). Este nombre ser&aacute; empleado por RoomX, si no se introduce ninguno.</td>
+            </tr>
+        </table>
+    </body>
+</html>
