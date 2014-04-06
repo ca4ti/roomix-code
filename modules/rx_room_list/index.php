@@ -343,7 +343,7 @@ function Wakeup_request($WakeUp_Ext, $arrLang)
     foreach($Current_wakeup as $key => $wakeup_file){
           if ($key > 1 && preg_match($File_filter,str_replace("_"," ",$wakeup_file))){
               	list($balise, $wak, $ext_num, $J, $M, $A, $H, $mn) = explode("_", $wakeup_file);
-			$Current_Wakup_status = $Current_Wakup_status."<span class='ui-icon ui-icon-trash' ></span>".$arrLang["Current wakeup"]." : ".$J." ".$M." ".$A." ".$H."h".str_replace(".call","",$mn)."mn<br>";
+			$Current_Wakup_status = $Current_Wakup_status.$arrLang["Current wakeup"]." : ".$J." ".$M." ".$A." ".$H."h".str_replace(".call","",$mn)."mn<br>";
 	   }
     }
 

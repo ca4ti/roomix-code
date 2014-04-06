@@ -4,8 +4,8 @@
         <link rel="stylesheet" href="/themes/{$THEMENAME}/help.css">
     </header>
     <body>
-    <h1>{$node_name}</h1>
-    <p align="Justify">English</p>
+        <h1>{$node_name}</h1>
+        <p align="Justify">English</p>
 
 <table class="inline">
 	<tr>
@@ -34,6 +34,7 @@ During entering from <b>last name</b> field, you have a list of guests begining 
 Additional Guest, is used in the case where you have a kid, or another person into the room.<br>
 <b>Booking</b> check box is here to book a room if you are into check-in menu.<br>
 <b>Booking Mode</b> display all rooms into the combo list to be able to book room. You are out of check-in mode. 
+During the entering guest name, this field includes the auto-completion.<br>
 
 		</td>
     </tr>

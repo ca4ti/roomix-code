@@ -4,19 +4,62 @@
         <link rel="stylesheet" href="/themes/{$THEMENAME}/help.css">
     </header>
     <body>
-        <h1>{$node_name}</h1>
-        <p align="Justify"></p>
+    <h1>{$node_name}</h1>
+    <p align="Justify">English</p>
 
-        <!-- Form to add images -->
-        <!--<div><img src="../modules/{$node_id}/images/images.png" border="0"></div> -->
-
+<table class="inline">
+	<tr>
+		<th>Details</th>
+	</tr>
+	<tr>
+		<td>
+		This module provides the Wake-Up features for each room.<br>
+		You may select only one hour for one day or select a range of the days to be waking up every day at the same hour.<br>
+		Also you may delete one or a range of the days for the one or a group of the rooms.<br>
+		<br>
+		You may apply a wake-up time for a group.<br>
+		This group will be the same like the room selected at first.<br>
+		<br>
+		</td>
+    </tr>
+    </table>
+		<p align="Justify">Fran&ccedil;ais</p>
         <table class="inline">
             <tr>
-                <th></th>
+                <th>D&eacute;tails</th>
             </tr>
             <tr>
-                <td></td>
+                <td>
+				Ce module fournit les fonctions de r&eacute;veil pour chaque chambre.<br>
+				Vous pouvez s&eacute;lectionner seulement une heure pour une journ&eacute;e ou s&eacute;lectionnez une plage de jours &agrave; se r&eacute;veiller tous les jours &agrave; la m&ecirc;me heure.<br>
+				Aussi, vous pouvez supprimer un ou une s&eacute;rie de jours pour l'un ou un groupe de pi&egrave;ces.<br>
+				<br>
+				Vous pouvez demander une heure de r&eacute;veil pour un groupe.<br>
+				Ce groupe sera le m&ecirc;me que la chambre choisie en premier.<br>
+				<br>
+				</td>
+    </tr>
+    </table>
+		<p align="Justify">Espa&ntilde;ol</p>
+        <table class="inline">
+            <tr>
+                <th>Detalles</th>
             </tr>
-        </table>
-    </body>
+            <tr>
+			<td>
+			Este m&oacute;dulo proporciona las caracter&iacute;sticas de atenci&oacute;n para cada habitaci&oacute;n.<br>
+			Usted puede seleccionar s&oacute;lo una hora por un d&oacute;a o seleccionar un rango de los d&oacute;as que se despiertan todos los d&oacute;as a la misma hora.<br>
+			Tambi&eacute;n puede eliminar una o una serie de los d&iactue;as para el uno o un grupo de las habitaciones.<br>
+			<br>
+			Usted puede solicitar un tiempo de atenci&oacute;n para un grupo.<br>
+			Este grupo ser&aacute; el mismo como si la habitaci&oacute;n seleccionada al principio.<br>
+			<br>
+            <td> 
+			</td>
+        </tr>
+    </table>
+<br>
+<br>
+</body>
 </html>
+

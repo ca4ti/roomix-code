@@ -1,3 +1,16 @@
 #!/bin/sh
-rm -f /var/spool/asterisk/outgoing/roomx_wakeup_$1*.call 2>&1
-rm -f /var/spool/asterisk/outgoing_done/roomx_wakeup_$1*.call 2>&1
+# Delete all wake up files of the room.
+#
+echo $1 " - " $2
+
+if [ "$2" == "" ]; then
+	rm -f /var/spool/asterisk/outgoing/roomx_wakeup_$1*.call 2>&1
+	rm -f /var/spool/asterisk/outgoing_done/roomx_wakeup_$1*.call 2>&1
+	exit 0
+else
+	# If there's the dates as arguments
+	# Delete the files between two dates.
+	#
+	echo "j'ai bon"
+	rm -f /var/spool/asterisk/outgoing/roomx_wakeup_$1_$2*.call 2>&1
+fi
