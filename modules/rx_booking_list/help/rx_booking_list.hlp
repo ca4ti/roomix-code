@@ -1,0 +1,56 @@
+<html>
+    <header>
+        <link rel="stylesheet" href="/themes/{$THEMENAME}/styles.css">
+        <link rel="stylesheet" href="/themes/{$THEMENAME}/help.css">
+    </header>
+    <body>
+        <h1>{$node_name}</h1>
+        <p align="Justify">English</p>
+
+        <!-- Form to add images -->
+        <!--<div><img src="../modules/{$node_id}/images/images.png" border="0"></div> -->
+
+        <table class="inline">
+            <tr>
+                <th>Details</th>
+            </tr>
+            <tr>
+                <td>This module display all rooms booked.<br>
+			To make a checking on a booked room, check the checkin box, and if you want to cancel a booking,<br>
+			check the canceled box.</td>
+            </tr>
+        </table>
+
+        <p align="Justify">Fran&ccedil;ais</p>
+
+        <!-- Form to add images -->
+        <!--<div><img src="../modules/{$node_id}/images/images.png" border="0"></div> -->
+
+        <table class="inline">
+            <tr>
+                <th>D&eacute;tails</th>
+            </tr>
+            <tr>
+                <td>Ce module affiche toutes les chambre r&eacute;serv&eacute;es.<br>
+			Pour faire une entr&eacute;e sur une chambre r&eacute;serv&eacute;e, cochez la case checkin,<br>
+			et si vous voulez annuler une r&eacute;servation, cochez la case annul&eacute;e.</td>
+            </tr>
+        </table>
+    
+            <p align="Justify">Espa–ol</p>
+
+        <!-- Form to add images -->
+        <!--<div><img src="../modules/{$node_id}/images/images.png" border="0"></div> -->
+
+        <table class="inline">
+            <tr>
+                <th>Detalles</th>
+            </tr>
+            <tr>
+                <td>Este m&oacute;dulo muestra las habitaciones reservadas.<br>
+			Para efectuar una entrada en una habitaci&oacute;n reservada, marque la casilla de entrada, y si quiere cancelar la reserva,<br>
+			marque la casilla de cancelado.</td>
+            </tr>
+        </table>
+    </body>
+</html>

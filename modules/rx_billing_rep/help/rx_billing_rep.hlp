@@ -1,0 +1,57 @@
+<html>
+    <header>
+        <link rel="stylesheet" href="/themes/{$THEMENAME}/styles.css">
+        <link rel="stylesheet" href="/themes/{$THEMENAME}/help.css">
+    </header>
+    <body>
+        <h1>{$node_name}</h1>
+        <p align="Justify">English</p>
+
+        <!-- Form to add images -->
+        <!--<div><img src="../modules/{$node_id}/images/images.png" border="0"></div> -->
+
+        <table class="inline">
+            <tr>
+                <th>Details</th>
+            </tr>
+            <tr>
+                <td>You can see some informations on every billings done. You can sort the list by date (ci/co), by guest name,<br>
+			and by paid status or not. With the way, you can know how many bills are paid, and change their status.<br>
+			So, When a guest pays their billing, then you can check the paid box.<br></td>
+            </tr>
+        </table>
+
+        <p align="Justify">Fran&ccedil;ais</p>
+
+        <!-- Form to add images -->
+        <!--<div><img src="../modules/{$node_id}/images/images.png" border="0"></div> -->
+
+        <table class="inline">
+            <tr>
+                <th>Details</th>
+            </tr>
+            <tr>
+                <td>Vous pouvez voir quelques informations sur tous les facturations effectu&eacute;es. <br>
+			Vous pouvez trier la liste par date (ci/co), par le nom du client, et par statut pay&eacute; ou non.<br> 
+			De cette mani&egrave;re, vous pouvez savoir combien de factures sont pay&eacute;es, et de changer leur statut.<br>
+			Alors, quand un client paie sa facture, alors vous pouvez cocher la case Pay&eacute;.<br></td>
+            </tr>
+        </table>
+    
+            <p align="Justify">Espa–ol</p>
+
+        <!-- Form to add images -->
+        <!--<div><img src="../modules/{$node_id}/images/images.png" border="0"></div> -->
+
+        <table class="inline">
+            <tr>
+                <th>Detalles</th>
+            </tr>
+            <tr>
+                <td> Podr&aacute; ver algunos datos de cada facturaci&oacute;n efectuada. Puede listar ordenando por fecha (entrada/salida), por nombre de invitado,<br>
+			y por estado del pago. De esta forma, puede saber que facturas est&aacute;n pagadas, y cambiar su estado.<br>
+			As&iacute; pues, cuando un invitado paga su factura, podr&aacute; marcar la casilla de pagado.<br></td>
+            </tr>
+        </table>
+    </body>
+</html>

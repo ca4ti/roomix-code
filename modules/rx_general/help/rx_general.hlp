@@ -1,0 +1,124 @@
+<html>
+    <header>
+        <link rel="stylesheet" href="/themes/{$THEMENAME}/styles.css">
+        <link rel="stylesheet" href="/themes/{$THEMENAME}/help.css">
+    </header>
+    <body>
+        <h1>{$node_name}</h1>
+        <p align="Justify">English</p>
+
+        <!-- Form to add images -->
+        <!--<div><img src="../modules/{$node_id}/images/images.png" border="0"></div> -->
+
+        <table class="inline">
+            <tr>
+                <th>Details</th>
+            </tr>
+            <tr>
+                <td><h2>Setting operating mode.</h2><br>
+			Here, you could select 2 operating mode. (Hotel, and Hospital). Today, only one operating mode is
+			enabled..<br>
+			<h2>Functions.</h2>
+			You could select 3 basic functions in RoomX application.<br>
+			<ul>
+			<li> Locked when checkout. When the room is billed, this room will be locked. Thus making it impossible to call a number.
+			<li> Calling between rooms: When checked, the room is able to call another room, but only if this room is included into the same group as the called room.
+			<li> Room must be clean: The room appear into the list of available room only if the room is cleaned. Else, the room will not appear into this list. However, this room could appear if you need to make a booking about this room.
+			</ul><h2>Company.</h2>
+			You can customize your company header, like the logo (png, gif, or jpg file extension), the company address,<br>
+			and the professional mail of company.<br>
+			<h2>RoomX Dial Plan.</h2>
+			You can customize or change the prefix of each RoomX function. 3 prefixes exist by default.<br>
+			<ul>
+			<li> <p>Mini-bar (<i>Default: *37</i>), is able to add some drinks to the room, which will be used during the billing.<br>
+			When the chambermaid cleans the room, she could check the mini-bar and enter all drinks used by the guest.<br>
+			Eg: <b>*37122#</b><br>
+			(1 could be a Coca, and 2 could be a Whiskey). So 1 Coca and 2 Whiskey, total 3 drinks.<br></p>
+			<li>Room Clean prefix (<i>Default: *36</i>) will be used when the room gets cleaned by the chambermaid.
+			<li>Reception (<i>Default: 100</i>) is here to giving a phone number to the reception..<br>
+			</ul>
+			<h2>Tax.</h2>
+			Two tax values can be entered. The first value is used by the outbound calls during the billing.<br>
+			Rounded option, it's there to round rates at upper minute. Not checked, the rate at second will apply.<br>
+		  </td>
+            </tr>
+        </table>
+    
+        <p align="Justify">Fran&ccedil;ais</p>
+
+        <!-- Form to add images -->
+        <!--<div><img src="../modules/{$node_id}/images/images.png" border="0"></div> -->
+
+        <table class="inline">
+            <tr>
+                <th>D&eacute;tails</th>
+            </tr>
+            <tr>
+                <td><h2>Mode op&eacute;ratoire.</h2><br>
+			ici, vous pouvez s&eacute;lectionner 2 modes de fonctionnement. (H&ocirc;tel, et l'h&ocirc;pital).<br>
+			Aujourd'hui, un seul mode de fonctionnement est activ&eacute; ..<br>
+			<h2>Fonctions.</h2>
+			Vous pouvez s&eacute;lectionner 3 fonctions de base dans l'application RoomX.<br>
+			<ul>
+			<li> V&eacute;rrouill&eacute; au D&eacute;part. Lorsque la chambre est factur&eacute;e, elle sera verrouill&eacute;e. Ainsi ce qui rend impossible d'appeler un num&eacute;ro &agrave; partir de cette chambre.
+			<li> Appel entre chambres: Quand elle est coch&eacute;e, la chambre est en mesure d'appeler une autre chambre, mais seulement si cette chambre est incluse dans le m&ecirc;me groupe que la chambre appel&eacute;e.
+			<li> Chambre doit &ecirc;tre propre: La chambre apparait dans la liste de chambre disponible uniquement si la chambre est nettoy&eacute;e. Sinon, la chambre n'appara&icirc;tra pas dans cette liste. Cependant, cette chambre pourrait appara&icirc;tre si vous en avez le besoin pour faire une r&eacute;servation de cette chambre. dans ce cas cliquer sur <i>Toutes les Chambres</i>.
+			</ul><h2>Companie.</h2>
+			Vous pouvez personnaliser votre en-t&ecirc;te soci&eacute;t&eacute;, comme le logo (extension de fichier: png, gif ou jpg), l'adresse de l'entreprise,<br>
+			et l'@mail professionnelle de l'entreprise.<br>
+			<h2>Plan de num. RoomX.</h2>
+			Vous pouvez personnaliser ou modifier le pr&eacute;fixe de chaque fonction RoomX. 3 pr&eacute;fixes existent par d&eacute;faut.<br>
+			<ul>
+			<li> <p>Mini-bar (<i>par d&eacute;faut: *37</i>), est capable d'ajouter des boissons &agrave; la chambre qui seront utilis&eacute;es lors de la facturation.<br>
+			Lorsque la femme de chambre nettoie la chambre, elle pourra v&eacute;rifier le mini-bar et entrer les boissons utilis&eacute;es par le client.<br>
+			Ex: <b>*37122#</b><br>
+			(1 pourrait &ecirc;tre un Coca, et 2 pourrait &ecirc;tre un whisky). Donc 1 Coca et 2 Whiskey, le total des 3 boissons.<br></p>
+			<li>Pr&eacute;fixe Chambre Faite (<i>par d&eacute;faut: * 36 </ i>) sera utilis&eacute; lorsque la chambre est nettoy&eacute;e par la femme de chambre.
+			<li>R&eacute;ception (<i> par d&eacute;faut: 100 </ i>) est ici pour param&eacute;trer le num&eacute;ro de la r&eacute;ception ..<br>
+			</ul>
+			<h2>Taxe.</h2>
+			Deux TVA peuvent &ecirc;tre entr&eacute;es. La premi&egrave;re valeur est utilis&eacute;e par les appels sortants durant la facturation.<br>
+			L'opton Arrondi, il est l&agrave; pour arrondir le prix d'une communication &agrave; la minute sup&eacute;rieure. Non coch&eacute;, le taux &agrave; la seconde s'appliquera.<br>
+		  </td>
+            </tr>
+        </table>
+
+        <p align="Justify">Español</p>
+
+        <!-- Form to add images -->
+        <!--<div><img src="../modules/{$node_id}/images/images.png" border="0"></div> -->
+
+        <table class="inline">
+            <tr>
+                <th>Detalles</th>
+            </tr>
+            <tr>
+                <td><h2>Estableciendo el modo de operaci&oacute;n.</h2><br>
+			Aqu&iacute; podr&aacute; selecionar entre dos modos de operaci&oacute;n. (Hotel, y Hospital). Actualmente solo un modo de operacion puede estar activo...<br>
+			<h2>Funciones.</h2>
+			Se pueden seleccionar tres funciones b&aacute;sicas dentro de la aplicacion RoomX.<br>
+			<ul>
+			<li> Cerrado al salir: Cuando se factura la habitaci&oacute;n, est&aacute; quedara cerrada. Haciendo pues imposible hacer una llamada.
+			<li> Llamada entre habitaciones: Cuando se marca, la habitaci&oacute;n ser&aacute; capaz de hacer llamadas pero solo a otras habitaci&oacute;nes que est&eacute;n dentro del mismo grupo.
+			<li> La habitaci&oacute;n debe limpiarse: La habitaci&oacute;n aparecer&aacute; en el listado de habitaciones dispobible solamente si ha sido limpiada. De lo contrario aparecer&aacute; en la lista. No obstante aparecer&aacute; si necesita hacer una reserva de la habitaci&oacute;n.
+			</ul><h2>Compañia.</h2>
+			Podr&aacute; personaliazar el Encabezado de su compañia, como el logotipo (extensiones png, gif, o jpg), la direcciçon de la compañia,<br>
+			 y la direccion de correo profesional de la compañia.<br>
+			<h2>Plan de marcacion de RoomX.</h2>
+			Puede personalizar  o cambiar el prefijo de cada funcion de RoomX. Por defecto existen tres prefijos.<br>
+			<ul>
+			<li> <p>Minibar (<i>Por defecto: *37</i>), es capaz de añadir algunas bebidas a la habitaci&oacute;n, que ser&aacute;n usadas durante la facturaci&oacute;n.<br>
+			Cuando la camarera limpie la habitaci&oacute;n, podr&aacute; comprobar el minibar y entrar todas las bebidas usadas por el invitado.<br>
+			Ej: <b>*37122#</b><br>
+			(1 Podria ser una Coca, y 2 un Whiskey). As&iacute; pues 1 Coca  y 2 Whiskey, total 3 bebidas.<br></p>
+			<li>Prefijo de limpieza de habitaci&oacute;n (<i>Por defecto: *36</i>) ser&aacute; usado cuando la habitaci&oacute;n quede limpia por la camarera.
+			<li>Recepci&oacute;n (<i>Por defecto: 100</i>) est&aacute; ah&iacute; para asgnar un n&uacute;mero a recepci&oacute;n.<br>
+			</ul>
+			<h2>impuestos.</h2>
+			Se pueden introducir dos valores para impuestos. El primer valor es usado para llamadas salientes durante la facturaci&oacute;n.<br>
+			Opcion de redondeo, se marcar&aacute; cuando se redondee al minuto. Si no est&aacute; marcado, se redondear&aacute; al segundo.<br>
+		  </td>
+            </tr>
+        </table>
+    </body>
+</html>

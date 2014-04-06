@@ -1,0 +1,58 @@
+<?php
+  /* vim: set expandtab tabstop=4 softtabstop=4 shiftwidth=4:
+  Codificación: UTF-8
+  +----------------------------------------------------------------------+
+  | Elastix version 2.0.0-27                                               |
+  | http://www.elastix.org                                               |
+  +----------------------------------------------------------------------+
+  | Copyright (c) 2006 Palosanto Solutions S. A.                         |
+  +----------------------------------------------------------------------+
+  | Cdla. Nueva Kennedy Calle E 222 y 9na. Este                          |
+  | Telfs. 2283-268, 2294-440, 2284-356                                  |
+  | Guayaquil - Ecuador                                                  |
+  | http://www.palosanto.com                                             |
+  +----------------------------------------------------------------------+
+  | The contents of this file are subject to the General Public License  |
+  | (GPL) Version 2 (the "License"); you may not use this file except in |
+  | compliance with the License. You may obtain a copy of the License at |
+  | http://www.opensource.org/licenses/gpl-license.php                   |
+  |                                                                      |
+  | Software distributed under the License is distributed on an "AS IS"  |
+  | basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See  |
+  | the License for the specific language governing rights and           |
+  | limitations under the License.                                       |
+  +----------------------------------------------------------------------+
+  | The Original Code is: Elastix Open Source.                           |
+  | The Initial Developer of the Original Code is PaloSanto Solutions    |
+  +----------------------------------------------------------------------+
+  $Id: en.lang,v 1.1 2010-07-19 09:07:07 Franck Danard franckd@agmp.org Exp $ */
+global $arrLangModule;
+$arrLangModule=array(
+"Mini Bar" 	=> "Mini Bar",
+"vat" 		=> "for every products",
+"VAT" 		=> "VAT",
+"Digits" 	=> "Digits",
+"Prices" 	=> "Prices without VAT",
+"Labels" 	=> "Products",
+"_1" => "1",
+"Cost (1)" => "Cost (1)",
+"_2" => "2",
+"Cost (2)" => "Cost (2)",
+"_3" => "3",
+"Cost (3)" => "Cost (3)",
+"_4" => "4",
+"Cost (4)" => "Cost (4)",
+"_5" => "5",
+"Cost (5)" => "Cost (5)",
+"_6" => "6",
+"Cost (6)" => "Cost (6)",
+"_7" => "7",
+"Cost (7)" => "Cost (7)",
+"_8" => "8",
+"Cost (8)" => "Cost (8)",
+"_9" => "9",
+"Cost (9)" => "Cost (9)",
+"_0" => "0",
+"Cost (0)" => "Cost (0)",
+);
+?>

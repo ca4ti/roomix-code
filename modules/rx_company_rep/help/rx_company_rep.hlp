@@ -1,0 +1,53 @@
+<html>
+    <header>
+        <link rel="stylesheet" href="/themes/{$THEMENAME}/styles.css">
+        <link rel="stylesheet" href="/themes/{$THEMENAME}/help.css">
+    </header>
+    <body>
+        <h1>{$node_name}</h1>
+        <p align="Justify">English</p>
+
+        <!-- Form to add images -->
+        <!--<div><img src="../modules/{$node_id}/images/images.png" border="0"></div> -->
+
+        <table class="inline">
+            <tr>
+                <th>Details</th>
+            </tr>
+            <tr>
+                <td>You can output some company reports, like how many checkin and checkout there were by day between two dates,<br>
+			Sum Rooms, mini-bar, calls, and billings..</td>
+            </tr>
+        </table>
+
+        <p align="Justify">Fran&ccedil;ais</p>
+
+        <!-- Form to add images -->
+        <!--<div><img src="../modules/{$node_id}/images/images.png" border="0"></div> -->
+
+        <table class="inline">
+            <tr>
+                <th>Details</th>
+            </tr>
+            <tr>
+                <td>Vous pouvez imprimer des rapports d'entreprise, comme le nombre arriv&eacute;e et de d&eacute;part, <br>
+			et ce entre deux dates, la recette des chambres, du mini-bar, des appels, et des facturations ..</td>
+            </tr>
+        </table>
+    
+        <p align="Justify">Espa–ol</p>
+
+        <!-- Form to add images -->
+        <!--<div><img src="../modules/{$node_id}/images/images.png" border="0"></div> -->
+
+        <table class="inline">
+            <tr>
+                <th>Detalles</th>
+            </tr>
+            <tr>
+                <td> Puede extraer ciertos informes de la compa–ia, como cuantas entradas ha habido por dia entre dos fechas,<br>
+			recibos de las habitaciones, minibar, llamadas, facturas...</td>
+            </tr>
+        </table>
+    </body>
+</html>

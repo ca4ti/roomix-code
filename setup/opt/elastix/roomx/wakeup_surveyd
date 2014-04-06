@@ -1,0 +1,55 @@
+#!/bin/sh
+
+Arg=$1
+if [ "$Arg" != "-e" ]  ; then
+    echo "Missing argument !!"
+	exit 2
+fi
+Ext=$2
+if [ "$Ext" == "" ] ; then
+	echo "Missing Extension !!"
+	exit 2
+fi
+
+while true ; 
+do
+###########################################################################
+# Check the existing .call files from roomx within outgoing_done directory.
+###########################################################################
+ls /var/spool/asterisk/outgoing_done/roomx_wakeup_*.call 1>/dev/null 2>&1 && res=OK || res=KO
+
+R1=""
+R2=""
+
+################################
+# Check Expired and Failed files.
+################################
+if [ $res == "OK" ] && [ ! -f /var/spool/asterisk/outgoing_done/flag ] ; then 
+	R1=$(grep -l Expired /var/spool/asterisk/outgoing_done/roomx_wakeup_*.call)
+	R2=$(grep -l Failed /var/spool/asterisk/outgoing_done/roomx_wakeup_*.call)
+fi
+
+###########################################################
+# If last test is true, then sending alert to the operator.
+###########################################################
+if [ "$R1" != "" ]||[ "$R2" != "" ] ; then
+        touch /var/spool/asterisk/outgoing_done/flag
+        echo "Channel: SIP/$Ext" >> /var/spool/asterisk/tmp/alert.call
+        echo "CallerID: Alert <$Ext>" >> /var/spool/asterisk/tmp/alert.call
+        echo "MaxRetries: 3" >> /var/spool/asterisk/tmp/alert.call
+        echo "RetryTime: 60" >> /var/spool/asterisk/tmp/alert.call
+        echo "WaitTime: 30" >> /var/spool/asterisk/tmp/alert.call
+        echo "Application: Playback" >> /var/spool/asterisk/tmp/alert.call
+        echo "Data: roomx/alert" >> /var/spool/asterisk/tmp/alert.call
+        echo "Priority: 1" >> /var/spool/asterisk/tmp/alert.call
+        echo "Extension: $Ext" >> /var/spool/asterisk/tmp/alert.call
+        mv /var/spool/asterisk/tmp/alert.call /var/spool/asterisk/outgoing/
+        chgrp asterisk /var/spool/asterisk/outgoing/alert.call
+        chown asterisk /var/spool/asterisk/outgoing/alert.call
+fi
+
+####################
+# Wait 15 seconds  #
+#################### 
+sleep 15
+done

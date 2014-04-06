@@ -1,0 +1,81 @@
+<html>
+    <header>
+        <link rel="stylesheet" href="/themes/{$THEMENAME}/styles.css">
+        <link rel="stylesheet" href="/themes/{$THEMENAME}/help.css">
+    </header>
+    <body>
+        <h1>{$node_name}</h1>
+        <p align="Justify">English</p>
+
+        <!-- Form to add images -->
+        <!--<div><img src="../modules/{$node_id}/images/images.png" border="0"></div> -->
+
+        <table class="inline">
+            <tr>
+                <th>Details</th>
+            </tr>
+            <tr>
+                <td>You can see the rooms status currently in your hotel. The guest name, the room name, if it's free or busy,<br>
+			 cleaned or not. if the guest used the mini-bar or not. if the room is on DND status or not ( Do Not Disturb ).<br>
+			 And you can see if the room is included in a group or not.<br>
+        		 if the phone device is a SiP phone, you can know if the phone is connected or not.<br>
+			 it's possible to change the "Clean" and "DND" status with a simple click on icone.<br><br>
+			 in this case, you have a small yellow triangle beside the phone number.
+			 You can have more details clicking on (?) icone. These informations will appear:<br>
+			 <li> Check-in date, and Check-Out date.
+			 <li> Additionnal guest (yes or not).
+			 <li> How many calls had been sent by the guest.
+		</td>
+            </tr>
+        </table>
+
+        <p align="Justify">Fran&ccedil;ais</p>
+
+        <!-- Form to add images -->
+        <!--<div><img src="../modules/{$node_id}/images/images.png" border="0"></div> -->
+
+        <table class="inline">
+            <tr>
+                <th>D&eacute;tails</th>
+            </tr>
+            <tr>
+                <td>Vous pouvez voir l'&eacute;tat des chambres actuellement dans votre h&ocirc;tel.<br>
+			Le nom du client, le nom de la chambre, si elle est libre ou occup&eacute;, nettoy&eacute;s ou non.<br>
+			Si le client a utilis&eacute; le mini-bar ou pas. Si la pi&egrave;ce est en Ne Pas D&eacute;ranger ou non (DND ou NPD).<br>
+			Et vous pouvez voir si la chambre fait parti dans un groupe ou non.<br>
+			il est posible de changer l'&ecute;tat de la "chambre faite" et du "NPD" par un simple clic sur l'ic&ocirc;ne.<br><br>
+			Si le t&eacute;l&eacute;phone est un t&eacute;l&eacute;phone SiP, vous pouvez savoir s'il est connect&eacute; ou non.<br>
+			Dans ce cas, vous avez un petit triangle jaune &agrave; c&ocirc;t&eacute; du num&eacute;ro de t&eacute;l&eacute;phone.
+			Vous pouvez avoir plus de d&eacute;tails en cliquant sur l'ic&ocirc;ne (?). Ces informations apparaitront:<br>
+			<li> Date d'arriv&eacute;e et de D&eacute;part.
+			<li> Personne supp. (oui/non).
+			<li> Combien d'appels ont &eacute;t&eacute; pass&eacute; par le client.
+	 </p>
+		</td>
+            </tr>
+        </table>
+        <p align="Justify">Espa–ol</p>
+
+        <!-- Form to add images -->
+        <!--<div><img src="../modules/{$node_id}/images/images.png" border="0"></div> -->
+
+        <table class="inline">
+            <tr>
+                <th>Detalles</th>
+            </tr>
+            <tr>
+                <td> Puede ver el estado de las habitaciones de su hotel. EL nombre del invitado, de la habitaci&oacute;n, si est&aacute; ocupada o libre,<br>
+			 limpia o no. Si el invitado us&oacute; el minibar o no. Si la habitacion tiene pedido el modo no molestar.<br>
+			 Y puede ver si la habitaci&oacute;n ha sido incluida en un grupo o no.<br>
+        		 Si el tel&eacute;fono es un dispositivo SiP, podr&aacute; saber si el este est&aacute; conectado o no.<br>
+			 Es posible cambiar el stado "limpia" y "No molestar" co un simple click en el icono.<br><br>
+			 En tal caso tendr&aacute; un peque–o triangulo amarillo al lado del n&uacute;meor del tel&eacute;fono.
+			 Podr&aacute; obtener m&aacute;s detalles haciendo click sobre el icono de interrogacion (?). Los siguientes datos aparecer&aacute;n:<br>
+			 <li> Fecha de entrada y de salida.
+			 <li> Si hay invitados adicionales (S&iacute; o no).
+			 <li> Cuantas llamadas han sido efectuadas por este invitado.
+		</td>
+            </tr>
+        </table>
+    </body>
+</html>

@@ -1,0 +1,99 @@
+<html>
+    <header>
+        <link rel="stylesheet" href="/themes/{$THEMENAME}/styles.css">
+        <link rel="stylesheet" href="/themes/{$THEMENAME}/help.css">
+    </header>
+    <body>
+        <h1>{$node_name}</h1>
+        <p align="Justify">English</p>
+        <table class="inline">
+            <tr>
+                <th>Details</th>
+            </tr>
+            <tr>
+                <td>You can do 2 types of checkout. A classic checkout by room, and a checkout by group.<br>
+			You can make check-out for today, or scheduled date, or other date. These last options creates<br>
+			a job under Linux to set free the room at this date. (<i>You see that the room will busy even if the billing is done.</i>)<br>
+			Checkout by group will take all rooms in group, and it will perform the checkout, room by room.<br>
+			However, you can select another room model at check-out, <b>billed as</b>. In this case, it's possible to apply another price for this room.<br>
+			<div><img src="../modules/{$node_id}/images/paid.png" border="0"></div><br>
+			You may select the payment mode.<br>
+			If paid is checked, the billing is paid by the guest, else, this billing is taken as not paid.<br>
+			<div><img src="../modules/{$node_id}/images/details.png" border="0"></div><br>
+			If you want to have call details for the room, check this box.<br>
+			<div><img src="../modules/{$node_id}/images/sbm.png" border="0"></div><br>
+			If you want that guest to receive its billing by mail, check this box.<br>
+			When you click on save button, these information will appear:<br>
+			If the phone is disconnected, you can see this warning:<br>
+			<div><img src="../modules/{$node_id}/images/warning_doc.png" border="0"></div><br>
+			Else, you will have only: <b>Checkout Done</b>
+			Next, you will see the information below:
+			<div><img src="../modules/{$node_id}/images/co.png" border="0"></div><br>
+			Click on display to see the billing, also you can print this billing by the way.<br>
+			<div><img src="../modules/{$node_id}/images/bill.png" border="0"></div><br>
+		</td>
+            </tr>
+        </table>
+        <p align="Justify">Fran&ccedil;ais</p>
+        <table class="inline">
+            <tr>
+                <th>D&eacute;tails</th>
+            </tr>
+            <tr>
+                <td>Vous pouvez faire 2 types de D&eacute;part. Un D&eacute;part classique de chambre, et un D&eacute;part par groupe.<br>
+			Vous pouvez utiliser trois types de dates pour le D&eacute;part, aujourd'hui, &agrave; la date pr&eacute;vue, ou autre date. Ces derni&egrave;res<br>
+			lib&eacute;reront la chambre &agrave; la date pr&eacute;vue. (<i>Vous verrez que la chambre sera occup&eacute;e m&ecirc;me si la facture est &eacute;dit&eacute;e</i>).<br>
+			D&eacute;part par groupe prendra toutes les chambres du groupe, et effectuera le check-out chambre par chambre.<br>
+			Cependant, vous pouvez s&eacute;lectionner un autre mod&egrave;le de chambre, <b>factur&eacute; comme</b>. Dans ce cas, il est possible d'appliquer un autre prix pour cette chambre.<br>
+			<div><img src="../modules/{$node_id}/images/paid.png" border="0"></div><br>
+			Vous pouvez s&eacute;lectionner le mode de paiement.<br>
+			Si la case Pay&eacute; est coch&eacute;e, la facturation est pay&eacute; par le client, sinon, cette facturation est consid&eacute;r&eacute; comme non pay&eacute;e..<br>
+			<div><img src="../modules/{$node_id}/images/details.png" border="0"></div><br>
+			Si vous voulez avoir le d&eacute;tail des appels de la chambre, cochez cette case.<br>
+			<div><img src="../modules/{$node_id}/images/sbm.png" border="0"></div><br>
+			Si vous voulez que le client re&ccedil;oive sa facture par courriel, cochez cette case.<br>
+			<br>
+			Lorsque vous cliquez sur le bouton de sauvegarde, ces informations apparaissent:<br>
+			Si le t&eacute;l&eacute;phone est d&eacute;connect&eacute;, vous pouvez voir cet avertissement:<br>
+			<div><img src="../modules/{$node_id}/images/warning_doc.png" border="0"></div><br>
+			Sinon, vous aurez seulement: <b>D&eacute;part Fait</b>
+			Ensuite, vous pourrez voir les informations ci-dessous:
+			<div><img src="../modules/{$node_id}/images/co.png" border="0"></div><br>
+			Cliquez sur l'&eacute;cran pour voir la facturation. Vous pouvez &eacute;galement imprimer cette facture par la m&ecirc;me occasion.<br>
+			<div><img src="../modules/{$node_id}/images/bill.png" border="0"></div><br>
+		</td>
+            </tr>
+        </table>
+    
+            <p align="Justify">Espa&ntilde;ol</p>
+
+        <table class="inline">
+            <tr>
+                <th>Detalles</th>
+            </tr>
+            <tr>
+                <td>Usted podra efectuar dos tipos de salidas.  Una salida tradicional por habitaci&oacute;n, y una salida por grupo.<br>
+			Puede hacerse una salida para hoy, un d&iacute;a agendado otra fecha. Estas opciones <br> 
+                        crean un evento bajo linux para poner libre la habitaci&oacute;n en esta fecha. (<i> Usted ve que la habitaci&oacute;n estar&aacute; ocupada aunque la facturaci&oacute;n ya est&eacute; hecha.</i>)<br>
+			Las salidas por grupo, seleccionar&aacute; todas las habitaciones del grupo y hara una salida habitaci&oacute;n por habitaci&oacute;n.<br>
+			No obstante, podr&aacute; seleccionar otro modelo de habitaci&oacute;n durante la salida, <b> facturar como </b>. En este caso, es posible aplicar otro precio para esta habitaci&oacute;n.<br>
+			<div><img src="../modules/{$node_id}/images/paid.png" border="0"></div><br>
+		    Usted puede seleccionar la forma de pago.<br>
+			Si se marca, como pagado, la factura est&aacute; pagada por el usuario, de lo contrario, la factura aparecer&aacute; como no pagada.<br>
+			<div><img src="../modules/{$node_id}/images/details.png" border="0"></div><br>
+			Si desea tener los detalles de llamadas para esta habitaciçon marque esta casilla.<br>
+			<div><img src="../modules/{$node_id}/images/sbm.png" border="0"></div><br>
+			Si quiere que este invitado reciba su factura por correo, arque esta casilla.<br>
+			Cuando haga click en el boton de salvar, aparecerña la siguiente informaci&oacute;n:<br>
+			Si el tel&eacute;fono est&aacute; desconectado, vera la siguiente alarma:<br>
+			<div><img src="../modules/{$node_id}/images/warning_doc.png" border="0"></div><br>
+			Normalmente, tendr&aacute; unicamente: <b>Salida efectuada</b>
+			A continuaci&oacute;n ver&aacute; la informaci&oacute;n siguiente:
+			<div><img src="../modules/{$node_id}/images/co.png" border="0"></div><br>
+			Haga click en mostrar para ver la factura, asi mismo podr&aacute; imprimir la factura.<br>
+			<div><img src="../modules/{$node_id}/images/bill.png" border="0"></div><br>
+		</td>
+            </tr>
+        </table>
+    </body>
+</html>

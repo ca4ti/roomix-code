@@ -1,0 +1,121 @@
+<html>
+    <header>
+        <link rel="stylesheet" href="/themes/{$THEMENAME}/styles.css">
+        <link rel="stylesheet" href="/themes/{$THEMENAME}/help.css">
+    </header>
+    <body>
+        <h1>{$node_name}</h1>
+        <p align="Justify"><h2> English</h2></p>
+		<table class="inline">
+			<tr>
+				<th>Details</th>
+			</tr>
+			<tr><td>
+		The Home page.<br>
+		<br>
+		This page display lots of informations:<br>
+		<br>
+		1 - <span style="font-weight: bold;">The RoomX version</span><br>
+		<img style="width: 387px; height: 225px;" alt="" src="../modules/{$node_id}/images/version.png"><br>
+		2 - <span style="font-weight: bold;">Number of free room:</span><br>
+		<br>
+		<img style="width: 132px; height: 37px;" alt="" src="../modules/{$node_id}/images/room_free.png"><br>
+		<br>
+		3 - <span style="font-weight: bold;">Number of busy room:</span><br>
+		<br>
+		<img style="width: 120px; height: 37px;" alt=""  src="../modules/{$node_id}/images/room_busy.png"><br>
+		<br>
+		4 - <span style="font-weight: bold;">Total of rooms:</span><br>
+		<br>
+		<img style="width: 159px; height: 37px;" alt="" src="../modules/{$node_id}/images/room_total.png"><br>
+		<br>
+		5 - <span style="font-weight: bold;">The booking of day.</span><br>
+		<br>
+		if any rooms are booked.
+		<img style="width: 159px; height: 37px;" alt="" src="../modules/{$node_id}/images/room_booking.png"><br>
+		<br>
+		<br>
+		if there's one or more rooms booked.<br>
+		<img style="width: 159px; height: 37px;" alt="" src="../modules/{$node_id}/images/room_booking_button.png"><br>
+		<p>If no trunk is declared as billable within elastix billing rate, then this message will appear.</p>
+		<img alt="" src="../modules/{$node_id}/images/alert.png"><br>
+		<br>
+		</td></tr>
+	</table>
+
+        <p align="Justify"><h2>Fran&ccedil;ais</h2></p>
+		<table class="inline">
+			<tr>
+				<th>D&eacute;tails</th>
+			</tr>
+			<tr><td>
+		Page d'accueil.<br>
+		<br>
+		Cette page affiche plusieurs informations<br>
+		<br>
+		1 - <span style="font-weight: bold;">La version de RoomX</span><br>
+		<img style="width: 387px; height: 225px;" alt="" src="../modules/{$node_id}/images/version.png"><br>
+		2 - <span style="font-weight: bold;">Le nombre de chambres libres:</span><br>
+		<br>
+		<img style="width: 132px; height: 37px;" alt="" src="../modules/{$node_id}/images/room_free.png"><br>
+		<br>
+		3 - <span style="font-weight: bold;">Nombre de chambres occup&eacute;es:</span><br>
+		<br>
+		<img style="width: 120px; height: 37px;" alt=""  src="../modules/{$node_id}/images/room_busy.png"><br>
+		<br>
+		4 - <span style="font-weight: bold;">Le total des chambres:</span><br>
+		<br>
+		<img style="width: 159px; height: 37px;" alt="" src="../modules/{$node_id}/images/room_total.png"><br>
+		<br>
+		5 - <span style="font-weight: bold;">R&eacute;servations du jour.</span><br>
+		<br>
+		S'il n'y a aucne r&eacute;servation dans la journ&eacute;e.
+		<img style="width: 159px; height: 37px;" alt="" src="../modules/{$node_id}/images/room_booking.png"><br>
+		<br>
+		<br>
+		S'il y a au moins une chambre en r&eacute;servation.<br>
+		<img style="width: 159px; height: 37px;" alt="" src="../modules/{$node_id}/images/room_booking_button.png"><br>
+		<p>S'il aucun trunk n'est d&eacute;clar&eacute; facturable dans la configuration de la taxation interne d'Elastix, alors un message d'alert apparait.</p>
+		<img alt="" src="../modules/{$node_id}/images/alert.png"><br>
+		</td></tr>
+	</table> 		
+        
+        <p align="Justify"><h2>Espa&ntilde;ol</h2></p>
+	<table class="inline">
+			<tr>
+				<th>Details</th>
+			</tr>
+			<tr><td>
+        
+        La p&aacute;gina de inicio.<br>
+		<br>
+		Esta p&aacute;gina muestra multiples informaciones:<br>
+		<br>
+		1 - <span style="font-weight: bold;">The RoomX version</span><br>
+		<img style="width: 387px; height: 225px;" alt="" src="../modules/{$node_id}/images/version.png"><br>
+		2 - <span style="font-weight: bold;">N&uacute;mero de habitaciones libres:</span><br>
+		<br>
+		<img style="width: 132px; height: 37px;" alt="" src="../modules/{$node_id}/images/room_free.png"><br>
+		<br>
+		3 - <span style="font-weight: bold;">N&uacute;mero de habitaciones ocupadas:</span><br>
+		<br>
+		<img style="width: 120px; height: 37px;" alt=""  src="../modules/{$node_id}/images/room_busy.png"><br>
+		<br>
+		4 - <span style="font-weight: bold;">Total de habitaciones:</span><br>
+		<br>
+		<img style="width: 159px; height: 37px;" alt="" src="../modules/{$node_id}/images/room_total.png"><br>
+		<br>
+		5 - <span style="font-weight: bold;">Reservas del dia.</span><br>
+		<br>
+		Si alguna habitacion est&aacute; reservada.
+		<img style="width: 159px; height: 37px;" alt="" src="../modules/{$node_id}/images/room_booking.png"><br>
+		<br>
+		<br>
+		Si hay una o m&aacute;s habitaciones reservadas.<br>
+		<img style="width: 159px; height: 37px;" alt="" src="../modules/{$node_id}/images/room_booking_button.png"><br>
+	    <p>Si no el tronco se declara como facturable dentro tarifa de facturaci&ograve;n Elastix, aparecer&agrave; este mensaje.</p>
+		<img alt="" src="../modules/{$node_id}/images/alert.png"><br>
+		</td></tr>
+	</table> 
+    </body>
+</html>

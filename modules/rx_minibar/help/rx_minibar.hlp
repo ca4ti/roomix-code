@@ -1,0 +1,62 @@
+<html>
+    <header>
+        <link rel="stylesheet" href="/themes/{$THEMENAME}/styles.css">
+        <link rel="stylesheet" href="/themes/{$THEMENAME}/help.css">
+    </header>
+    <body>
+        <h1>{$node_name}</h1>
+        <p align="Justify">English</p>
+
+        <!-- Form to add images -->
+        <!--<div><img src="../modules/{$node_id}/images/images.png" border="0"></div> -->
+
+        <table class="inline">
+            <tr>
+                <th>Details</th>
+            </tr>
+            <tr>
+                <td>This menu affecting a product on each key with its price. You can enter 10 different products on this module.<br>
+			2 V.A.T can be selected.<br>
+			When the chambermaid checks a mini-bar, she dials the prefix (*37 by default) and presses the number of the product used.<br>
+			The entering is ended by the * key. if the * key is not pressed, all products will not billed.<br>
+			The # key cancels the entering.</td>
+            </tr>
+        </table>
+
+        <p align="Justify">Fran&ccedil;ais</p>
+
+        <!-- Form to add images -->
+        <!--<div><img src="../modules/{$node_id}/images/images.png" border="0"></div> -->
+
+        <table class="inline">
+            <tr>
+                <th>D&eacute;tails</th>
+            </tr>
+            <tr>
+                <td>Ce menu affecte un produit sur chaque touche du clavier du t&eacute;l&eacute;phone avec son prix. Vous pouvez entrer 10 produits diff&eacute;rents sur ce module.<br>
+			2 TVA peuvent &ecirc;tre s&eacute;lectionn&eacute;es.<br>
+			Lorsque la femme de chambre v&eacute;rifie un mini-bar, elle compose le pr&eacute;fixe (* 37 par d&eacute;faut) et appuie sur la touche correspondant au produit utilis&eacute;.<br>
+			L'entr&eacute;e se termine par la touche *. Si la touche * n'est pas compos&eacute;e, tous les produits ne seront pas factur&eacute;s.<br>
+			La touche # annule aussi la saisie.<br></td>
+            </tr>
+        </table>
+    
+            <p align="Justify">Espa–ol</p>
+
+        <!-- Form to add images -->
+        <!--<div><img src="../modules/{$node_id}/images/images.png" border="0"></div> -->
+
+        <table class="inline">
+            <tr>
+                <th>Detalles</th>
+            </tr>
+            <tr>
+                <td>Este Men&uacute; afecta los productos de cada campo y sus precios. Usted podr&aacute; poner hasta diez productos en este modulo.<br>
+			Dos tipos de i.V.A pueden ser seleccionados.<br>
+			Cuando la camarera compruebe el minibar, marcar&aacute; el prefijo (Por defecto: *37) y presionar&aacute; el numeor del producto usado.<br>
+			La entrada es habilitada presionando la tecla asterisco (*). Si la tecla asterisco no es presionada, los productos no ser&aacute;n cobrados en la factura.<br>
+			La tecla Almuhadilla (#)  cancela la introducci&oacute;n.</td>
+            </tr>
+        </table>
+    </body>
+</html>
