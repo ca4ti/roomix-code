@@ -50,7 +50,7 @@ function Title($title)
 	return $content;
 }
 
-function Header_company($company,$logo,$client)
+function Header_company($company,$logo,$client,$description)
 {
 $content = "
 <table style='text-align: left; width: 100%;' border='0' cellpadding='2' cellspacing='2'>
@@ -59,6 +59,11 @@ $content = "
 		<td style='vertical-align: top;'>$logo<br>$company</td>
 		<td style='vertical-align: top;'><br></td>
 		<td style='vertical-align: bottom;'>$client</td>
+	</tr>
+	<tr>
+		<td style='vertical-align: top;'> $description </td>
+		<td style='vertical-align: top;'> </td>
+		<td style='vertical-align: bottom;'> </td>
 	</tr>
 </tbody>
 </table>

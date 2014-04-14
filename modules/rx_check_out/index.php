@@ -398,7 +398,8 @@ function saveNewCheckOut($smarty, $module_name, $local_templates_dir, &$pDB, &$p
      $For 			= $arrFor[0];
 	 $for			= $For['first_name']." ".$For['last_name']."<br>\n".$For['address']."<br>\n".$For['cp']." ".$For['city']."<br>\n".$For['NIF'];
 	 $company 		= "<br><b>".nl2br($Config['company'])."</b>";
-     $Billing_page 	= $Billing_page.Header_company($company,"<img src='".$Config['logo64']."'>",$for);
+	 $description	= "{$arrLang["Stayed from"]} {$arrGuest['date_ci']} {$arrLang["to"]} {$arrGuest['date_ci']}.";
+     $Billing_page 	= $Billing_page.Header_company($company,"<img src='".$Config['logo64']."'>",$for,$description);
      $Billing_page 	= $Billing_page."".Sale_title($arrLang["Sale"]);
 
 	 // How many nights ?
