@@ -107,7 +107,7 @@ function reportBookingList($smarty, $module_name, $local_templates_dir, &$pDB, $
         "filter_value" =>  $filter_value);
     $oGrid->setURL($url);
 
-    $arrColumns = array(_tr("Checkin"),_tr("Canceled"),_tr("Rooms"),_tr("First Name"),_tr("Last Name"),_tr("Additional Guest"),_tr("payment_mode_b"),_tr("Money Advance"),_tr("Date Checkin"),_tr("Date Checkout"),);
+    $arrColumns = array(_tr("Checkin"),_tr("Canceled"),_tr("Confirmed"),_tr("Rooms"),_tr("First Name"),_tr("Last Name"),_tr("Additional Guest"),_tr("payment_mode_b"),_tr("Money Advance"),_tr("Date Checkin"),_tr("Date Checkout"),);
     $oGrid->setColumns($arrColumns);
 
     $total   = $pBookingList->getNumBookingList($filter_field, $filter_value);
@@ -140,18 +140,22 @@ function reportBookingList($smarty, $module_name, $local_templates_dir, &$pDB, $
         
     if(is_array($arrResult) && $total>0){
         foreach($arrResult as $key => $value){ 
-           $PayMod    = $value['payment_mode_b'];
+        $PayMod    = $value['payment_mode_b'];
+		$Confirm   = "<input type='checkbox' name='confirmed[".$key."]' value='".$value['id']."'>";
+		if ( $value['confirmed'] == 1 )
+		  $Confirm = $ok[$value['confirmed']];
 	    $arrTmp[0] = "<input type='checkbox' name='checkin[".$key."]' value='".$value['id']."'>";
 	    $arrTmp[1] = "<input type='checkbox' name='canceled[".$key."]' value='".$value['id']."'>";
-	    $arrTmp[2] = $value['room_name'];
-	    $arrTmp[3] = $value['first_name'];
-	    $arrTmp[4] = $value['last_name'];
-	    $arrTmp[5] = $ok[$value['num_guest']];	
-	    $arrTmp[6] = $arrOptions_payment[$PayMod];
-	    $arrTmp[7] = $value['money_advance'];
-	    $arrTmp[8] = $value['date_ci'];
-	    $arrTmp[9] = $value['date_co'];           
-           $arrData[] = $arrTmp;
+		$arrTmp[2] = $Confirm;
+	    $arrTmp[3] = $value['room_name'];
+	    $arrTmp[4] = $value['first_name'];
+	    $arrTmp[5] = $value['last_name'];
+	    $arrTmp[6] = $ok[$value['num_guest']];	
+	    $arrTmp[7] = $arrOptions_payment[$PayMod];
+	    $arrTmp[8] = $value['money_advance'];
+	    $arrTmp[9] = $value['date_ci'];
+	    $arrTmp[10]= $value['date_co'];           
+        $arrData[] = $arrTmp;
         }
     }
 
@@ -178,99 +182,112 @@ function ActionBookingList($smarty, $module_name, $local_templates_dir, &$pDB, &
     $_DATA = $_POST;
 
     // There's some checkin to do?
-    //-------------------------------
+    //-------------------------------------
     if(array_key_exists('checkin',$_DATA))
     {
     	foreach($_DATA['checkin'] as $key => $value)
     	{
-      		// Making CheckIn Room.
-		//---------------------
+      	// Making CheckIn Room.
+		//------------------------------
 
 		$arrBooking 			= $pBookingList->getCheckIn('booking',"WHERE id = $value");
 
-              // Save all Datas into the table register. 
-        	//---------------------------------------------
-        	$value_register['room_id']  	= "'".$arrBooking['0']['room_id']."'";
-        	$value_register['guest_id'] 	= "'".$arrBooking['0']['guest_id']."'";
-        	$value_register['date_ci']  	= "'".$arrBooking['0']['date_ci']."'";
-        	$value_register['date_co']  	= "'".$arrBooking['0']['date_co']."'";
-        	$value_register['num_guest']	= "'".$arrBooking['0']['num_guest']."'";
-        	$value_register['payment_mode_b']	= "'".$arrBooking['0']['payment_mode_b']."'";
-        	$value_register['money_advance']	= "'".$arrBooking['0']['money_advance']."'";
-        	$value_register['status']   	= "'1'";
-        	$arrRegister 		  		= $pBookingList->insertQuery('register',$value_register);
+        // Save all Datas into the table register. 
+        //---------------------------------------------
+        $value_register['room_id']  	= "'".$arrBooking['0']['room_id']."'";
+        $value_register['guest_id'] 	= "'".$arrBooking['0']['guest_id']."'";
+        $value_register['date_ci']  	= "'".$arrBooking['0']['date_ci']."'";
+        $value_register['date_co']  	= "'".$arrBooking['0']['date_co']."'";
+        $value_register['num_guest']	= "'".$arrBooking['0']['num_guest']."'";
+        $value_register['payment_mode_b']	= "'".$arrBooking['0']['payment_mode_b']."'";
+        $value_register['money_advance']	= "'".$arrBooking['0']['money_advance']."'";
+        $value_register['status']   	= "'1'";
+        $arrRegister 		  			= $pBookingList->insertQuery('register',$value_register);
 
-        	// Update the room status (Free -> Busy)
+        // Update the room status (Free -> Busy)
 	 	// Put the guest name into the room.
-        	//---------------------------------------------
+        //---------------------------------------------
 
-		$guest_id			= $value_register['guest_id'];
-		$arrGuest	 		= $pBookingList->getCheckIn("guest","WHERE id = $guest_id");
-	 	$guest_name 			= str_replace("'","",$arrGuest['0']['first_name']." ".$arrGuest['0']['last_name']);
-       	$value_rooms['free'] 	= '0'; 
-        	$value_rooms['guest_name']  = "'".$guest_name."'";
-        	$where 			= "id = ".$value_register['room_id'];
-        	$arrRegister 			= $pBookingList->updateQuery('rooms',$value_rooms, $where);
+		$guest_id					= $value_register['guest_id'];
+		$arrGuest	 				= $pBookingList->getCheckIn("guest","WHERE id = $guest_id");
+	 	$guest_name 				= str_replace("'","",$arrGuest['0']['first_name']." ".$arrGuest['0']['last_name']);
+       	$value_rooms['free'] 		= '0'; 
+        $value_rooms['guest_name']  = "'".$guest_name."'";
+        $where 						= "id = ".$value_register['room_id'];
+        $arrRegister 				= $pBookingList->updateQuery('rooms',$value_rooms, $where);
 
 	 	// Update status table.
 	 	//---------------------
 	 	$free				= $pBookingList->Free();				// Take all free rooms
 	 	$busy				= $pBookingList->Busy();				// Take all busy rooms
-	 	$booking			= $pBookingList->getBookingStatus();		// Take all booking of the day. 
+	 	$booking			= $pBookingList->getBookingStatus();	// Take all booking of the day. 
 
-        	$value_status['free']  	= strval($free);
-        	$value_status['busy']   	= strval($busy);
-        	$value_status['booking']    = strval($booking);
+        $value_status['free']  		= strval($free);
+        $value_status['busy']   	= strval($busy);
+        $value_status['booking']    = strval($booking);
 	  
 	 	$arrStatus	 		= $pBookingList->UpdateStatus($value_status);	// At first, creating the day if not exist
 	 	$arrStatus	 		= $pBookingList->UpdateStatus($value_status);	// Next, re-sending request to update free, busy, and booking
 
 	 	// Take the rooms extension from id 
-        	//---------------------------------------------
-        	$where 			= "WHERE id = ".$value_register['room_id'];
-        	$arrRooms 			= $pBookingList->getCheckIn('rooms',$where);
-        	$Rooms 			= $arrRooms['0'];
+        //---------------------------------------------
+        $where 				= "WHERE id = ".$value_register['room_id'];
+        $arrRooms 			= $pBookingList->getCheckIn('rooms',$where);
+        $Rooms 				= $arrRooms['0'];
 
-        	// Modify the account code extension into Freepbx data
-        	//---------------------------------------------
-        	$value_rl['value']  		= "'true'";
-        	$where              		= "variable = 'need_reload';";
-        	$arrReload          		= $pBookingList_Ast->updateQuery('admin',$value_rl, $where);
+        // Modify the account code extension into Freepbx data
+        //----------------------------------------------------------------------
+        $value_rl['value'] 	= "'true'";
+        $where             	= "variable = 'need_reload';";
+        $arrReload         	= $pBookingList_Ast->updateQuery('admin',$value_rl, $where);
 
-        	$value_ac['data']   		= "'".$value_register['guest_id']."'";
-        	$where              		= "id = '".$Rooms['extension']."' and keyword = 'accountcode';";
-        	$arrAccount         		= $pBookingList_Ast->updateQuery('sip',$value_ac, $where);
+        $value_ac['data']  	= "'".$value_register['guest_id']."'";
+        $where             	= "id = '".$Rooms['extension']."' and keyword = 'accountcode';";
+        $arrAccount        	= $pBookingList_Ast->updateQuery('sip',$value_ac, $where);
 
-        	$cmd				= "/var/lib/asterisk/bin/module_admin reload";
-        	exec($cmd);
+        $cmd				= "/var/lib/asterisk/bin/module_admin reload";
+        exec($cmd);
 
-        	// Unlock the extension 
-        	//---------------------------------------------
+        // Unlock the extension 
+        //---------------------------------------------
 	 	$cmd 				= "/usr/sbin/asterisk -rx 'database put LOCKED ".$Rooms['extension']." 0'";
 		exec($cmd);
 
-        	// Call Between rooms enabled or not.
-        	//---------------------------------------------
-        	$arrConfig 			= $pBookingList->getCheckIn('config',"");
-        	$arrAstDB 			= $arrConfig['0'];
+        // Call Between rooms enabled or not.
+        //---------------------------------------------
+        $arrConfig 			= $pBookingList->getCheckIn('config',"");
+        $arrAstDB 			= $arrConfig['0'];
 
-        	$cmd				= "/usr/sbin/asterisk -rx 'database put CBR ".$Rooms['extension']." ".$arrAstDB['cbr']."'";
-        	exec($cmd);
+        $cmd				= "/usr/sbin/asterisk -rx 'database put CBR ".$Rooms['extension']." ".$arrAstDB['cbr']."'";
+        exec($cmd);
 
-      		// Deleting booked Room.
-		//----------------------
+      	// Deleting booked Room.
+		//------------------------------
 		$Result = $pBookingList->Delete($value);  
 	}
     }
     
     // There's some booking canceled?
-    //-------------------------------
+    //-----------------------------------------
     if(array_key_exists('canceled',$_DATA)){
     	foreach($_DATA['canceled'] as $key => $value)
     	{
-      		// Deleting booked Room.
+      	// Deleting booked Room.
 		//----------------------
 		$Result = $pBookingList->Delete($value);         
+    	}
+    }
+	
+	// There's some booking confirmed?
+    //----------------------------------------------
+    if(array_key_exists('confirmed',$_DATA)){
+    	foreach($_DATA['confirmed'] as $key => $value)
+    	{
+		// Save the statud confirmed.
+		//-------------------------------------
+        $value_booking['confirmed'] = "'1'";
+        $where 						= "id = $value";
+        $arrRegister 				= $pBookingList->updateQuery('booking',$value_booking, $where);         
     	}
     }
 
@@ -278,7 +295,8 @@ function ActionBookingList($smarty, $module_name, $local_templates_dir, &$pDB, &
     $filter_field = getParameter("filter_field");
     $filter_value = getParameter("filter_value");
 
-    //begin grid parameters
+    // Begin grid parameters
+	//-------------------------------
     $oGrid  = new paloSantoGrid($smarty);
     $oGrid->setTitle(_tr("Booking List"));
     $oGrid->pagingShow(true); // show paging section.
@@ -292,7 +310,7 @@ function ActionBookingList($smarty, $module_name, $local_templates_dir, &$pDB, &
         "filter_value" =>  $filter_value);
     $oGrid->setURL($url);
 
-    $arrColumns = array(_tr("Checkin"),_tr("Canceled"),_tr("Rooms"),_tr("First Name"),_tr("Last Name"),_tr("Number Guest"),_tr("Date Checkin"),_tr("Date Checkout"),);
+    $arrColumns = array(_tr("Checkin"),_tr("Canceled"),_tr("Confirmed"),_tr("Rooms"),_tr("First Name"),_tr("Last Name"),_tr("Additional Guest"),_tr("payment_mode_b"),_tr("Money Advance"),_tr("Date Checkin"),_tr("Date Checkout"),);
     $oGrid->setColumns($arrColumns);
 
     $total   = $pBookingList->getNumBookingList($filter_field, $filter_value);
@@ -325,23 +343,28 @@ function ActionBookingList($smarty, $module_name, $local_templates_dir, &$pDB, &
     
     if(is_array($arrResult) && $total>0){
         foreach($arrResult as $key => $value){
-           $PayMod    = $value['payment_mode_b'];
+        $PayMod    = $value['payment_mode_b'];
+		$Confirm   = "<input type='checkbox' name='confirmed[".$key."]' value='".$value['id']."'>";
+		if ( $value['confirmed'] == 1 )
+		  $Confirm = $ok[$value['confirmed']];
 	    $arrTmp[0] = "<input type='checkbox' name='checkin[".$key."]' value='".$value['id']."'>";
 	    $arrTmp[1] = "<input type='checkbox' name='canceled[".$key."]' value='".$value['id']."'>";
-	    $arrTmp[2] = $value['room_name'];
-	    $arrTmp[3] = $value['first_name'];
-	    $arrTmp[4] = $value['last_name'];
-	    $arrTmp[5] = $ok[$value['num_guest']];	
-	    $arrTmp[6] = $arrOptions_payment[$PayMod];
-	    $arrTmp[7] = $value['money_advance'];
-	    $arrTmp[8] = $value['date_ci'];
-	    $arrTmp[9] = $value['date_co'];           
-           $arrData[] = $arrTmp;
+		$arrTmp[2] = $Confirm;
+	    $arrTmp[3] = $value['room_name'];
+	    $arrTmp[4] = $value['first_name'];
+	    $arrTmp[5] = $value['last_name'];
+	    $arrTmp[6] = $ok[$value['num_guest']];	
+	    $arrTmp[7] = $arrOptions_payment[$PayMod];
+	    $arrTmp[8] = $value['money_advance'];
+	    $arrTmp[9] = $value['date_ci'];
+	    $arrTmp[10]= $value['date_co'];           
+        $arrData[] = $arrTmp;
         }
     }
     $oGrid->setData($arrData);
 
-    //begin section filter
+    // begin section filter
+	//------------------------------
     $oFilterForm = new paloForm($smarty, createFieldFilter());
     $smarty->assign("SHOW", _tr("Show"));
     $htmlFilter  = $oFilterForm->fetchForm("$local_templates_dir/filter.tpl","",$_POST);

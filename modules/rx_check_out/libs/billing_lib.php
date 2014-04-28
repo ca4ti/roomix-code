@@ -61,7 +61,7 @@ $content = "
 		<td style='vertical-align: bottom;'>$client</td>
 	</tr>
 	<tr>
-		<td style='vertical-align: top;'> $description </td>
+		<td style='vertical-align: top;'> <br><br>$description </td>
 		<td style='vertical-align: top;'> </td>
 		<td style='vertical-align: bottom;'> </td>
 	</tr>

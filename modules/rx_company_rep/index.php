@@ -96,9 +96,9 @@ function viewFormCompanyReport($smarty, $module_name, $local_templates_dir, &$pD
     $id     = getParameter("id");
     $smarty->assign("ID", $id); //persistence id with input hidden in tpl
 
-    if ( $_DATA['date_start'] == "" && $_DATA['date_end'] == ""){
+    if ( !isset($_DATA['date_start']) && !isset($_DATA['date_end'])){
     	$_DATA['date_start'] = date("Y-m-d");
-    	$_DATA['date_end'] = date("Y-m-d");
+    	$_DATA['date_end'] 	 = date("Y-m-d");
     }
 
     if($action=="view")

@@ -42,7 +42,7 @@ CREATE TABLE IF NOT EXISTS `config` (
   `minibar` varchar(6) NOT NULL,
   `logo` varchar(100) NOT NULL,
   `logo64` mediumtext NOT NULL,
-  `vat_1` decimal(5,2) NOT NULL default '19.60',
+  `vat_1` decimal(5,2) NOT NULL default '20.0',
   `vat_2` decimal(5,2) NOT NULL default '5.50',
   `mail` varchar(50) NOT NULL,
   `version` varchar(10) NOT NULL,

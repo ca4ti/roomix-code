@@ -80,7 +80,7 @@ function check_trunk_billing(&$pDB_Trk)
 	$pDB_trunk_Billing = new paloSantoHome($pDB_Trk);
 	$is_trunk = $pDB_trunk_Billing -> gettrunk();
 	$popup = "";
-    if(count($is_trunk) == 0)
+    if(!isset($is_trunk['0']))
 		$popup = '<script type="text/javascript">Popup_Alert("Pas de trunk facturable!!!")</script>';
 	return $popup;
 }

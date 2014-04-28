@@ -87,7 +87,7 @@ function check_trunk_billing(&$pDB_Trk)
 	$pDB_trunk_Billing = new paloSantoCheckOut($pDB_Trk);
 	$is_trunk = $pDB_trunk_Billing -> loadtrunk();
 	$popup = "";
-    if(count($is_trunk) == 0)
+    if(!isset($is_trunk['0']))
 		$popup = '<script type="text/javascript">Popup_Alert("Pas de trunk facturable!!!")</script>';
 	return $popup;
 }
@@ -398,7 +398,7 @@ function saveNewCheckOut($smarty, $module_name, $local_templates_dir, &$pDB, &$p
      $For 			= $arrFor[0];
 	 $for			= $For['first_name']." ".$For['last_name']."<br>\n".$For['address']."<br>\n".$For['cp']." ".$For['city']."<br>\n".$For['NIF'];
 	 $company 		= "<br><b>".nl2br($Config['company'])."</b>";
-	 $description	= "{$arrLang["Stayed from"]} {$arrGuest['date_ci']} {$arrLang["to"]} {$arrGuest['date_ci']}.";
+	 $description	= "{$arrLang["Stayed from"]} {$arrGuest['date_ci']} {$arrLang["to"]} {$arrGuest['date_co']}.";
      $Billing_page 	= $Billing_page.Header_company($company,"<img src='".$Config['logo64']."'>",$for,$description);
      $Billing_page 	= $Billing_page."".Sale_title($arrLang["Sale"]);
 
