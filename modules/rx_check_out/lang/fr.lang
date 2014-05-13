@@ -62,12 +62,13 @@ $arrLangModule=array(
 "Money Advance"					=> "Accompte",
 "Credit Card"					=> "Carte de Crédit",
 "Bank Check"					=> "Chèque Bancaire",
-"Cach"							=> "Liquide",
+"Cash"							=> "Liquide",
 "Other"							=> "Autre",
 "PayPal"						=> "PayPal",
 "Transfer"						=> "Transfert",
 "Remains to be paid"			=> "Reste &agrave; Payer",
 "Stayed from"					=> "Séjour du",
 "to"							=> "au",
+"No trunk Billable !!!" 	    => "Pas de trunk facturable !!!",
 );
 ?>

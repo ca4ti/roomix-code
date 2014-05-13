@@ -75,13 +75,14 @@ function _moduleContent(&$smarty, $module_name)
     return $content;
 }
 
-function check_trunk_billing(&$pDB_Trk)
+function check_trunk_billing(&$pDB_Trk, $arrLang)
 {
 	$pDB_trunk_Billing = new paloSantoHome($pDB_Trk);
 	$is_trunk = $pDB_trunk_Billing -> gettrunk();
 	$popup = "";
+	$message_trunk = $arrLang["No trunk Billable !!!"];
     if(!isset($is_trunk['0']))
-		$popup = '<script type="text/javascript">Popup_Alert("Pas de trunk facturable!!!")</script>';
+		$popup = '<script type="text/javascript">Popup_Alert("'.$message_trunk.'")</script>';
 	return $popup;
 }
 
@@ -93,7 +94,7 @@ function viewFormHome($smarty, $module_name, $local_templates_dir, &$pDB, &$pDB_
 	$DocumentRoot = (isset($_SERVER['argv'][1]))?$_SERVER['argv'][1]:"/var/www/html";
     require_once("$DocumentRoot/libs/misc.lib.php");
 	
-	check_trunk_billing($pDB_Trk);
+	check_trunk_billing($pDB_Trk, $arrLang);
 
     // Moving context file at first using.
     //------------------------------------
@@ -110,7 +111,7 @@ function viewFormHome($smarty, $module_name, $local_templates_dir, &$pDB, &$pDB_
     $smarty->assign("Number_Rooms", $arrLang["Number of Rooms"]);
     $smarty->assign("title",_tr("Home"));
     $smarty->assign("icon","/modules/$module_name/images/icone.png");
-	$smarty->assign("popup",check_trunk_billing($pDB_Trk));
+	$smarty->assign("popup",check_trunk_billing($pDB_Trk, $arrLang));
 
     if($action=="view")
         $oForm->setViewMode();

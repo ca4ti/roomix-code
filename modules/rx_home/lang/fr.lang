@@ -28,15 +28,16 @@
   $Id: en.lang,v 1.1 2010-03-28 08:03:53 Franck Danard franckd@agmp.org Exp $ */
 global $arrLangModule;
 $arrLangModule=array(
-"Home" 		=> "Accueil",
-"room" 		=> "Chambre",
-"Rooms Free"		=> "Chambres Libres",
-"Room Busy"		=> "Chambres Occupées",
-"Number of Rooms"	=> "Total de Chambres",
-"Booking Today"	=> "Réservations Aujourd'hui",
-"No Booking Today"	=> "Aucune Réservation Aujourd'hui",
-"Potentially full"   => "Potentiellement Complet!",
-"Full"   		=> "Complet!",
-"Intro"		=> "<big><big><big><big>RoomX</big></big></big></big><br>Le module Hôtel pour Elastix. <br>Version : ",
+"Home" 							=> "Accueil",
+"room" 							=> "Chambre",
+"Rooms Free"					=> "Chambres Libres",
+"Room Busy"						=> "Chambres Occupées",
+"Number of Rooms"				=> "Total de Chambres",
+"Booking Today"					=> "Réservations Aujourd'hui",
+"No Booking Today"				=> "Aucune Réservation Aujourd'hui",
+"Potentially full"  			=> "Potentiellement Complet!",
+"Full"   						=> "Complet!",
+"Intro"							=> "<big><big><big><big>RoomX</big></big></big></big><br>Le module Hôtel pour Elastix. <br>Version : ",
+"No trunk Billable !!!" 	    => "Pas de trunk facturable !!!",
 );
 ?>

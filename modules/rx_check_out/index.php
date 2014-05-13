@@ -82,13 +82,14 @@ function _moduleContent(&$smarty, $module_name)
     return $content;
 }
 
-function check_trunk_billing(&$pDB_Trk)
+function check_trunk_billing(&$pDB_Trk, $arrLang)
 {
 	$pDB_trunk_Billing = new paloSantoCheckOut($pDB_Trk);
 	$is_trunk = $pDB_trunk_Billing -> loadtrunk();
 	$popup = "";
+	$message_trunk = $arrLang["No trunk Billable !!!"];
     if(!isset($is_trunk['0']))
-		$popup = '<script type="text/javascript">Popup_Alert("Pas de trunk facturable!!!")</script>';
+		$popup = '<script type="text/javascript">Popup_Alert("'.$message_trunk.'")</script>';
 	return $popup;
 }
 
@@ -133,7 +134,7 @@ function viewFormCheckOut($smarty, $module_name, $local_templates_dir, &$pDB, &$
     $smarty->assign("IMG", "images/list.png");
     $smarty->assign("title",_tr("Check Out"));
     $smarty->assign("icon","/modules/$module_name/images/icone.png");
-	$smarty->assign("popup",check_trunk_billing($pDB_Trk));
+	$smarty->assign("popup",check_trunk_billing($pDB_Trk, $arrLang));
 
     $htmlForm = $oForm->fetchForm("$local_templates_dir/form.tpl",$arrLang["CheckOut"], $_DATA);
     $content = "<form  method='POST' style='margin-bottom:0;' action='?menu=$module_name'>".$htmlForm."</form>";
@@ -304,7 +305,6 @@ function saveNewCheckOut($smarty, $module_name, $local_templates_dir, &$pDB, &$p
 	// Replace the guest name.by the room name 
 	//------------------------------------------------------
 	$cmd 			= "asterisk -rx 'database put AMPUSER/{$arrExt['extension']} cidname \"{$arrExt['room_name']}\"'";
-	echo $cmd;
 	exec($cmd);
 
     // Delete account code extension into Freepbx data
@@ -742,7 +742,7 @@ function createFieldForm($arrLang, &$pDB)
 
     $arrOptions_payment = array(
 				'1' => $arrLang['Credit Card'],
-				'2' => $arrLang['Cach'],
+				'2' => $arrLang['Cash'],
 				'3' => $arrLang['Bank Check'],
 				'4' => $arrLang['Transfer'],
 				'5' => $arrLang['PayPal'],
