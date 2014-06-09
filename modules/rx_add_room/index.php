@@ -495,22 +495,23 @@ function reportAddRoom($smarty, $module_name, $local_templates_dir, &$pDB, &$pDB
 	    }
 
 	    $select="";
-    	    if(is_array($arrModel) && $totalModel>0){
+    	    if(is_array($arrModel) && $totalModel > 0){
             	foreach($arrModel as $key_r => $value_r){ 
-	       
-		$where = "where extension = '".$value['extension']."'";
-           	$arrRoom = $pAddRoomModel->getModel('rooms', $where);
-              if (is_array($arrRoom)){
-           		$Room = $arrRoom['0'];
-           		if ($Room['model'] == $value_r['room_model']) {
-	    				$select = "<option selected='selected'>".$value_r['room_model']."</option>".$select;
-	    			}
-	    			else {
-					$select = "<option>".$value_r['room_model']."</option>".$select;
-	    			}
-        		}
-		}
-    	    }
+					$where 		= "where extension = '".$value['extension']."'";
+					$arrRoom 	= $pAddRoomModel->getModel('rooms', $where);
+					if (is_array($arrRoom)){
+					    $Room=Null;
+						if(count($arrRoom) > 0)
+							$Room = $arrRoom[0];
+						if ($Room['model'] == $value_r['room_model']) {
+							$select = "<option selected='selected'>".$value_r['room_model']."</option>".$select;
+						}
+						else {
+							$select = "<option>".$value_r['room_model']."</option>".$select;
+						}
+					}
+				}
+			}
 
            $checked = "";
            if ( $chk == 1) 

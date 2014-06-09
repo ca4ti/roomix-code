@@ -28,8 +28,8 @@
   $Id: br.lang,v 1.1 2011-02-09 20:12:20 Ricardo Zippert rzippert@gmail.com Exp $ */
 global $arrLangModule;
 $arrLangModule=array(
-"Show Filter"		=> "Show Filter",
-"Hide Filter"		=> "Hide Filter",
+"Show Filter"		=> "Mostrar Filtro",
+"Hide Filter"		=> "Esconder Filtro",
 "Download"		=> "Download",
 "Models" 		=> "Modelos",
 "Delete" 		=> "Apagar",
@@ -38,14 +38,14 @@ $arrLangModule=array(
 "V.A.T"  		=> "IMP",
 "Search" 		=> "Buscar",
 "Show"   		=> "Mostrar",
-"Guest"  		=> "Pessoa Suplementares",
+"Guest"  		=> "Hospede adicioanl",
 "Price" 		=> "Preços",
 "VAT"    		=> "IMP",
 "Edit"   		=> "Edit",
-"Add Model" 		=> "Add Model",
-"Select" 		=> "Select",
-"Add"    		=> "Add",
-"Guest"  		=> "Guest",
-"Show"   		=> "Show",
+"Add Model" 		=> "Adicionar modele",
+"Select" 		=> "Escolher",
+"Add"    		=> "Adicionar",
+"Guest"  		=> "Hospede",
+"Show"   		=> "Mostrar",
 );
 ?>

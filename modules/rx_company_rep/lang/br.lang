@@ -28,15 +28,15 @@
   $Id: en.lang,v 1.1 2011-05-18 04:05:28 Franck Danard franckd@agmp.org Exp $ */
 global $arrLangModule;
 $arrLangModule=array(
-"Total Check-In for this period : " 		=> "Total Check-In for this period : ",
-"Total Check-Out for this period : " 		=> "Total Check-Out for this period : ",
-"Total price of rooms for this period : " 	=> "Total price of rooms for this period : ",
-"Total price of calls for this period : " 	=> "Total price of calls for this period : ",
-"Total price of Bar for this period : "		=> "Total price of Bar for this period : ",
-"Total price of Billings for this period : " 	=> "Total price of Billings for this period : ",
-"Company Report" 					=> "Company Report",
-"Date Start"						=> "Date Start",
-"Date End" 						=> "Date End",
-"Type of Report" 					=> "Type of Report",
+"Total Check-In for this period : " 		=> "Numero total de check-in neste periodo : ",
+"Total Check-Out for this period : " 		=> "Numero total de check-out neste periodo : ",
+"Total price of rooms for this period : " 	=> "Preço total de apto neste periodo : ",
+"Total price of calls for this period : " 	=> "Numero total de ligações neste periodo: ",
+"Total price of Bar for this period : "		=> "Numero total de bebidas neste periodo : ",
+"Total price of Billings for this period : " 	=> "Numero total de fatura neste periodo : ",
+"Company Report" 					=> "Relatorio da companhia",
+"Date Start"						=> "Inicio",
+"Date End" 						=> "Fim",
+"Type of Report" 					=> "Tipo de relatorio",
 );
 ?>

@@ -369,7 +369,7 @@ function createFieldForm($arrLang, &$pDB)
                                             "INPUT_EXTRA_PARAM"      => "",
                                             "VALIDATION_TYPE"        => "text",
                                             "VALIDATION_EXTRA_PARAM" => "",
-                				  "COLS"                   => "30",
+											"COLS"                   => "30",
                                             "ROWS"                   => "10",
                                             "EDITABLE"               => "si"
 						  ),

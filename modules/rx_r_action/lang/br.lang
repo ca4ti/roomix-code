@@ -28,18 +28,18 @@
   $Id: en.lang,v 1.1 2012-02-05 06:02:02 Danard Franck franckd@agmp.org Exp $ */
 global $arrLangModule;
 $arrLangModule=array(
-"Show Filter"		=> "Show Filter",
-"Hide Filter"		=> "Hide Filter",
+"Show Filter"		=> "Mostrar Filtro",
+"Hide Filter"		=> "Esconder Filtro",
 "Download"		=> "Download",
-"EDIT"			=> "Edit",
-"CANCEL"		=> "Cancel",
-"ADD"			=> "Add",
-"SAVE"			=> "Save",
-"Remote_Action" 	=> "Remote Action Control",
-"select" 		=> "Select",
-"Rooms" 		=> "Rooms",
-"Action CI" 		=> "Action CI",
-"Action CO" 		=> "Action CO",
-"Edit Action"		=> "Edit Action"
+"EDIT"			=> "Editar",
+"CANCEL"		=> "Cancelar",
+"ADD"			=> "Adicionar",
+"SAVE"			=> "Salvar",
+"Remote_Action" 	=> "Controle de ação remota",
+"select" 		=> "Escolher",
+"Rooms" 		=> "Apto",
+"Action CI" 		=> "Ação no check-in",
+"Action CO" 		=> "Ação no check-out",
+"Edit Action"		=> "Editar Ação"
 );
 ?>

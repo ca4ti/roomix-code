@@ -122,7 +122,7 @@ class paloSantoAddRoom {
         if(isset($filter_field) & $filter_field !="")
             $where = "where $filter_field like '$filter_value%'";
 
-        $query   = "SELECT * FROM users $where";
+        $query   = "SELECT * FROM users $where ORDER BY extension ASC";
         $result=$this->_DB->fetchTable($query, true);
 
         if($result==FALSE){

@@ -61,13 +61,12 @@ $arrLangModule=array(
 "Money Advance"						=> "Money Advance",
 "Credit Card"						=> "Credit Card",
 "Bank Check"						=> "Bank Check",
-"Cash"								=> "Cash",
+"Cach"								=> "Cach",
 "Other"								=> "Other",
 "PayPal"							=> "PayPal",
 "Transfer"							=> "Transfer",
 "Remains to be paid"				=> "Remains to be paid",
 "Stayed from"						=> "Stayed from",
 "to"								=> "to",
-"No trunk Billable !!!" 	    	=> "No trunk Billable !!!",
 );
 ?>

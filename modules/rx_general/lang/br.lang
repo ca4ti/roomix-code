@@ -45,6 +45,6 @@ $arrLangModule=array(
 "Functions"			=> "Funções",
 "Company"			=> "Companhia",
 "Roomx Dial Plan"		=> "RoomX Plano de Discagem",
-"Tax"				=> "Taxe",
+"Tax"				=> "Impostos",
 );
 ?>
