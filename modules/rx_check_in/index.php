@@ -357,6 +357,7 @@ function saveNewCheckIn($smarty, $module_name, $local_templates_dir, &$pDB, &$pD
         		$where              	= "id = '".$Rooms['extension']."' and keyword = 'accountcode';";
         		$arrAccount         	= $pCheckIn_Ast->updateQuery('sip',$value_ac, $where);
         		$arrAccount         	= $pCheckIn_Ast->updateQuery('dahdi',$value_ac, $where);
+        		$arrAccount         	= $pCheckIn_Ast->updateQuery('zap',$value_ac, $where);
 
         		$cmd			="/var/lib/asterisk/bin/module_admin reload";
         		exec($cmd);

@@ -120,6 +120,7 @@ function saveAddRoom($smarty, $module_name, $local_templates_dir, &$pDB, &$pDBM,
 			$where              	= "id = '".$value."' and keyword = 'context';";
         		$arrAccount         	= $pFreePBX->updateFreepbx('sip',$value_ac, $where);
 			$arrAccount         	= $pFreePBX->updateFreepbx('dahdi',$value_ac, $where);
+			$arrAccount         	= $pFreePBX->updateFreepbx('zap',$value_ac, $where);
 
         		$cmd			= "/var/lib/asterisk/bin/module_admin reload";
 			exec($cmd);	
@@ -299,6 +300,7 @@ function deleteAddRoom($smarty, $module_name, $local_templates_dir, &$pDB, &$pDB
 			$where              	= "id = '".$value."' and keyword = 'context';";
         		$arrAccount         	= $pFreePBX->updateFreepbx('sip',$value_ac, $where);
 			$arrAccount         	= $pFreePBX->updateFreepbx('dahdi',$value_ac, $where);
+			$arrAccount         	= $pFreePBX->updateFreepbx('zap',$value_ac, $where);
 
 
         		$cmd			= "/var/lib/asterisk/bin/module_admin reload";
