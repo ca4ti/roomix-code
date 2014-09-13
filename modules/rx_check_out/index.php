@@ -316,6 +316,7 @@ function saveNewCheckOut($smarty, $module_name, $local_templates_dir, &$pDB, &$p
     $value_ac['data']   = "''";
     $where              = "id = '".$arrExt['extension']."' and keyword = 'accountcode';";
     $arrAccount         = $pCheckOut_Ast->updateQuery('sip',$value_ac, $where);
+    $arrAccount         = $pCheckOut_Ast->updateQuery('dahdi',$value_ac, $where);
 
     $cmd="/var/lib/asterisk/bin/module_admin reload";
     exec($cmd);

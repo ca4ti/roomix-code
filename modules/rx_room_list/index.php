@@ -238,11 +238,13 @@ function Launching_Transfer($register_id,$from, $to,$pDB, $pDB_Ast)
     $value_ac['data']   = "''";
     $where              = "id = '{$from_room["extension"]}' and keyword = 'accountcode';";
     $arrAccount         = $pRoom_Ast->updateQuery('sip',$value_ac, $where);
+    $arrAccount         = $pRoom_Ast->updateQuery('dahdi',$value_ac, $where);
 	
 	// To
 	$value_ac['data']   = "'{$Account_C["data"]}'";
     $where              = "id = '{$to_room["extension"]}' and keyword = 'accountcode';";
     $arrAccount         = $pRoom_Ast->updateQuery('sip',$value_ac, $where);
+    $arrAccount         = $pRoom_Ast->updateQuery('dahdi',$value_ac, $where);
 
     $cmd="/var/lib/asterisk/bin/module_admin reload";
     exec($cmd);
