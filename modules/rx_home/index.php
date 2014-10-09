@@ -148,19 +148,19 @@ function viewFormHome($smarty, $module_name, $local_templates_dir, &$pDB, &$pDB_
     $smarty->assign("IMG", "images/list.png");
     $smarty->assign("LOGO", "./modules/$module_name/images/logo-roomx.png");
     $smarty->assign("Roomx_intro", $intro);
-    $smarty->assign("FREE",$free[0]);  
+    $smarty->assign("FREE",$free);  
     $smarty->assign("BUSY",$busy); 
     $smarty->assign("Booking_Today", $arrLang["No Booking Today"]);
     if ($booking > 0){
     	$smarty->assign("BOOKING","<a style='text-decoration: none;' href='index.php?menu=rx_booking_list&filter_field=date_ci&filter_value=$today'><button type='button'>".$booking." ".$arrLang["Booking Today"]."</button></a>");   
     	$smarty->assign("Booking_Today","");
     }
-    $smarty->assign("TOTAL",$total[0]);
+    $smarty->assign("TOTAL",$total);
 
     $Warning 	= $busy + $booking;
-    if ($Warning == $total[0])
+    if ($Warning == $total)
     	$smarty->assign("mb_message", $arrLang["Potentially full"] );
-    if ($busy == $total[0])
+    if ($busy == $total)
 	$smarty->assign("mb_message", $arrLang["Full"] );
 
     $htmlForm = $oForm->fetchForm("$local_templates_dir/form.tpl",$arrLang["Home"], $_DATA);
