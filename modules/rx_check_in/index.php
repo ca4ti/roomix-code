@@ -82,6 +82,9 @@ function _moduleContent(&$smarty, $module_name)
         case "guest_id":
             $content = SendingDataGuest($module_name, $pDB, $arrConf, $guest_ID);
             break;
+        case "ws":
+            $content = roomx_webservices($module_name, $pDB, $arrConf);
+            break;
         case "find_guest":
             $content = getInfoGuest($module_name, $pDB, $arrConf, $who);
             break;
@@ -94,6 +97,216 @@ function _moduleContent(&$smarty, $module_name)
             break;
     }
     return $content;
+}
+ 
+function roomx_webservices($module_name, &$pDB, $arrConf)
+{
+	//	Below, put your ip address from your website (webservices client)
+	//-------------------------------------------------------------------
+    If ( $_SERVER["REMOTE_ADDR"] == '193.107.20.140') {
+	function number_of_rooms($pDB)
+	{
+		$pRoom= new paloSantoCheckIn($pDB);
+		$where = "ORDER BY `extension` ASC"; 
+		$arrRoom=$pRoom->getCheckIn('rooms',$where);
+		
+		return count($arrRoom);
+	}
+	
+	function check_booking($pDB,$start, $end)
+	{
+		$pRoom	= new paloSantoCheckIn($pDB);
+		$where 	= "ORDER BY `extension` ASC"; 
+		$arrRoom=$pRoom->getCheckIn('rooms',$where);
+		foreach($arrRoom as $k => $value)
+		{
+			$room_name	= $value['room_name'];	
+			$room_id 	= $value['id'];
+			$arrBook=$pRoom->Check_Booking($room_id, $start, $end);
+			$result	   .= "\t<room id=".$value['id'].">\n".
+								"\t\t<name>".$room_name."</name>\n".
+								"\t\t<status>".$arrBook."</status>\n".
+						  "\t</room>\n";
+		}		
+		return $result;
+	}
+	
+	function add_booking($pDB, $room_id, $start, $end, $payment_mode_b, $guest_id, $money_advance, $num_guest, $confirmed, $booking_number)
+	{
+		$pRoom					= new paloSantoCheckIn($pDB);
+		$val["room_id"] 		= "'".$room_id."'";
+		$val["date_ci"] 		= "'".$start."'";
+		$val["date_co"] 		= "'".$end."'";
+		$val["payment_mode_b"] 	= "'".$payment_mode_b."'";
+		$val["guest_id"] 		= "'".$guest_id."'";
+		$val["money_advance"] 	= "'".$money_advance."'";
+		$val["num_guest"] 		= "'".$num_guest."'";
+		$val["confirmed"]		= "'".$confirmed."'";
+		$val["booking_number"]	= "'".$booking_number."'";
+		
+		$arrBook=$pRoom->insertQuery('booking',$val);
+		If ($arrBook == False) 
+		{
+			$result =	"SQL Error";
+		}
+		Else
+		{
+			$result =	"Performed";
+		}
+		return $result;
+	}
+	
+	function add_guest($pDB, $first_name, $last_name, $address, $cp, $city, $phone, $mobile, $fax, $mail, $tin, $Off_Doc)
+	{
+		if ( $first_name !='' and  $last_name!='' and $address!='' and $cp!='' and $city!='' and ($phone !='' or $mobile !='') and $mail!='')
+		{
+			$pRoom					= new paloSantoCheckIn($pDB);
+			$val["first_name"] 		= "'".$first_name."'";
+			$val["last_name"] 		= "'".$last_name."'";
+			$val["address"] 		= "'".$address."'";
+			$val["cp"] 				= "'".$cp."'";
+			$val["city"] 			= "'".$city."'";
+			$val["phone"] 			= "'".$phone."'";
+			$val["mobile"] 			= "'".$mobile."'";
+			$val["fax"]				= "'".$fax."'";
+			$val["mail"]			= "'".$mail."'";
+			$val["NIF"]				= "'".$tin."'";
+			$val["Off_Doc"]			= "'".$Off_Doc."'";
+		
+			$arrBook=$pRoom->insertQuery('guest',$val);
+			If ($arrBook == False) 
+			{
+				$result =	"SQL Error";
+			}
+			Else
+			{
+				$result =	"Performed";
+			}
+		}
+		Else
+		{
+			$result =	"Error Missing Argument";
+		}
+		return $result;
+	}
+
+	function find_guest($pDB, $first_name, $last_name, $mail)
+	{
+		$pRoom		= new paloSantoCheckIn($pDB);
+		$conditions = "WHERE (first_name = '".$first_name."' AND last_name = '".$last_name."') OR mail = '".$mail."'";
+		$guest		= $pRoom->getCheckIn("guest",$conditions);
+		foreach ($guest as $k => $val)
+		{
+			$result.= "\n\t<guest>\n".
+						"\t\t<id>".$val['id']."</id>\n".
+						"\t\t<first_name>".$val['first_name']."</first_name>\n".
+						"\t\t<last_name>".$val['last_name']."</last_name>\n".
+						"\t\t<address>".$val['address']."</address>\n".
+						"\t\t<cp>".$val['cp']."</cp>\n".
+						"\t\t<city>".$val['city']."</city>\n".
+						"\t\t<phone>".$val['phone']."</phone>\n".
+						"\t\t<mobile>".$val['mobile']."</mobile>\n".
+						"\t\t<fax>".$val['fax']."</fax>\n".
+						"\t\t<mail>".$val['mail']."</mail>\n".
+						"\t\t<NIF>".$val['NIF']."</NIF>\n".
+						"\t\t<Off_Doc>".$val['Off_Doc']."</Off_Doc>\n".
+					  "\t</guest>\n";	
+		}
+		return $result;		  
+	}
+
+	function get_all_guests($pDB)
+	{
+		$pRoom		= new paloSantoCheckIn($pDB);
+		$guest		= $pRoom->getCheckIn("guest",'');
+		foreach ($guest as $k => $val)
+		{
+			$result.= "\n\t<guest id=".$val['id'].">\n".
+						"\t\t<first_name>".$val['first_name']."</first_name>\n".
+						"\t\t<last_name>".$val['last_name']."</last_name>\n".
+						"\t\t<address>".$val['address']."</address>\n".
+						"\t\t<cp>".$val['cp']."</cp>\n".
+						"\t\t<city>".$val['city']."</city>\n".
+						"\t\t<phone>".$val['phone']."</phone>\n".
+						"\t\t<mobile>".$val['mobile']."</mobile>\n".
+						"\t\t<fax>".$val['fax']."</fax>\n".
+						"\t\t<mail>".$val['mail']."</mail>\n".
+						"\t\t<NIF>".$val['NIF']."</NIF>\n".
+						"\t\t<Off_Doc>".$val['Off_Doc']."</Off_Doc>\n".
+					  "\t</guest>\n";	
+		}
+		return $result;		  
+	}	
+
+	
+	switch ($_GET['function'])
+	{
+		case "number_of_rooms" :
+				$value = @call_user_func($_GET['function'], $pDB); 
+				echo 	"<response>".
+							"\t<value>".$value."</value>".
+						"</response>"; 
+		break;
+
+		case "find_guest" :
+				$value = @call_user_func($_GET['function'], $pDB, $_GET['first_name'], $_GET['last_name'], $_GET['mail']); 
+				echo 	"<response>".
+							"\t<value>".$value."</value>".
+						"</response>"; 
+		break;
+		
+		case "get_all_guests" :
+				$value = @call_user_func($_GET['function'], $pDB); 
+				echo 	"<response>".
+							"\t<value>".$value."</value>".
+						"</response>"; 
+		break;
+		
+		case "add_booking" :
+				$value = @call_user_func($_GET['function'],$pDB,$_GET['room_id'], $_GET['start'], $_GET['end'], $_GET['payment_mode_b'], $_GET['guest_id'], $_GET['money_advance'], $_GET['num_guest'], $_GET['confirmed'], $_GET['booking_number']);			
+				echo 	"<response>".
+							"\t<value>".$value."</value>".
+						"</response>"; 				
+		break;
+		
+		case "add_guest" :
+				$value = @call_user_func($_GET['function'],$pDB, $_GET['first_name'], $_GET['last_name'], $_GET['address'], $_GET['cp'], $_GET['city'], $_GET['phone'], $_GET['mobile'], $_GET['fax'], $_GET['mail'], $_GET['tin'], $_GET['Off_Doc']);			
+				echo 	"<response>".
+							"\t<value>".$value."</value>".
+						"</response>"; 				
+		break;
+		
+		case "check_booking" :
+				if ($_GET['start'] != '' OR $_GET['end'] != '') 
+				{
+					$value = @call_user_func($_GET['function'], $pDB, $_GET['start'], $_GET['end']); 
+					echo 	"<response>".$value."</response>"; 
+				}
+				Else
+				{
+				echo 	"<response>".
+							"\t<error>Bad Argument</error>\n".
+							"\t<function>".$_GET['function']."</function>\n".
+							"\t<argument>Wrong date format!!! </argument>".
+						"</response>";	
+				}
+		break;
+			
+		Default : 
+				echo 	"<response>".
+							"\t<error>Bad Request</error>\n".
+							"\t<function>".$_GET['function']." doesn't exist!!</function>\n".
+							"\t<argument>Ignored Arguments!!</argument>".
+						"</response>";		
+		Break;
+	}
+	}
+	Else
+	{
+		echo 	"<response>".
+					"\t<error>Permission Denied for ".$_SERVER["REMOTE_ADDR"]."</error>\n".
+				"</response>";
+	}
 }
 
 function remoteActionControl($url)
@@ -277,8 +490,16 @@ function saveNewCheckIn($smarty, $module_name, $local_templates_dir, &$pDB, &$pD
 	 		}
 	 	else
 	 		{
+				// Generating booking code
+				// Simple converting date d-m-y-h-mn-sc to Hexa.
+				//--------------------------------
+				$dt=date("ymdHis");
+				$booking_number = strtoupper(base_convert($dt,10,16));
+		
         		$value_register['payment_mode_b']  = "'".$_DATA['payment_mode_b']."'";
         		$value_register['money_advance']   = "'".$_DATA['money_advance']."'";
+				$value_register['booking_number']  = "'".$booking_number."'";
+				
 				$arrRegister 		  			   = $pCheckIn->insertQuery('booking',$value_register);
 	 		}
 		// Control if Guest_id is present into the database.
@@ -293,9 +514,9 @@ function saveNewCheckIn($smarty, $module_name, $local_templates_dir, &$pDB, &$pD
                       	"' and fax = '".$_DATA['fax'].
                       	"' and mail = '".$_DATA['mail']."'";
 				
-				$where			= $conditions;
+				$where				= $conditions;
 	 			$arrGuestID 		= $pCheckIn->getCheckIn("guest", $where);
-        			$GuestID_checked	= $arrGuestID[0];
+        		$GuestID_checked	= $arrGuestID[0];
 				
 				if ( $GuestID_checked['id'] != "" || $GuestID_checked != 0){
 					$arrdel 	= $pCheckIn->delQuery("guest", $where);
@@ -338,8 +559,10 @@ function saveNewCheckIn($smarty, $module_name, $local_templates_dir, &$pDB, &$pD
 		
 		// Replace the room name by the guest name.
 		//------------------------------------------------------
-		$cmd 				= "asterisk -rx 'database put AMPUSER/{$Rooms['extension']} cidname \"$guest_name\"'";
-		exec($cmd);
+		if ($_DATA['booking'] == "off" ){
+			$cmd 			= "asterisk -rx 'database put AMPUSER/{$Rooms['extension']} cidname \"$guest_name\"'";
+			exec($cmd);
+		}
 
 	 	// Sending a R.A.C information
 	 	//-------------------------------
@@ -597,6 +820,8 @@ function getAction()
         return "find_guest";
     else if(getParameter("action")=="guest_id")
         return "guest_id";
+    else if(getParameter("action")=="ws")
+        return "ws";
     else if(getParameter("new_open")) 
         return "view_form";
     else if(getParameter("action")=="view")      //Get parameter by GET (command pattern, links)

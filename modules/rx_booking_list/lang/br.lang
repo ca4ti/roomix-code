@@ -29,12 +29,13 @@
 global $arrLangModule;
 $arrLangModule=array(
 "Booking List" 		=> "Lista de reserva",
+"Booking number"	=> "N. Reserva",
 "Checkin" 			=> "Check-in",
 "Canceled" 			=> "Cancelado",
 "Rooms" 			=> "Quartos",
 "Guest" 			=> "Hospede",
 "Date Checkin" 		=> "Datado Check-in",
-"Date Checkout" 	=> "Data do Check-out
+"Date Checkout" 	=> "Data do Check-out",
 "First Name"		=> "Nome",
 "Last Name"			=> "Sobrenome",
 "Search"			=> "Buscar",

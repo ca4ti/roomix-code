@@ -80,7 +80,7 @@ class paloSantoBookingList{
             //$arrParam = array("$filter_value%");
         }
 
-        $query   = "SELECT booking.id, `confirmed`, `room_name`, `first_name`, `last_name`, `num_guest`,`payment_mode_b`,`money_advance`,
+        $query   = "SELECT booking.id, `confirmed`, `booking_number`,`room_name`, `first_name`, `last_name`, `num_guest`,`payment_mode_b`,`money_advance`,
                     DATE(date_format(`date_ci`,'%Y-%m-%d'))  AS date_ci , 
 		      DATE(date_format(`date_co`,'%Y-%m-%d')) AS date_co  
 		      FROM `booking` 

@@ -71,7 +71,7 @@ class paloSantoCheckIn {
     function getCheckIn($tables, $where)
     {
         $query   = "SELECT * FROM $tables $where";
-
+		
         $result=$this->_DB->fetchTable($query, true);
 
         if($result==FALSE){
@@ -220,7 +220,7 @@ class paloSantoCheckIn {
 		      room_id = '$room' AND
 		      date_ci <= '$date_co' AND
 		      date_co >= '$date_ci';";
-
+	
         $result=$this->_DB->fetchTable($query, true, "");
 
         if($result==FALSE){

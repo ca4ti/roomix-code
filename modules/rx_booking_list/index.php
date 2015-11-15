@@ -107,7 +107,7 @@ function reportBookingList($smarty, $module_name, $local_templates_dir, &$pDB, $
         "filter_value" =>  $filter_value);
     $oGrid->setURL($url);
 
-    $arrColumns = array(_tr("Checkin"),_tr("Canceled"),_tr("Confirmed"),_tr("Rooms"),_tr("First Name"),_tr("Last Name"),_tr("Additional Guest"),_tr("payment_mode_b"),_tr("Money Advance"),_tr("Date Checkin"),_tr("Date Checkout"),);
+    $arrColumns = array(_tr("Checkin"),_tr("Canceled"),_tr("Confirmed"),_tr("Booking number"),_tr("Rooms"),_tr("First Name"),_tr("Last Name"),_tr("Additional Guest"),_tr("payment_mode_b"),_tr("Money Advance"),_tr("Date Checkin"),_tr("Date Checkout"),);
     $oGrid->setColumns($arrColumns);
 
     $total   = $pBookingList->getNumBookingList($filter_field, $filter_value);
@@ -147,14 +147,15 @@ function reportBookingList($smarty, $module_name, $local_templates_dir, &$pDB, $
 	    $arrTmp[0] = "<input type='checkbox' name='checkin[".$key."]' value='".$value['id']."'>";
 	    $arrTmp[1] = "<input type='checkbox' name='canceled[".$key."]' value='".$value['id']."'>";
 		$arrTmp[2] = $Confirm;
-	    $arrTmp[3] = $value['room_name'];
-	    $arrTmp[4] = $value['first_name'];
-	    $arrTmp[5] = $value['last_name'];
-	    $arrTmp[6] = $ok[$value['num_guest']];	
-	    $arrTmp[7] = $arrOptions_payment[$PayMod];
-	    $arrTmp[8] = $value['money_advance'];
-	    $arrTmp[9] = $value['date_ci'];
-	    $arrTmp[10]= $value['date_co'];           
+		$arrTmp[3] = $value['booking_number'];	
+	    $arrTmp[4] = $value['room_name'];
+	    $arrTmp[5] = $value['first_name'];
+	    $arrTmp[6] = $value['last_name'];
+	    $arrTmp[7] = $ok[$value['num_guest']];	
+	    $arrTmp[8] = $arrOptions_payment[$PayMod];
+	    $arrTmp[9] = $value['money_advance'];
+	    $arrTmp[10]= $value['date_ci'];
+	    $arrTmp[11]= $value['date_co'];           
         $arrData[] = $arrTmp;
         }
     }
@@ -194,14 +195,15 @@ function ActionBookingList($smarty, $module_name, $local_templates_dir, &$pDB, &
 
         // Save all Datas into the table register. 
         //---------------------------------------------
-        $value_register['room_id']  	= "'".$arrBooking['0']['room_id']."'";
-        $value_register['guest_id'] 	= "'".$arrBooking['0']['guest_id']."'";
-        $value_register['date_ci']  	= "'".$arrBooking['0']['date_ci']."'";
-        $value_register['date_co']  	= "'".$arrBooking['0']['date_co']."'";
-        $value_register['num_guest']	= "'".$arrBooking['0']['num_guest']."'";
-        $value_register['payment_mode_b']	= "'".$arrBooking['0']['payment_mode_b']."'";
-        $value_register['money_advance']	= "'".$arrBooking['0']['money_advance']."'";
-        $value_register['status']   	= "'1'";
+        $value_register['room_id']  	 = "'".$arrBooking['0']['room_id']."'";
+        $value_register['guest_id'] 	 = "'".$arrBooking['0']['guest_id']."'";
+        $value_register['date_ci']  	 = "'".$arrBooking['0']['date_ci']."'";
+        $value_register['date_co']  	 = "'".$arrBooking['0']['date_co']."'";
+        $value_register['num_guest']	 = "'".$arrBooking['0']['num_guest']."'";
+        $value_register['payment_mode_b']= "'".$arrBooking['0']['payment_mode_b']."'";
+        $value_register['money_advance'] = "'".$arrBooking['0']['money_advance']."'";
+        $value_register['status']   	 = "'1'";
+		$value_register['booking_number']= "'".$arrBooking['0']['booking_number']."'";
         $arrRegister 		  			= $pBookingList->insertQuery('register',$value_register);
 
         // Update the room status (Free -> Busy)
@@ -310,7 +312,7 @@ function ActionBookingList($smarty, $module_name, $local_templates_dir, &$pDB, &
         "filter_value" =>  $filter_value);
     $oGrid->setURL($url);
 
-    $arrColumns = array(_tr("Checkin"),_tr("Canceled"),_tr("Confirmed"),_tr("Rooms"),_tr("First Name"),_tr("Last Name"),_tr("Additional Guest"),_tr("payment_mode_b"),_tr("Money Advance"),_tr("Date Checkin"),_tr("Date Checkout"),);
+    $arrColumns = array(_tr("Checkin"),_tr("Canceled"),_tr("Confirmed"),_tr("Booking number"),_tr("Rooms"),_tr("First Name"),_tr("Last Name"),_tr("Additional Guest"),_tr("payment_mode_b"),_tr("Money Advance"),_tr("Date Checkin"),_tr("Date Checkout"),);
     $oGrid->setColumns($arrColumns);
 
     $total   = $pBookingList->getNumBookingList($filter_field, $filter_value);
@@ -350,14 +352,15 @@ function ActionBookingList($smarty, $module_name, $local_templates_dir, &$pDB, &
 	    $arrTmp[0] = "<input type='checkbox' name='checkin[".$key."]' value='".$value['id']."'>";
 	    $arrTmp[1] = "<input type='checkbox' name='canceled[".$key."]' value='".$value['id']."'>";
 		$arrTmp[2] = $Confirm;
-	    $arrTmp[3] = $value['room_name'];
-	    $arrTmp[4] = $value['first_name'];
-	    $arrTmp[5] = $value['last_name'];
-	    $arrTmp[6] = $ok[$value['num_guest']];	
-	    $arrTmp[7] = $arrOptions_payment[$PayMod];
-	    $arrTmp[8] = $value['money_advance'];
-	    $arrTmp[9] = $value['date_ci'];
-	    $arrTmp[10]= $value['date_co'];           
+		$arrTmp[3] = $value['booking_number'];	
+	    $arrTmp[4] = $value['room_name'];
+	    $arrTmp[5] = $value['first_name'];
+	    $arrTmp[6] = $value['last_name'];
+	    $arrTmp[7] = $ok[$value['num_guest']];	
+	    $arrTmp[8] = $arrOptions_payment[$PayMod];
+	    $arrTmp[9] = $value['money_advance'];
+	    $arrTmp[10]= $value['date_ci'];
+	    $arrTmp[11]= $value['date_co'];           
         $arrData[] = $arrTmp;
         }
     }

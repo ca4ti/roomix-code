@@ -275,7 +275,7 @@ function saveNewCheckOut($smarty, $module_name, $local_templates_dir, &$pDB, &$p
         if ($_DATA['When'] == '0')
         	$date_co 	= date("Y-m-d H:i:s");	// Today
         if ($_DATA['When'] == '2')
-		$date_co 	= $_DATA['date'];		// Other Day
+			$date_co 	= $_DATA['date'];		// Other Day
         if ($_DATA['When'] != '1')
 			{
 				$value_co['date_co']= "'".$date_co."'";    
