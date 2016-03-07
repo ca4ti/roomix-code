@@ -199,7 +199,7 @@ function createFieldForm()
     return $arrFields;
 }
 
-function date_diff($date1, $date2)  
+function date_difference($date1, $date2)  
 {
  $s = strtotime($date2)-strtotime($date1);
  $d = intval($s/86400)+1;  
@@ -208,7 +208,7 @@ function date_diff($date1, $date2)
 
 function Booking_Cal($date_start, $date_end, $booking_rooms, $files_graph, $Title, $today) {
 
-	$dayNumber = date_diff($date_start, $date_end);
+	$dayNumber = date_difference($date_start, $date_end);
 
 	$graph = new GanttGraph(900);
 	$graph->SetMarginColor('blue:1.7');
