@@ -32,7 +32,6 @@ $arrLangModule=array(
 "Hide Filter"		=> "Cacher les Filtres",
 "Download"			=> "Télécharger",
 "Booking List" 		=> "Liste des Réservations",
-"Booking number"	=> "N° Rés.",
 "Checkin" 			=> "Arrivée",
 "Canceled" 			=> "Annuler",
 "Rooms" 			=> "Chambres",

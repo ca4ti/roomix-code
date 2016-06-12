@@ -179,6 +179,7 @@ function viewFormGeneral($smarty, $module_name, $local_templates_dir, &$pDB, $ar
     $_DATA["mail"]      = $get_config['mail'];
     $_DATA["vat_1"]     = $get_config['vat_1'];
     $_DATA["vat_2"]     = $get_config['vat_2'];
+    $_DATA["discount"]  = $get_config['discount'];
     
     $smarty->assign("LOGO", $get_config['logo']);
 
@@ -256,6 +257,7 @@ function saveNewGeneral($smarty, $module_name, $local_templates_dir, &$pDB, $arr
         $mail      	= $_DATA['mail'];
         $vat_1     	= $_DATA['vat_1'];
         $vat_2     	= $_DATA['vat_2'];
+	$discount     	= $_DATA['discount'];
 
 
 	 $search 	= array('é', 'è', 'à', 'ê', 'ô' ,'\'' );
@@ -298,6 +300,7 @@ function saveNewGeneral($smarty, $module_name, $local_templates_dir, &$pDB, $arr
 	 $arrValores['vat_1']     = "'".$vat_1."'";
 	 $arrValores['vat_2']     = "'".$vat_2."'";
 	 $arrValores['rounded']   = "'".$rounded."'";
+	 $arrValores['discount']  = "'".$discount."'";
 	 if (isset($route_archive)){
 	 	$arrValores['logo']= "'".$route_archive."'";
 		if (preg_match("/.png/i",$route_archive))
@@ -427,6 +430,14 @@ function createFieldForm($arrLang, &$pDB)
                                             "VALIDATION_TYPE"        => "text",
                                             "VALIDATION_EXTRA_PARAM" => ""
                                             ),
+            "discount"       => array(      "LABEL"                  => $arrLang["discount"],
+                                            "REQUIRED"               => "no",
+                                            "INPUT_TYPE"             => "TEXT",
+                                            "INPUT_EXTRA_PARAM"      => array("style" => "width:50px"),
+                                            "VALIDATION_TYPE"        => "text",
+                                            "VALIDATION_EXTRA_PARAM" => "",
+                                            "EDITABLE"               => "si"
+						  ),
             );
     return $arrFields;
 }

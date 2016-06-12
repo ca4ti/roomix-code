@@ -67,8 +67,10 @@ $arrLangModule=array(
 "PayPal"						=> "PayPal",
 "Transfer"						=> "Transfert",
 "Remains to be paid"			=> "Reste &agrave; Payer",
+"discount"						=> "Remise",
 "Stayed from"					=> "Séjour du",
 "to"							=> "au",
 "No trunk Billable !!!" 	    => "Pas de trunk facturable !!!",
+"Discount included : "			=> "Remise incuse : ",
 );
 ?>

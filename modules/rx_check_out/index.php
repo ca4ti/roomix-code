@@ -108,7 +108,7 @@ function viewFormCheckOut($smarty, $module_name, $local_templates_dir, &$pDB, &$
     $action = getParameter("action");
     $id     = getParameter("id");
     $smarty->assign("ID", $id); //persistence id with input hidden in tpl
-
+	
     if($action=="view")
         $oForm->setViewMode();
     else if($action=="view_edit" || getParameter("save_edit"))
@@ -124,8 +124,9 @@ function viewFormCheckOut($smarty, $module_name, $local_templates_dir, &$pDB, &$
             $smarty->assign("mb_message", $pCheckOut->errMsg);
         }
     }
-
-    $_DATA['date'] = date("Y-m-d H:i:s");
+	$_CONF 				= $pCheckOut->GetCheckout("config","");
+	$_DATA["discount"]	= $_CONF["0"]["discount"];
+    $_DATA['date'] 		= date("Y-m-d H:i:s");
 
     $smarty->assign("SAVE", $arrLang["Save"]);
     $smarty->assign("EDIT", $arrLang["Edit"]);
@@ -213,6 +214,8 @@ function saveNewCheckOut($smarty, $module_name, $local_templates_dir, &$pDB, &$p
     $arrFormCheckOut = createFieldForm($arrLang, $pDB);
     $oForm = new paloForm($smarty,$arrFormCheckOut);
     $_DATA = $_POST;
+	
+	$discount = $_DATA["discount"];
 
     if(!$oForm->validateForm($_POST)){
         // Validation basic, not empty and VALIDATION_TYPE 
@@ -275,7 +278,7 @@ function saveNewCheckOut($smarty, $module_name, $local_templates_dir, &$pDB, &$p
         if ($_DATA['When'] == '0')
         	$date_co 	= date("Y-m-d H:i:s");	// Today
         if ($_DATA['When'] == '2')
-			$date_co 	= $_DATA['date'];		// Other Day
+		$date_co 	= $_DATA['date'];		// Other Day
         if ($_DATA['When'] != '1')
 			{
 				$value_co['date_co']= "'".$date_co."'";    
@@ -425,16 +428,23 @@ function saveNewCheckOut($smarty, $module_name, $local_templates_dir, &$pDB, &$p
     $add_guest 	  = 0;
 	$star		  = "";
     if ( $arrGuest['num_guest'] == '1'){
-        $add_guest = strval($Model['room_guest']);
-	    $star 	 = " (+)";
+        $add_guest= strval($Model['room_guest']);
+	    $star 	  = " (+)";
 	}
-    $puht         = strval($Model['room_price']) + $add_guest;
-    $patc         = ($puht*$Night)*(1+(strval($Model['room_vat'])/100));
-	$vat          = $patc - ($puht*$Night) ;
+    $puht 		  = strval($Model['room_price']) + $add_guest;
+	
+	// Discount
+	$remise		  = ($puht*$discount)/100;
+	$puht		  = $puht-$remise;
+	$patc         = ($puht*$Night)*(1+(strval($Model['room_vat'])/100));
+	$TT_disc	  = (($puht+$remise)*$Night)*(1+(strval($Model['room_vat'])/100))-$patc;
+	$vat          = $patc - ($puht*$Night);
 	$vat_Nights   = $vat;
 	$TT_Nights    = $patc; 
+	
     $Billing_page = $Billing_page.Sale($arrLang["Nights with room's model: "].$Model['room_model'].$star, $Night, sprintf("%01.2f", $puht), sprintf("%01.2f", $vat), sprintf("%01.2f", $patc), $curr);
-
+	if ($remise != 0)
+		$Billing_page = $Billing_page.Sale_discount($arrLang["Discount included : "]."-".$discount."%", "", "", "", sprintf("%01.2f", $TT_disc), $curr);
 
 	 // There's a mini-bar?
 	 //--------------------
@@ -590,24 +600,37 @@ function saveNewCheckOut($smarty, $module_name, $local_templates_dir, &$pDB, &$p
 	  	}
 	 }
 
-	 $money_advance= $arrGuest['money_advance'];
-	 $ht		 = $vat_Nights + $Total_Call_VAT + $TT_MiniBar_v;
-	 $total_bill	 = $TT_Nights  + $Total_Calls    + $TT_MiniBar;
+	 $money_advance	= $arrGuest['money_advance'];
+	 $ht		 	= $vat_Nights + $Total_Call_VAT + $TT_MiniBar_v;
+	 $total_bill	= $TT_Nights  + $Total_Calls    + $TT_MiniBar;
 
-    // remains to be paid
-    $remains	 = $total_bill - $money_advance;
+	if ($_DATA['paid'] == "off") {
+		// remains to be paid
+		$remains	  = $total_bill - $money_advance;
+		$Billing_page = $Billing_page.Total_Billing(
+						sprintf("%01.2f", $total_bill - $ht), 
+						sprintf("%01.2f", $ht), 
+						sprintf("%01.2f", $money_advance),
+						sprintf("%01.2f", $total_bill), 
+						sprintf("%01.2f", $remains), 
+						$curr, 
+						$arrLang);
+		}
+		else
+		{
+		$remains	  = $total_bill - $money_advance;
+		$Billing_page = $Billing_page.Total_Billing(
+						sprintf("%01.2f", $total_bill - $ht), 
+						sprintf("%01.2f", $ht), 
+						sprintf("%01.2f", $money_advance),
+						sprintf("%01.2f", $total_bill), 
+						sprintf("%01.2f", 0), 
+						$curr, 
+						$arrLang);				
+	}
 
-	$Billing_page = $Billing_page.Total_Billing(
-				sprintf("%01.2f", $total_bill - $ht), 
-				sprintf("%01.2f", $ht), 
-				sprintf("%01.2f", $money_advance),
-				sprintf("%01.2f", $total_bill), 
-				sprintf("%01.2f", $remains), 
-				$curr, 
-				$arrLang);
-
-    $name	     	 = $Bnumber.".html";
-	 $name_path 	 = "/var/www/html/roomx_billing/".$name;
+    $name	   	 = $Bnumber.".html";
+	$name_path 	 = "/var/www/html/roomx_billing/".$name;
 
 	 $Billing_file = fopen($name_path, 'w+');
 	 fwrite($Billing_file,$Billing_page);
@@ -784,6 +807,13 @@ function createFieldForm($arrLang, &$pDB)
                                             "VALIDATION_EXTRA_PARAM" => "",
                                             "EDITABLE"               => "si",
                                             ),
+            "discount"   => array(  "LABEL"                  => $arrLang["discount"],
+                                            "REQUIRED"               => "no",
+                                            "INPUT_TYPE"             => "TEXT",
+                                            "INPUT_EXTRA_PARAM"      => "",
+                                            "VALIDATION_TYPE"        => "text",
+                                            "VALIDATION_EXTRA_PARAM" => "no"
+											),
             "paid"   => array(      "LABEL"                  => $arrLang["Paid"],
                                             "REQUIRED"               => "no",
                                             "INPUT_TYPE"             => "CHECKBOX",

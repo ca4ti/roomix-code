@@ -40,9 +40,9 @@
     <tr class="letra12">
         <td align="right" width="90"><b>{$group.LABEL} : </b></td>
         <td align="left"  width="50">{$group.INPUT}</td>
-
-        <td align="right" width=""> </b></td>
-        <td align="left"> </td>
+		
+        <td align="right" width=""><b>{$discount.LABEL} : </b></b></td>
+        <td align="left">{$discount.INPUT}</td>
     </tr>
     <tr class="letra12">
         <td align="right"><b>{$paid.LABEL} : </b></td>

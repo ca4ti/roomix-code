@@ -32,7 +32,6 @@ $arrLangModule=array(
 "Hide Filter"		=> "Hide Filter",
 "Download"			=> "Download",
 "Booking List" 		=> "Booking List",
-"Booking number"	=> "Booking number",
 "Checkin" 			=> "Checkin",
 "Canceled" 			=> "Canceled",
 "Rooms" 			=> "Rooms",

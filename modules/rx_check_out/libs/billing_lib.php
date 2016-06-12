@@ -103,6 +103,21 @@ function Sale($service, $qt, $puht, $vat, $price, $curr)
 return $content;
 }
 
+function Sale_discount($service, $qt, $puht, $vat, $price, $curr)
+{
+	$content ="
+	<tr class='line'>
+		<td style='vertical-align: top; width: 502px; text-align: left'>$service</td>
+		<td style='vertical-align: top; width: 70px; text-align: right'>$qt</td>
+		<td style='vertical-align: top; width: 70px; text-align: right'>$puht</td>
+		<td style='vertical-align: top; width: 70px; text-align: right'>$vat</td>
+		<td style='vertical-align: top; width: 70px; text-align: right'>$price $curr<br></td>
+	</tr>
+";
+
+return $content;
+}
+
 function Detail_table_Title()
 {
 	$content = "

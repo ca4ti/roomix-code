@@ -1,0 +1,1 @@
+UPDATE `roomx`.`config` SET `vat_1` = '20', `vat_2` = '7', `version` = '2.0-110' WHERE CONVERT( `config`.`o_m` USING utf8 ) = 'Hotel' LIMIT 1 ;

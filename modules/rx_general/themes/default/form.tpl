@@ -95,6 +95,14 @@
         <td align="right" width="200" valign="top"><b>{$rounded.LABEL} : </b></td>
         <td align="left" valign="top">{$rounded.INPUT}</td>
     </tr>
+    <tr class="letra12">
+        <td align="right" valign="top"><hr style="border-style: dotted; border-width: 1px; width: 100%;"></td>
+        <td align="left" valign="top"><i><b>{$discount.LABEL}</i></b></td>
+    </tr>
+    <tr class="letra12">
+        <td align="right" width="200" valign="top"><b>{$discount.LABEL} : </b></td>
+        <td align="left" valign="top">{$discount.INPUT}</td>
+    </tr>
 </table>
 
 <input class="button" type="hidden" name="id" value="{$ID}" />
