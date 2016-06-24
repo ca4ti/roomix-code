@@ -71,6 +71,6 @@ $arrLangModule=array(
 "Stayed from"					=> "Séjour du",
 "to"							=> "au",
 "No trunk Billable !!!" 	    => "Pas de trunk facturable !!!",
-"Discount included : "			=> "Remise incuse : ",
+"Discount : "					=> "Remise : ",
 );
 ?>

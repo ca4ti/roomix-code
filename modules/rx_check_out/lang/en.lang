@@ -70,6 +70,6 @@ $arrLangModule=array(
 "Transfer"						=> "Transfer",
 "Remains to be paid"			=> "Remains to be paid",
 "No trunk Billable !!!" 	    => "No trunk Billable !!!",
-"Discount included : "			=> "Discount included : ",
+"Discount : "					=> "Discount : ",
 );
 ?>

@@ -688,7 +688,7 @@ function createFieldForm($arrLang, &$pDB)
             "date_co" => array(             "LABEL"                  => $arrLang["Date Checkout"],
                                             "REQUIRED"               => "yes",
                                             "INPUT_TYPE"             => "DATE",
-                                            "INPUT_EXTRA_PARAM"      => array("TIME" => true, "FORMAT" => "%Y-%m-%d %H:%M:%S","TIMEFORMAT" => "24"),
+                                            "INPUT_EXTRA_PARAM"      => array("TIME" => False, "FORMAT" => "%Y-%m-%d %H:%M:%S","TIMEFORMAT" => "24"),
                                             "VALIDATION_TYPE"        => "text",
                                             "EDITABLE"               => "si",
                                             "VALIDATION_EXTRA_PARAM" => ""

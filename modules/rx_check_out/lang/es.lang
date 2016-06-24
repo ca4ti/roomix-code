@@ -69,6 +69,6 @@ $arrLangModule=array(
 "discount"							=> "Discount",
 "Stayed from"						=> "Stayed from",
 "to"								=> "to",
-"Discount included : "				=> "Discount included : ",
-);
+"Discount : "						=> "Discount : ",
+);	
 ?>

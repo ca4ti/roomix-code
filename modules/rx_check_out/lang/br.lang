@@ -69,6 +69,6 @@ $arrLangModule=array(
 "Remains to be paid"			=> "Saldo",
 "Stayed from"					=> "Hospedado de",
 "to"							=> "à",
-"Discount included : "			=> "Discount included : ",
+"Discount : "					=> "Discount : ",
 );
 ?>

@@ -436,15 +436,19 @@ function saveNewCheckOut($smarty, $module_name, $local_templates_dir, &$pDB, &$p
 	// Discount
 	$remise		  = ($puht*$discount)/100;
 	$puht		  = $puht-$remise;
+	$patc_brut	  = (($puht+$remise)*$Night)*(1+(strval($Model['room_vat'])/100));
 	$patc         = ($puht*$Night)*(1+(strval($Model['room_vat'])/100));
 	$TT_disc	  = (($puht+$remise)*$Night)*(1+(strval($Model['room_vat'])/100))-$patc;
-	$vat          = $patc - ($puht*$Night);
+	$vat_brut	  = $patc_brut-(($puht+$remise)*$Night);
+	$vat          = $patc-($puht*$Night);
 	$vat_Nights   = $vat;
 	$TT_Nights    = $patc; 
 	
-    $Billing_page = $Billing_page.Sale($arrLang["Nights with room's model: "].$Model['room_model'].$star, $Night, sprintf("%01.2f", $puht), sprintf("%01.2f", $vat), sprintf("%01.2f", $patc), $curr);
-	if ($remise != 0)
-		$Billing_page = $Billing_page.Sale_discount($arrLang["Discount included : "]."-".$discount."%", "", "", "", sprintf("%01.2f", $TT_disc), $curr);
+    $Billing_page = $Billing_page.Sale($arrLang["Nights with room's model: "].$Model['room_model'].$star, $Night, sprintf("%01.2f", $puht+$remise), sprintf("%01.2f", $vat_brut), sprintf("%01.2f", $patc_brut), $curr);
+	if ($remise != 0) {
+		$Billing_page = $Billing_page.Sale_discount($arrLang["Discount : "]."-".$discount."%", "", "", "", sprintf("%01.2f", -$TT_disc), $curr);
+		$Billing_page = $Billing_page.Sale_discount("", "", "", "TOTAL =", sprintf("%01.2f",$patc_brut-$TT_disc), $curr);
+	}
 
 	 // There's a mini-bar?
 	 //--------------------
