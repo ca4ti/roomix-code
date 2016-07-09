@@ -239,14 +239,12 @@ function Launching_Transfer($register_id,$from, $to,$pDB, $pDB_Ast)
     $where              = "id = '{$from_room["extension"]}' and keyword = 'accountcode';";
     $arrAccount         = $pRoom_Ast->updateQuery('sip',$value_ac, $where);
     $arrAccount         = $pRoom_Ast->updateQuery('dahdi',$value_ac, $where);
-    $arrAccount         = $pRoom_Ast->updateQuery('zap',$value_ac, $where);
 	
 	// To
 	$value_ac['data']   = "'{$Account_C["data"]}'";
     $where              = "id = '{$to_room["extension"]}' and keyword = 'accountcode';";
     $arrAccount         = $pRoom_Ast->updateQuery('sip',$value_ac, $where);
     $arrAccount         = $pRoom_Ast->updateQuery('dahdi',$value_ac, $where);
-    $arrAccount         = $pRoom_Ast->updateQuery('zap',$value_ac, $where);
 
     $cmd="/var/lib/asterisk/bin/module_admin reload";
     exec($cmd);
@@ -434,7 +432,7 @@ function reportRoomList($smarty, $module_name, $local_templates_dir, &$pDB, $pDB
     $Wakeup_File = getParameter("wakeup_file");
 
     //begin grid parameters
-    $oGrid  = new paloSantoGrid($smarty);
+    $oGrid  		= new paloSantoGrid($smarty);
     $totalRoomList  = $pRoomList->getNumRoomList($filter_field, $filter_value);
 	$room_free		= $pRoomList->getRoomFree();
 
@@ -597,8 +595,7 @@ function reportRoomList($smarty, $module_name, $local_templates_dir, &$pDB, $pDB
     //begin section filter
     $arrFormFilterRoomList = createFieldFilter($arrLang);
     $oFilterForm = new paloForm($smarty, $arrFormFilterRoomList);
-
-    $smarty->assign("SHOW", $arrLang["Show"]);
+	$smarty->assign("SHOW", $arrLang["Show"]);
 
     $htmlFilter = $oFilterForm->fetchForm("$local_templates_dir/filter.tpl","",$_POST);
 
@@ -615,11 +612,12 @@ function reportRoomList($smarty, $module_name, $local_templates_dir, &$pDB, $pDB
     }
     else{
         $oGrid->showFilter(trim($htmlFilter));
-        $content = "<form  method='POST' style='margin-bottom:0;' action=\"$url\">".$oGrid->fetchGrid($arrGrid, $arrData,$arrLang)."</form>";
+        //$content = "<form  method='POST' style='margin-bottom:0;' action=\"$url\">".$oGrid->fetchGrid($arrGrid, $arrData,$arrLang)."</form>";
+		$content = $oGrid->fetchGrid($arrGrid, $arrData,$arrLang);
     }
 
     //end grid parameters
-
+	
     return $content;
 }
 

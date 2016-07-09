@@ -190,7 +190,8 @@ function reportBillingreport($smarty, $module_name, $local_templates_dir, &$pDB,
     }
     else{
         $oGrid->showFilter(trim($htmlFilter));
-        $content = "<form  method='POST' style='margin-bottom:0;' action=\"$url\">".$oGrid->fetchGrid($arrGrid, $arrData,$arrLang)."</form>";
+        //$content = "<form  method='POST' style='margin-bottom:0;' action=\"$url\">".$oGrid->fetchGrid($arrGrid, $arrData,$arrLang)."</form>";
+		$content = $oGrid->fetchGrid($arrGrid, $arrData,$arrLang);
     }
     //end grid parameters
 

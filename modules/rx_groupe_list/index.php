@@ -230,8 +230,8 @@ function reportGroupeList($smarty, $module_name, $local_templates_dir, &$pDB, $a
     $total  = $totalGroupeList;
     $oGrid->setLimit($limit);
     $oGrid->setTotal($total);
-    $oGrid->enableExport();   // enable csv export.
-    $oGrid->pagingShow(true); // show paging section.
+    $oGrid->enableExport(True);   	// enable csv export.
+    $oGrid->pagingShow(True); 		// show paging section.
     $oGrid->customAction("save_new", _tr("Add"));
 
     $oGrid->calculatePagination($action,$start);
@@ -291,8 +291,10 @@ function reportGroupeList($smarty, $module_name, $local_templates_dir, &$pDB, $a
     }
     else{
         $oGrid->showFilter(trim($htmlFilter));
-        $content = "<form  method='POST' style='margin-bottom:0;' action=\"$url\">".$oGrid->fetchGrid($arrGrid, $arrData,$arrLang)."</form>";
+        //$content = "<form  method='POST' style='margin-bottom:0;' action=\"$url\">".$oGrid->fetchGrid($arrGrid, $arrData,$arrLang)."</form>";
+		$content = $oGrid->fetchGrid($arrGrid, $arrData, $arrLang);
     }
+	
     //end grid parameters
 
     return $content;

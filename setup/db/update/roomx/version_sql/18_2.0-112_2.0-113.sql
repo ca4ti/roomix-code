@@ -1,0 +1,2 @@
+ALTER TABLE `config` CHANGE `discount` `discount` DECIMAL(5,2) NOT NULL DEFAULT '0.00'
+UPDATE `roomx`.`config` SET `vat_1` = '20', `vat_2` = '7', `version` = '2.0-113' WHERE CONVERT( `config`.`o_m` USING utf8 ) = 'Hotel' LIMIT 1 ;
